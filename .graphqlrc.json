@@ -1,0 +1,4 @@
+{
+  "schema": "node_modules/backend-schema/schema.gql",
+  "documents": "src/**/*.gql"
+}

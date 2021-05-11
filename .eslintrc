@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "react-app",
+    "prettier"
+  ],
+  "plugins": [
+    "graphql"
+  ],
+  "rules": {
+    "graphql/template-strings": ["error", {
+      "env": "literal",
+      "schemaJsonFilepath": "graphql.schema.json"
+    }]
+  }
+}

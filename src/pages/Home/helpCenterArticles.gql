@@ -1,0 +1,7 @@
+query HelpCenterArticles {
+  helpCenterArticles {
+    id
+    title
+    authors
+  }
+}
