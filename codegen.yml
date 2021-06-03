@@ -1,5 +1,5 @@
 overwrite: true
-schema: "./node_modules/backend-schema/schema.gql"
+schema: "./node_modules/@vulcan-fydp/schema/schema.gql"
 documents: "src/**/*.gql"
 generates:
   src/graphql.ts:
