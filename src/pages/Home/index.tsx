@@ -1,35 +1,5 @@
-import * as React from "react";
-import {
-  Center,
-  Flex,
-  Spacer,
-  Box,
-  Stack,
-  Heading,
-  Text,
-  Input,
-  Button,
-  ButtonGroup,
-} from "@chakra-ui/react";
-
-const NavBar = () => (
-  <Flex maxWidth="1000px" margin="0 auto" paddingTop="40px">
-    <Box>
-      <Heading size="3xl">V</Heading>
-    </Box>
-    <Spacer />
-    <Box>
-      <ButtonGroup>
-        <Button color="white" colorScheme="whitealpha" variant="ghost">
-          Blog
-        </Button>
-        <Button color="white" colorScheme="whitealpha" variant="ghost">
-          Sign in
-        </Button>
-      </ButtonGroup>
-    </Box>
-  </Flex>
-);
+import { Navbar } from "../Navbar/navbar";
+import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
 
 export const Home = () => (
   <Box
@@ -37,7 +7,7 @@ export const Home = () => (
     h="100vh"
     alignItems="center"
   >
-    <NavBar />
+    <Navbar />
     <Stack spacing="32px" alignItems="center" paddingTop="100px">
       <Heading as="h1" size="4xl" textAlign="center" maxWidth="675px">
         Play with your friends{" "}
