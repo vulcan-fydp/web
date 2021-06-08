@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 export const Navbar = () => (
-  <Flex maxWidth="1000px" margin="0 auto" paddingTop="40px">
+  <Flex maxWidth="1000px" margin="0 auto" padding="40px 20px 0 20px">
     <Box>
       <Heading size="3xl">V</Heading>
     </Box>
