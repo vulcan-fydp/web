@@ -1,16 +1,7 @@
 import { Navbar } from "../Navbar/navbar";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import {
-  Box,
-  Stack,
-  Heading,
-  Text,
-  Input,
-  Button,
-  Center,
-} from "@chakra-ui/react";
-import { snapshotViewportBox } from "framer-motion";
+import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
 
 const INPUT_WIDTH = "300px";
 const FORM_TOP_PADDING = "48px";
