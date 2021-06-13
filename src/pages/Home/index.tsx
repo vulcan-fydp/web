@@ -10,6 +10,7 @@ import {
   Button,
   Center,
 } from "@chakra-ui/react";
+import { snapshotViewportBox } from "framer-motion";
 
 const INPUT_WIDTH = "300px";
 const FORM_TOP_PADDING = "48px";
@@ -23,23 +24,23 @@ export const Home = () => {
       minHeight="100vh"
     >
       <Navbar />
-      <Stack spacing="24px" alignItems="center" paddingTop="100px">
-        <Heading as="h1" size="4xl" textAlign="center" maxWidth="675px">
+      <Stack spacing="40px" alignItems="center" paddingTop="100px">
+        <Heading size="4xl" textAlign="center" maxWidth="675px">
           Play with your friends
           <Text as="span" color="#9F7AEA">
             {" anywhere."}
           </Text>
         </Heading>
-        <Heading as="h3" size="md" textAlign="center">
+        <Heading size="md" textAlign="center">
           Vulcan makes it simple to play the
           <Text as="span" color="#FFF275">
             {" Nintendo Switch "}
           </Text>
           with your friends.
         </Heading>
-        <MailingListForm />
-        {/* <JoinRoomForm /> */}
       </Stack>
+      <MailingListForm />
+      {/* <JoinRoomForm /> */}
     </Box>
   );
 };
@@ -47,37 +48,35 @@ export const Home = () => {
 const MailingListForm = () => {
   const [email, setEmail] = React.useState("");
   return (
-    <Stack paddingTop={FORM_TOP_PADDING} spacing="24px" alignItems="center">
+    <Stack spacing="32px" alignItems="center">
       <Heading as="h3" size="md" textAlign="center">
         Sign up for our mailing list to catch our latest updates!
       </Heading>
-      <Box>
-        <Input
-          placeholder="Email"
-          variant="Filled"
-          bg="black"
-          color="white"
-          w={INPUT_WIDTH}
-          sz="lg"
-          marginRight="24px"
-          value={email}
-          onChange={(event) => {
-            setEmail(event.target.value);
-          }}
-        ></Input>
-        <Button
-          w="100px"
-          sz="lg"
-          bg="#9F7AEA"
-          color="white"
-          marginTop="-0.5"
-          onClick={() => {
-            // Todo: Add email to db
-          }}
-        >
-          Submit
-        </Button>
-      </Box>
+      <Input
+        placeholder="Email"
+        variant="Filled"
+        bg="black"
+        color="white"
+        w={INPUT_WIDTH}
+        sz="lg"
+        marginRight="24px"
+        value={email}
+        onChange={(event) => {
+          setEmail(event.target.value);
+        }}
+      ></Input>
+      <Button
+        w="100px"
+        sz="lg"
+        bg="#9F7AEA"
+        color="white"
+        marginTop="-0.5"
+        onClick={() => {
+          // Todo: Add email to db
+        }}
+      >
+        Submit
+      </Button>
     </Stack>
   );
 };

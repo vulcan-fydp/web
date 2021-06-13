@@ -1,10 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
 
-// Specify the specific font weights we're using
 import "@fontsource/montserrat";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import * as React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { apolloClient } from "./apollo";
 import { Pages } from "./pages";
@@ -14,18 +12,26 @@ const theme = extendTheme({
     heading: "montserrat",
     body: "montserrat",
   },
-  textStyles: {
-    h1: {
-      fontWeight: "semibold",
-    },
-    h3: {
-      fontWeight: "regular",
-    },
-  },
   components: {
     Heading: {
       baseStyle: {
         color: "white",
+        fontWeight: "regular",
+      },
+      sizes: {
+        "4xl": {
+          fontWeight: "black",
+        },
+      },
+    },
+    Button: {
+      baseStyle: {
+        boxShadow: "md",
+      },
+    },
+    Input: {
+      baseStyle: {
+        boxShadow: "md",
       },
     },
   },

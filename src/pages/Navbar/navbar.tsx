@@ -18,12 +18,12 @@ export const Navbar = () => (
       <Heading size="3xl">V</Heading>
     </Box>
     <Spacer />
-    <Box>
+    {/* <Box>
       <ButtonGroup>
         <Button color="white" colorScheme="whitealpha" variant="ghost">
           Sign in
         </Button>
       </ButtonGroup>
-    </Box>
+    </Box> */}
   </Flex>
 );

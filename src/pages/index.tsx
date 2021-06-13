@@ -1,5 +1,4 @@
 import { Route, Switch } from "react-router";
-import React from "react";
 import { Home } from "./Home";
 
 export const Pages = () => (
