@@ -12,6 +12,16 @@ export type Scalars = {
 };
 
 
+export type AssignVulcastToRelayResult = RelayAssignment | AuthenticationError | VulcastAssignedToRelayError;
+
+/** Error thrown when the client must authenticate to perform an action. */
+export type AuthenticationError = {
+  __typename?: 'AuthenticationError';
+  message: Scalars['String'];
+};
+
+export type CreateRoomResult = Room | AuthenticationError | VulcastNotFoundError | VulcastInRoomError | VulcastNotAssignedToRelayError;
+
 export type HelpCenterArticle = {
   __typename?: 'HelpCenterArticle';
   id: Scalars['ID'];
@@ -26,6 +36,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   createHelpCenterArticle: HelpCenterArticle;
   updateHelpCenterArticle: HelpCenterArticle;
+  createRoom: CreateRoomResult;
+  assignVulcastToRelay?: Maybe<AssignVulcastToRelayResult>;
 };
 
 
@@ -43,9 +55,25 @@ export type MutationUpdateHelpCenterArticleArgs = {
   content?: Maybe<Scalars['String']>;
 };
 
+
+export type MutationCreateRoomArgs = {
+  vulcastGuid: Scalars['ID'];
+};
+
 export type Query = {
   __typename?: 'Query';
   helpCenterArticles: Array<HelpCenterArticle>;
+};
+
+export type Relay = {
+  __typename?: 'Relay';
+  hostName: Scalars['String'];
+};
+
+export type RelayAssignment = {
+  __typename?: 'RelayAssignment';
+  relay: Relay;
+  relayAccessToken: Scalars['String'];
 };
 
 export enum Role {
@@ -53,3 +81,62 @@ export enum Role {
   User = 'USER',
   Anonymous = 'ANONYMOUS'
 }
+
+export type Room = {
+  __typename?: 'Room';
+  guid: Scalars['ID'];
+  vulcast: Vulcast;
+  relay: Relay;
+  roomSessions: Array<RoomSession>;
+};
+
+export type RoomSession = {
+  __typename?: 'RoomSession';
+  guid: Scalars['ID'];
+  isHost: Scalars['Boolean'];
+  room: Room;
+  nickname: Scalars['String'];
+  controllerNumber?: Maybe<Scalars['Int']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  guid: Scalars['String'];
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+export type Vulcast = {
+  __typename?: 'Vulcast';
+  guid: Scalars['ID'];
+  owningUser: User;
+  room?: Maybe<Room>;
+};
+
+/** Error thrown when a request attempts to assign a Vulcast to a Relay but it is already assigned. */
+export type VulcastAssignedToRelayError = {
+  __typename?: 'VulcastAssignedToRelayError';
+  message: Scalars['String'];
+};
+
+/** Error thrown because the requested action cannot be performed while the vulcast is in a room. */
+export type VulcastInRoomError = {
+  __typename?: 'VulcastInRoomError';
+  message: Scalars['String'];
+};
+
+/** Error thrown when a request requires the vulcast to be connected to a relay but it isn't. */
+export type VulcastNotAssignedToRelayError = {
+  __typename?: 'VulcastNotAssignedToRelayError';
+  message: Scalars['String'];
+};
+
+/**
+ * Error thrown when the client attempts to perform an action on a vulcast that
+ * does not exist or that they do not own.
+ */
+export type VulcastNotFoundError = {
+  __typename?: 'VulcastNotFoundError';
+  message: Scalars['String'];
+};

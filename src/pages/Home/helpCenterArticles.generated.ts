@@ -10,7 +10,7 @@ export type HelpCenterArticlesQuery = (
   { __typename?: 'Query' }
   & { helpCenterArticles: Array<(
     { __typename?: 'HelpCenterArticle' }
-    & Pick<Types.HelpCenterArticle, 'title'>
+    & Pick<Types.HelpCenterArticle, 'id' | 'title' | 'authors'>
   )> }
 );
 
@@ -18,7 +18,9 @@ export type HelpCenterArticlesQuery = (
 export const HelpCenterArticlesDocument = gql`
     query HelpCenterArticles {
   helpCenterArticles {
+    id
     title
+    authors
   }
 }
     `;

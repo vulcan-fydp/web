@@ -1,15 +1,15 @@
 import { Route, Switch } from "react-router";
-import React from "react";
 import { Home } from "./Home";
+import { Dashboard } from "./Dashboard/dashboard";
 
 export const Pages = () => (
   <Switch>
     {/* These routes are semi-placeholder and subject to change */}
-    <Route path="/" render={() => <Home />} />
+    <Route exact path="/" render={() => <Home />} />
 
     <Route path="/room/:roomGuid" />
 
-    <Route path="/dashboard" />
+    <Route path="/dashboard" render={() => <Dashboard />} />
     <Route path="/dashboard/controller" />
     <Route path="/dashboard/rooms" />
     <Route path="/dashboard/account" />
