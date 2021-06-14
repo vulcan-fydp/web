@@ -5,6 +5,8 @@ import { Dashboard } from "./Dashboard/dashboard";
 export const Pages = () => (
   <Switch>
     {/* These routes are semi-placeholder and subject to change */}
+    <Route exact path="/" render={() => <Home />} />
+
     <Route path="/room/:roomGuid" />
 
     <Route path="/dashboard" render={() => <Dashboard />} />
@@ -14,8 +16,6 @@ export const Pages = () => (
 
     <Route path="/help-center" />
     <Route path="/help-center/:helpCenterArticleGuid" />
-
-    <Route path="/" render={() => <Home />} />
 
     <Route render={() => null} />
   </Switch>

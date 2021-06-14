@@ -1,11 +1,4 @@
-import {
-  Flex,
-  Spacer,
-  Box,
-  Heading,
-  Button,
-  ButtonGroup,
-} from "@chakra-ui/react";
+import { Flex, Spacer, Box, Heading } from "@chakra-ui/react";
 
 export const Navbar = () => (
   <Flex

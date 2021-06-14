@@ -1,4 +1,4 @@
-mutation createRoom($vulcastGuid: ID!) {
+mutation CreateRoom($vulcastGuid: ID!) {
   createRoom(vulcastGuid: $vulcastGuid) {
     __typename
     ... on Room {

@@ -6,11 +6,8 @@ import {
   Center,
   Spinner,
 } from "@chakra-ui/react";
-import * as React from "react";
+import { useState } from "react";
 import { useCreateRoomMutation } from "./dashboard.generated";
-
-const INPUT_WIDTH = "300px";
-const FORM_TOP_PADDING = "48px";
 
 export const Dashboard = () => {
   // TODO: hardcode that the user is logged in
@@ -21,7 +18,7 @@ export const Dashboard = () => {
       vulcastGuid: vulcastGuid,
     },
   });
-  const [roomCode, setRoomCode] = React.useState("");
+  const [roomCode, setRoomCode] = useState("");
 
   // Accessing the data
   if (data?.createRoom.__typename === "Room") {

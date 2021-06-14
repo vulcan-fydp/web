@@ -1,5 +1,5 @@
 import { Navbar } from "../Navbar/navbar";
-import * as React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
 
@@ -38,7 +38,7 @@ export const Home = () => {
 };
 
 const MailingListForm = () => {
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = useState("");
   return (
     <Stack spacing="32px" alignItems="center">
       <Heading as="h3" size="md" textAlign="center">
@@ -74,8 +74,8 @@ const MailingListForm = () => {
 };
 
 const JoinRoomForm = () => {
-  const [roomCode, setRoomCode] = React.useState("");
-  const [name, setName] = React.useState("");
+  const [roomCode, setRoomCode] = useState("");
+  const [name, setName] = useState("");
   return (
     <Stack paddingTop={FORM_TOP_PADDING} spacing="16px" alignItems="center">
       <Input
