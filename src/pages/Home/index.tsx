@@ -3,6 +3,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
 
+// TODO: possibly pull these out into the theme
 const INPUT_WIDTH = "300px";
 const FORM_TOP_PADDING = "48px";
 

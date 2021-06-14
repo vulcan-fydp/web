@@ -13,14 +13,13 @@ const INPUT_WIDTH = "300px";
 const FORM_TOP_PADDING = "48px";
 
 export const Dashboard = () => {
-  // Todo: vulcastGuid will be passed in as a param
+  // TODO: vulcastGuid will be passed in as a param
   const vulcastGuid = "guid";
   const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
     variables: {
       vulcastGuid: vulcastGuid,
     },
   });
-
   const [roomCode, setRoomCode] = React.useState("");
 
   // Accessing the data
@@ -56,7 +55,7 @@ export const Dashboard = () => {
                 createRoomMutation();
                 setRoomCode("temp-room-code");
               } else {
-                // Todo: close down the room
+                // TODO: call api to close the room
                 setRoomCode("");
               }
             }}
