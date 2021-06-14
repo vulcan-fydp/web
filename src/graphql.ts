@@ -20,7 +20,7 @@ export type AuthenticationError = {
   message: Scalars['String'];
 };
 
-export type CreateRoomResult = Room | AuthenticationError | VulcastNotFoundError | VulcastInRoomError;
+export type CreateRoomResult = Room | AuthenticationError | VulcastNotFoundError | VulcastInRoomError | VulcastNotAssignedToRelayError;
 
 export type HelpCenterArticle = {
   __typename?: 'HelpCenterArticle';
@@ -86,6 +86,7 @@ export type Room = {
   __typename?: 'Room';
   guid: Scalars['ID'];
   vulcast: Vulcast;
+  relay: Relay;
   roomSessions: Array<RoomSession>;
 };
 
@@ -122,6 +123,12 @@ export type VulcastAssignedToRelayError = {
 /** Error thrown because the requested action cannot be performed while the vulcast is in a room. */
 export type VulcastInRoomError = {
   __typename?: 'VulcastInRoomError';
+  message: Scalars['String'];
+};
+
+/** Error thrown when a request requires the vulcast to be connected to a relay but it isn't. */
+export type VulcastNotAssignedToRelayError = {
+  __typename?: 'VulcastNotAssignedToRelayError';
   message: Scalars['String'];
 };
 

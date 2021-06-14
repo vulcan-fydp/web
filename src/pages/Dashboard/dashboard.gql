@@ -1,0 +1,20 @@
+mutation createRoom($vulcastGuid: ID!) {
+  createRoom(vulcastGuid: $vulcastGuid) {
+    __typename
+    ... on Room {
+      guid
+    }
+    ... on AuthenticationError {
+      message
+    }
+    ... on VulcastNotFoundError {
+      message
+    }
+    ... on VulcastInRoomError {
+      message
+    }
+    ... on VulcastNotAssignedToRelayError {
+      message
+    }
+  }
+}
