@@ -13,6 +13,7 @@ const INPUT_WIDTH = "300px";
 const FORM_TOP_PADDING = "48px";
 
 export const Dashboard = () => {
+  // TODO: hardcode that the user is logged in
   // TODO: vulcastGuid will be passed in as a param
   const vulcastGuid = "guid";
   const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
@@ -53,7 +54,6 @@ export const Dashboard = () => {
             onClick={() => {
               if (roomCode === "") {
                 createRoomMutation();
-                setRoomCode("temp-room-code");
               } else {
                 // TODO: call api to close the room
                 setRoomCode("");
