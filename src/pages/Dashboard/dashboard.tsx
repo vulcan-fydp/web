@@ -2,7 +2,6 @@ import {
   Stack,
   Heading,
   Box,
-  Text,
   Button,
   ButtonGroup,
   Center,
@@ -16,6 +15,8 @@ import { Link } from "react-router-dom";
 
 import vulcast from "./vulcast.png";
 import copy from "./copy.png";
+import profile from "./profile.png";
+import controller from "./controller.png";
 
 // TODO: Cleanup
 const INPUT_WIDTH = "300px";
@@ -34,6 +35,8 @@ export const Dashboard = () => {
   );
 };
 
+type DashboardTab = "player" | "controller" | "stream";
+
 const DashboardImpl = () => {
   // TODO: hardcode that the user is logged in
   // TODO: vulcastGuid will be passed in as a param
@@ -49,13 +52,18 @@ const DashboardImpl = () => {
   if (data?.createRoom.__typename === "Room") {
     setRoomCode(data.createRoom.guid);
   }
-  const roomTabs = [<PlayerTab />, <ControllerTab />, <StreamTab />];
+  const dashboardTab: DashboardTab = "player";
+  const dashboardTabs = {
+    player: <PlayerTab />,
+    controller: <ControllerTab />,
+    stream: <StreamTab />,
+  };
 
   return (
     <Stack spacing="40px" alignItems="left" paddingTop="100px">
       <DashboardHeader />
       <TabButtons />
-      {roomTabs[0]}
+      {dashboardTabs[dashboardTab]}
       {/* <Heading size="lg" textAlign="center" minWidth="80vw">
         <Text as="span" color="#AEAEAE">
           {roomCode === ""
@@ -103,7 +111,7 @@ const PreDashboard = () => {
 
 const DashboardHeader = () => {
   return (
-    <Stack direction="row">
+    <Stack direction="row" align="center">
       <RoomDetails />
       <EndRoom />
     </Stack>
@@ -125,7 +133,6 @@ const RoomDetails = () => {
           sz="lg"
           bg="#9F7AEA"
           color="white"
-          marginTop="-0.5"
           rightIcon={CopyIcon}
           _hover={{ bg: "#733BE7" }}
         >
@@ -140,71 +147,130 @@ const EndRoom = () => {
   const [isHost, setIsHost] = useState(true);
   return (
     <Stack spacing="40px" alignItems="center" paddingTop="34px">
-      <Button
-        sz="lg"
-        bg="#9F7AEA"
-        color="white"
-        marginTop="-0.5"
-        _hover={{ bg: "#733BE7" }}
-      >
+      <Button sz="lg" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
         {isHost ? "End Room" : "Leave Room"}
       </Button>
     </Stack>
   );
 };
 
+const grey = "#434343";
+const purple = "#9F7AEA";
+
 const TabButtons = () => {
+  const curTab: DashboardTab = "player";
   return (
     <Box align="left">
       <ButtonGroup>
         <Button
           sz="lg"
-          bg="#9F7AEA"
+          bg={curTab === "player" ? grey : purple}
           color="white"
-          marginTop="-0.5"
           _hover={{ bg: "#733BE7" }}
         >
           Players
         </Button>
-        <Button
+        {/* <Button
           sz="lg"
-          bg="#9F7AEA"
+          bg={curTab === "controller" ? grey : purple}
           color="white"
-          marginTop="-0.5"
           _hover={{ bg: "#733BE7" }}
         >
           Controller Settings
         </Button>
         <Button
           sz="lg"
-          bg="#9F7AEA"
+          bg={curTab === "stream" ? grey : purple}
           color="white"
-          marginTop="-0.5"
           _hover={{ bg: "#733BE7" }}
         >
           Game Stream
-        </Button>
+        </Button> */}
       </ButtonGroup>
     </Box>
   );
 };
 
+type PlayerDetails = {
+  name: String;
+};
+const connectedPlayers: [PlayerDetails] = [
+  "Michal",
+  "Gordon",
+  "Robbie",
+  "Ayush",
+];
+
+const playerToController = {
+  controller2: "robbie",
+  controller3: "michal",
+  controller4: "gordon",
+};
+
 const PlayerTab = () => {
   return (
-    <Box>
+    <Stack direction="column">
       <Heading as="h3" size="md">
         Connected Players
       </Heading>
-    </Box>
+      connectedPlayers.map((name) => {
+        return <Player></Player>
+      })
+    </Stack>
   );
 };
+
+const PlayerModal = () => {
+  const playerName = "Michal";
+
+  return (
+    <Stack direction="row" alignItems="center">
+      <Image src={profile} />
+      <Heading as="h2" size="md">
+        {playerName}
+      </Heading>
+    </Stack>
+  );
+};
+
+const ControllerModal = () => {
+  const controllerNumber = 3;
+
+  return (
+    <Stack direction="row" alignItems="center">
+      <Heading as="h2" size="md">
+        {"Controller " + controllerNumber}
+      </Heading>
+      <Image src={controller} />
+      <Button sz="md" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
+        Edit
+      </Button>
+    </Stack>
+  );
+};
+
+const ModerationModal = () => {
+  return (
+    <Stack direction="row" alignItems="center">
+      <Button sz="md" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
+        Kick
+      </Button>
+    </Stack>
+  );
+};
+
 const Player = () => {
   return (
-    <Box borderWidth="2px" borderColour="white">
-      <Heading as="h3" size="md">
-        Connected Players
-      </Heading>
-    </Box>
+    <Stack
+      borderWidth="2px"
+      borderColour="white"
+      direction="row"
+      padding="8px 16px 8px 16px"
+    >
+      <PlayerModal />
+      <ControllerModal />
+      <ModerationModal />
+    </Stack>
   );
 };
 
@@ -227,7 +293,6 @@ const LinkVulcast = () => {
         sz="lg"
         bg="#9F7AEA"
         color="white"
-        marginTop="-0.5"
         onClick={() => {
           // Call backend to start the room
           // IF ready:
@@ -248,7 +313,7 @@ const CreateRoom = () => {
       <Heading as="h3" size="lg">
         Host a room
       </Heading>
-      <Button w="200px" sz="lg" bg="#9F7AEA" color="white" marginTop="-0.5">
+      <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
         Start Room
       </Button>
     </Stack>
@@ -288,7 +353,7 @@ const JoinRoom = () => {
         }}
       ></Input>
       <Link to={`/room/${roomCode}`}>
-        <Button w="200px" sz="lg" bg="#9F7AEA" color="white" marginTop="-0.5">
+        <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
           Join Room
         </Button>
       </Link>
