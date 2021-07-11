@@ -6,6 +6,9 @@ import {
   Input,
   Button,
   Text,
+  Box,
+  VStack,
+  Flex,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useCallback } from "react";
@@ -59,8 +62,13 @@ export const LoginPage = () => {
 
   return (
     <HeroPage>
-      <form onSubmit={handleSubmit(onFormSubmit)}>
-        <FormControl isInvalid={!!errors.email}>
+      <Flex
+        as="form"
+        onSubmit={handleSubmit(onFormSubmit)}
+        flexDir="column"
+        alignItems="center"
+      >
+        <FormControl isInvalid={!!errors.email} mb="15px">
           <Input
             type="email"
             placeholder="Email"
@@ -72,7 +80,7 @@ export const LoginPage = () => {
             <FormErrorMessage>{errors.email.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <FormControl isInvalid={!!errors.password}>
+        <FormControl isInvalid={!!errors.password} mb="40px">
           <Input
             type="password"
             placeholder="Password"
@@ -84,11 +92,17 @@ export const LoginPage = () => {
             <FormErrorMessage>{errors.password.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <Button isDisabled={isSubmitting} type="submit">
+        <Button
+          isDisabled={isSubmitting}
+          type="submit"
+          colorScheme="purple"
+          fontSize="sm"
+          size="lg"
+        >
           Log In
         </Button>
-      </form>
-      {responseError !== undefined ? <Text>{responseError}</Text> : null}
+        {responseError !== undefined ? <Text>{responseError}</Text> : null}
+      </Flex>
     </HeroPage>
   );
 };
