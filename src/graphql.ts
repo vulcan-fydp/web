@@ -20,7 +20,19 @@ export type AuthenticationError = {
   message: Scalars['String'];
 };
 
+export type ClientInRoomError = {
+  __typename?: 'ClientInRoomError';
+  message: Scalars['String'];
+};
+
 export type CreateRoomResult = Room | AuthenticationError | VulcastNotFoundError | VulcastInRoomError | VulcastNotAssignedToRelayError;
+
+export type CreateUserResult = User | AuthenticationError | EmailInUseError | InvalidEmailError | InvalidFirstNameError | InvalidLastNameError | InvalidPasswordError;
+
+export type EmailInUseError = {
+  __typename?: 'EmailInUseError';
+  message: Scalars['String'];
+};
 
 export type HelpCenterArticle = {
   __typename?: 'HelpCenterArticle';
@@ -32,12 +44,59 @@ export type HelpCenterArticle = {
   updatedAt: Scalars['String'];
 };
 
+export type InvalidEmailError = {
+  __typename?: 'InvalidEmailError';
+  message: Scalars['String'];
+};
+
+export type InvalidFirstNameError = {
+  __typename?: 'InvalidFirstNameError';
+  message: Scalars['String'];
+};
+
+export type InvalidLastNameError = {
+  __typename?: 'InvalidLastNameError';
+  message: Scalars['String'];
+};
+
+export type InvalidPasswordError = {
+  __typename?: 'InvalidPasswordError';
+  message: Scalars['String'];
+};
+
+export type JoinRoomResult = RelayAssignment | AuthenticationError | ClientInRoomError;
+
+export type LogInAsUserResult = User | AuthenticationError;
+
+export type LogInAsVulcastResult = VulcastAuthentication | AuthenticationError;
+
+export type LogOutFromUserResult = Success | AuthenticationError;
+
 export type Mutation = {
   __typename?: 'Mutation';
+  logInAsUser: LogInAsUserResult;
+  createUser?: Maybe<CreateUserResult>;
+  logOutFromUser: LogOutFromUserResult;
   createHelpCenterArticle: HelpCenterArticle;
   updateHelpCenterArticle: HelpCenterArticle;
+  logInAsVulcast: LogInAsVulcastResult;
   createRoom: CreateRoomResult;
-  assignVulcastToRelay?: Maybe<AssignVulcastToRelayResult>;
+  joinRoom: JoinRoomResult;
+  assignVulcastToRelay: AssignVulcastToRelayResult;
+};
+
+
+export type MutationLogInAsUserArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationCreateUserArgs = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -56,13 +115,26 @@ export type MutationUpdateHelpCenterArticleArgs = {
 };
 
 
+export type MutationLogInAsVulcastArgs = {
+  vulcastGuid: Scalars['String'];
+  secret: Scalars['String'];
+};
+
+
 export type MutationCreateRoomArgs = {
   vulcastGuid: Scalars['ID'];
+};
+
+
+export type MutationJoinRoomArgs = {
+  roomGuid: Scalars['ID'];
+  nickname: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   helpCenterArticles: Array<HelpCenterArticle>;
+  vulcasts: Array<Vulcast>;
 };
 
 export type Relay = {
@@ -99,6 +171,11 @@ export type RoomSession = {
   controllerNumber?: Maybe<Scalars['Int']>;
 };
 
+export type Success = {
+  __typename?: 'Success';
+  _?: Maybe<Scalars['Boolean']>;
+};
+
 export type User = {
   __typename?: 'User';
   guid: Scalars['String'];
@@ -118,6 +195,12 @@ export type Vulcast = {
 export type VulcastAssignedToRelayError = {
   __typename?: 'VulcastAssignedToRelayError';
   message: Scalars['String'];
+};
+
+export type VulcastAuthentication = {
+  __typename?: 'VulcastAuthentication';
+  vulcast: Vulcast;
+  vulcastAccessToken: Scalars['String'];
 };
 
 /** Error thrown because the requested action cannot be performed while the vulcast is in a room. */

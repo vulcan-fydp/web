@@ -1,6 +1,7 @@
 import { Route, Switch } from "react-router";
 import { Home } from "./Home";
 import { Dashboard } from "./Dashboard/dashboard";
+import { LoginRouter } from "pages/login";
 
 export const Pages = () => (
   <Switch>
@@ -8,6 +9,8 @@ export const Pages = () => (
     <Route exact path="/" render={() => <Home />} />
 
     <Route path="/room/:roomGuid" />
+
+    <Route path="/login" render={() => <LoginRouter />} />
 
     <Route path="/dashboard" render={() => <Dashboard />} />
     <Route path="/dashboard/controller" />
