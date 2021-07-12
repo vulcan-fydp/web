@@ -1,0 +1,14 @@
+mutation logIn($email: String!, $password: String!) {
+  logInAsUser(email: $email, password: $password) {
+    __typename
+    ... on User {
+      guid
+      email
+      firstName
+      lastName
+    }
+    ... on AuthenticationError {
+      message
+    }
+  }
+}

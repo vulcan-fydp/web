@@ -1,4 +1,4 @@
-import { Navbar } from "../Navbar/navbar";
+import { Navbar } from "components/Navbar";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
