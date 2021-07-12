@@ -5,18 +5,15 @@ import {
   Button,
   ButtonGroup,
   Center,
-  Spinner,
   Input,
   Image,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useCreateRoomMutation } from "./dashboard.generated";
 import { Link } from "react-router-dom";
-
+import { PlayerTab } from "./playerTab";
 import vulcast from "./vulcast.png";
 import copy from "./copy.png";
-import profile from "./profile.png";
-import controller from "./controller.png";
 
 // TODO: Cleanup
 const INPUT_WIDTH = "300px";
@@ -158,7 +155,7 @@ const grey = "#434343";
 const purple = "#9F7AEA";
 
 const TabButtons = () => {
-  const curTab: DashboardTab = "player";
+  const [curTab, setCurTab] = useState("player");
   return (
     <Box align="left">
       <ButtonGroup>
@@ -167,14 +164,20 @@ const TabButtons = () => {
           bg={curTab === "player" ? grey : purple}
           color="white"
           _hover={{ bg: "#733BE7" }}
+          onClick={() => {
+            setCurTab("player");
+          }}
         >
           Players
         </Button>
-        {/* <Button
+        <Button
           sz="lg"
           bg={curTab === "controller" ? grey : purple}
           color="white"
           _hover={{ bg: "#733BE7" }}
+          onClick={() => {
+            setCurTab("controller");
+          }}
         >
           Controller Settings
         </Button>
@@ -183,103 +186,23 @@ const TabButtons = () => {
           bg={curTab === "stream" ? grey : purple}
           color="white"
           _hover={{ bg: "#733BE7" }}
+          onClick={() => {
+            setCurTab("stream");
+          }}
         >
           Game Stream
-        </Button> */}
+        </Button>
       </ButtonGroup>
     </Box>
   );
 };
 
-type PlayerDetails = {
-  name: String;
-};
-const connectedPlayers: [PlayerDetails] = [
-  "Michal",
-  "Gordon",
-  "Robbie",
-  "Ayush",
-];
-
-const playerToController = {
-  controller2: "robbie",
-  controller3: "michal",
-  controller4: "gordon",
-};
-
-const PlayerTab = () => {
-  return (
-    <Stack direction="column">
-      <Heading as="h3" size="md">
-        Connected Players
-      </Heading>
-      connectedPlayers.map((name) => {
-        return <Player></Player>
-      })
-    </Stack>
-  );
-};
-
-const PlayerModal = () => {
-  const playerName = "Michal";
-
-  return (
-    <Stack direction="row" alignItems="center">
-      <Image src={profile} />
-      <Heading as="h2" size="md">
-        {playerName}
-      </Heading>
-    </Stack>
-  );
-};
-
-const ControllerModal = () => {
-  const controllerNumber = 3;
-
-  return (
-    <Stack direction="row" alignItems="center">
-      <Heading as="h2" size="md">
-        {"Controller " + controllerNumber}
-      </Heading>
-      <Image src={controller} />
-      <Button sz="md" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
-        Edit
-      </Button>
-    </Stack>
-  );
-};
-
-const ModerationModal = () => {
-  return (
-    <Stack direction="row" alignItems="center">
-      <Button sz="md" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
-        Kick
-      </Button>
-    </Stack>
-  );
-};
-
-const Player = () => {
-  return (
-    <Stack
-      borderWidth="2px"
-      borderColour="white"
-      direction="row"
-      padding="8px 16px 8px 16px"
-    >
-      <PlayerModal />
-      <ControllerModal />
-      <ModerationModal />
-    </Stack>
-  );
-};
-
 const ControllerTab = () => {
-  return <Box></Box>;
+  return <Box>Controller Tab</Box>;
 };
 
 const StreamTab = () => {
-  return <Box></Box>;
+  return <Box>Stream Tab</Box>;
 };
 
 const LinkVulcast = () => {
