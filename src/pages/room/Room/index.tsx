@@ -62,7 +62,13 @@ export const Dashboard = () => {
   return (
     <DashboardContext.Provider value={contextValue}>
       <HeroPage isDashboard={true}>
-        <VStack spacing="20px" paddingTop="64px" alignItems="left" w="1000px">
+        <VStack
+          spacing="20px"
+          paddingTop="64px"
+          alignItems="left"
+          width="100%"
+          maxWidth="1000px"
+        >
           <ShareAndCloseRoomHeader />
           <TabButtons />
           <Divider borderWidth="1px" borderColor="white" opacity={1} />
@@ -75,7 +81,7 @@ export const Dashboard = () => {
 
 const ShareAndCloseRoomHeader = () => {
   return (
-    <HStack direction="row" justifyContent="space-between">
+    <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
       <RoomDetails />
       <EndRoom />
     </HStack>

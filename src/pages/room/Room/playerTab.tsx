@@ -1,7 +1,9 @@
-import { HStack, VStack, Heading, Button, Flex, Image } from "@chakra-ui/react";
+import { HStack, VStack, Heading, Button, Image } from "@chakra-ui/react";
 import profile from "resources/profile.png";
 import controllerIcon from "resources/controller.png";
+import spectatorIcon from "resources/spectator.png";
 
+// TODO: Replace this with a backend query
 type PlayerInfo = {
   name: String;
 };
@@ -29,17 +31,19 @@ const playerToController: Map<String, Controller> = new Map([
 
 export function PlayerTab() {
   return (
-    <VStack alignItems="left">
+    <>
       <Heading size="md">Connected Players</Heading>
-      {connectedPlayers.map((player) => {
-        return (
-          <Player
-            player={player}
-            controller={playerToController.get(player.name)!}
-          />
-        );
-      })}
-    </VStack>
+      <VStack alignItems="left" spacing="20px">
+        {connectedPlayers.map((player) => {
+          return (
+            <Player
+              player={player}
+              controller={playerToController.get(player.name)!}
+            />
+          );
+        })}
+      </VStack>
+    </>
   );
 }
 
@@ -57,7 +61,6 @@ const Player = (playerProps: PlayerProperties) => {
       padding="8px 16px 8px 16px"
       justifyContent="space-between"
       alignItems="center"
-      w="100%"
       maxWidth="1000px"
     >
       <PlayerModal playerName={playerProps.player.name} />
@@ -67,11 +70,11 @@ const Player = (playerProps: PlayerProperties) => {
   );
 };
 
-interface PlayerModalI {
+interface PlayerModalProps {
   playerName: String;
 }
 
-const PlayerModal: React.FC<PlayerModalI> = ({ playerName }) => {
+const PlayerModal: React.FC<PlayerModalProps> = ({ playerName }) => {
   return (
     <HStack direction="row" alignItems="center" width="160px">
       <Image src={profile} />
@@ -80,15 +83,15 @@ const PlayerModal: React.FC<PlayerModalI> = ({ playerName }) => {
   );
 };
 
-interface ControllerModalI {
+interface ControllerModalProps {
   controller: Controller;
 }
 
-const ControllerModal: React.FC<ControllerModalI> = ({ controller }) => {
+const ControllerModal: React.FC<ControllerModalProps> = ({ controller }) => {
   return (
     <HStack direction="row" alignItems="center">
       <HStack width="160px">
-        <Image src={controllerIcon} />
+        <Image src={controller === "Spectator" ? spectatorIcon : controllerIcon} />
         <Heading size="sm">{controller}</Heading>
       </HStack>
       <Button variant="solidSmall">Edit</Button>
