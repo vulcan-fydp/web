@@ -135,6 +135,8 @@ export type Query = {
   __typename?: 'Query';
   helpCenterArticles: Array<HelpCenterArticle>;
   vulcasts: Array<Vulcast>;
+  /** Gets the user making this request or null if this request was not made by a user */
+  user?: Maybe<User>;
 };
 
 export type Relay = {
@@ -182,6 +184,7 @@ export type User = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  vulcasts: Array<Vulcast>;
 };
 
 export type Vulcast = {

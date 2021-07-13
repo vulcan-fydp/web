@@ -1,0 +1,17 @@
+query Session {
+  user {
+    guid
+    email
+    firstName
+    lastName
+    vulcasts {
+      guid
+      room {
+        guid
+        relay {
+          hostName
+        }
+      }
+    }
+  }
+}
