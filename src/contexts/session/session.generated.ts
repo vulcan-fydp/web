@@ -10,19 +10,22 @@ export type SessionQuery = (
   { __typename?: 'Query' }
   & { user?: Types.Maybe<(
     { __typename?: 'User' }
-    & Pick<Types.User, 'guid' | 'email' | 'firstName' | 'lastName'>
+    & Pick<Types.User, 'id' | 'email' | 'firstName' | 'lastName'>
     & { vulcasts: Array<(
       { __typename?: 'Vulcast' }
-      & Pick<Types.Vulcast, 'guid'>
+      & Pick<Types.Vulcast, 'id'>
       & { room?: Types.Maybe<(
         { __typename?: 'Room' }
-        & Pick<Types.Room, 'guid'>
+        & Pick<Types.Room, 'id'>
         & { relay: (
           { __typename?: 'Relay' }
           & Pick<Types.Relay, 'hostName'>
         ) }
       )> }
     )> }
+  )>, room?: Types.Maybe<(
+    { __typename?: 'Room' }
+    & Pick<Types.Room, 'id'>
   )> }
 );
 
@@ -30,19 +33,22 @@ export type SessionQuery = (
 export const SessionDocument = gql`
     query Session {
   user {
-    guid
+    id
     email
     firstName
     lastName
     vulcasts {
-      guid
+      id
       room {
-        guid
+        id
         relay {
           hostName
         }
       }
     }
+  }
+  room {
+    id
   }
 }
     `;

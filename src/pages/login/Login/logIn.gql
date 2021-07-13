@@ -2,7 +2,7 @@ mutation logIn($email: String!, $password: String!) {
   logInAsUser(email: $email, password: $password) {
     __typename
     ... on User {
-      guid
+      id
       email
       firstName
       lastName

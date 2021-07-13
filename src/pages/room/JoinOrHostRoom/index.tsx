@@ -1,9 +1,9 @@
 import { useSession } from "contexts/session";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouteMatch } from "react-router";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import {
   Text,
@@ -12,86 +12,54 @@ import {
   Input,
   FormErrorMessage,
   Button,
+  HStack,
 } from "@chakra-ui/react";
+import { apolloClient } from "apollo";
+import {
+  JoinRoomDocument,
+  JoinRoomMutation,
+  JoinRoomMutationVariables,
+} from "./joinRoom.generated";
+import { useUserQuery } from "./user.generated";
+import { JoinRoomForm } from "./JoinRoomForm";
+import { CreateRoomForm } from "./CreateRoomForm";
 
 export const JoinOrHostRoom: React.FC = () => {
-  const { params } = useRouteMatch<{ roomGuid?: string }>();
+  const { params } = useRouteMatch<{ roomId?: string }>();
 
-  const { user, room } = useSession();
+  const { data, loading } = useUserQuery();
 
-  console.log(user, room);
-
-  if (room) {
-    return <Redirect to={`/room/${room.guid}/stream`} />;
+  if (loading || !data) {
+    return null;
   }
 
-  if (!user || user.vulcasts.length === 0) {
-    return <JoinRoom roomGuid={params.roomGuid} />;
+  if (data.room) {
+    return <Redirect to={`/room/${data.room.id}/stream`} />;
   }
 
-  return <JoinAndHostRoom />;
+  if (!data.user || data.user.vulcasts.length === 0) {
+    return <JoinRoom roomId={params.roomId} />;
+  }
+
+  return <JoinAndHostRoom vulcastId={data.user.vulcasts[0].id} />;
 };
 
-interface JoinRoomForm {
-  roomGuid: string;
-  nickname: string;
-}
-
-const JoinRoom: React.FC<{ roomGuid?: string }> = ({ roomGuid }) => {
-  const [promptRoomGuid, setPromptRoomGuid] = useState(
-    typeof roomGuid !== "string"
-  );
-
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-  } = useForm<JoinRoomForm>({
-    defaultValues: {
-      roomGuid,
-      nickname: "",
-    },
-  });
-
+const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <HeroPage>
       <Text>Hello</Text>
-      <Flex
-        as="form"
-        flexDir="column"
-        align="center"
-        onSubmit={handleSubmit(() => null)}
-      >
-        {promptRoomGuid ? (
-          <FormControl isInvalid={!!errors.roomGuid}>
-            <Input
-              placeholder="Room Code"
-              {...register("roomGuid", {
-                required: "Room code cannot be empty",
-              })}
-            />
-            {errors.roomGuid ? (
-              <FormErrorMessage>{errors.roomGuid.message}</FormErrorMessage>
-            ) : null}
-          </FormControl>
-        ) : null}
-        <FormControl isInvalid={!!errors.nickname}>
-          <Input
-            placeholder="Nickname"
-            {...register("nickname", {
-              required: "Nickname cannot be empty",
-            })}
-          />
-          {errors.nickname ? (
-            <FormErrorMessage>{errors.nickname.message}</FormErrorMessage>
-          ) : null}
-        </FormControl>
-        <Button type="submit">Join Game</Button>
-      </Flex>
+      <JoinRoomForm roomId={roomId} />
     </HeroPage>
   );
 };
 
-const JoinAndHostRoom: React.FC = () => {
-  return null;
+const JoinAndHostRoom: React.FC<{ vulcastId: string }> = ({ vulcastId }) => {
+  return (
+    <Flex>
+      <HStack>
+        <JoinRoomForm />
+        <CreateRoomForm vulcastId={vulcastId} />
+      </HStack>
+    </Flex>
+  );
 };

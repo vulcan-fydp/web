@@ -64,7 +64,7 @@ export type InvalidPasswordError = {
   message: Scalars['String'];
 };
 
-export type JoinRoomResult = RelayAssignment | AuthenticationError | ClientInRoomError;
+export type JoinRoomResult = RoomConnection | AuthenticationError | ClientInRoomError;
 
 export type LogInAsUserResult = User | AuthenticationError;
 
@@ -116,18 +116,18 @@ export type MutationUpdateHelpCenterArticleArgs = {
 
 
 export type MutationLogInAsVulcastArgs = {
-  vulcastGuid: Scalars['String'];
+  vulcastId: Scalars['String'];
   secret: Scalars['String'];
 };
 
 
 export type MutationCreateRoomArgs = {
-  vulcastGuid: Scalars['ID'];
+  vulcastId: Scalars['ID'];
 };
 
 
 export type MutationJoinRoomArgs = {
-  roomGuid: Scalars['ID'];
+  roomId: Scalars['ID'];
   nickname: Scalars['String'];
 };
 
@@ -137,6 +137,12 @@ export type Query = {
   vulcasts: Array<Vulcast>;
   /** Gets the user making this request or null if this request was not made by a user */
   user?: Maybe<User>;
+  room?: Maybe<Room>;
+};
+
+
+export type QueryUserArgs = {
+  id?: Maybe<Scalars['ID']>;
 };
 
 export type Relay = {
@@ -158,15 +164,21 @@ export enum Role {
 
 export type Room = {
   __typename?: 'Room';
-  guid: Scalars['ID'];
+  id: Scalars['ID'];
   vulcast: Vulcast;
   relay: Relay;
   roomSessions: Array<RoomSession>;
 };
 
+export type RoomConnection = {
+  __typename?: 'RoomConnection';
+  room: Room;
+  accessToken: Scalars['String'];
+};
+
 export type RoomSession = {
   __typename?: 'RoomSession';
-  guid: Scalars['ID'];
+  id: Scalars['ID'];
   isHost: Scalars['Boolean'];
   room: Room;
   nickname: Scalars['String'];
@@ -180,7 +192,7 @@ export type Success = {
 
 export type User = {
   __typename?: 'User';
-  guid: Scalars['String'];
+  id: Scalars['ID'];
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -189,7 +201,7 @@ export type User = {
 
 export type Vulcast = {
   __typename?: 'Vulcast';
-  guid: Scalars['ID'];
+  id: Scalars['ID'];
   owningUser: User;
   room?: Maybe<Room>;
 };

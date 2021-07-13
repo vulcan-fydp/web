@@ -1,18 +1,18 @@
-import { Room, User } from "graphql";
+import { Room } from "graphql";
 import { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { createContext } from "react";
-import { SessionQuery, useSessionQuery } from "./session.generated";
+import { useSessionQuery } from "./session.generated";
 
 interface SessionContextValue {
-  user: SessionQuery["user"] | undefined;
-  room: Room | undefined;
+  userId: string | undefined;
+  roomId: string | undefined;
 }
 
 const sessionContext = createContext<SessionContextValue>({
-  user: undefined,
-  room: undefined,
+  userId: undefined,
+  roomId: undefined,
 });
 
 export const SessionContext: React.FC = ({ children }) => {
@@ -33,7 +33,7 @@ export const SessionContext: React.FC = ({ children }) => {
 
   return (
     <sessionContext.Provider
-      value={{ user: data?.user ?? undefined, room: undefined }}
+      value={{ userId: data?.user?.id ?? undefined, roomId: undefined }}
     >
       {children}
     </sessionContext.Provider>
