@@ -16,7 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       bottom="calc(100% - 50px)"
     >
       <Flex
-        alignItems="space-between"
+        justifyContent="space-between"
         w="100%"
         maxWidth="1000px"
         padding="0 100px"
@@ -36,10 +36,17 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
 export const DefaultNavbarContent = () => {
   const isLoggedIn = true;
-
+  // TODO: Add a more polished menu here
+  const dashboard = (
+    <Link as={RouterLink} to="/dashboard">
+      <Text textAlign="center" height="48px" lineHeight="48px" color="white">
+        Dashboard
+      </Text>
+    </Link>
+  );
   if (isLoggedIn) {
-    return null;
+    return dashboard;
   } else {
-    return null;
+    return dashboard;
   }
 };

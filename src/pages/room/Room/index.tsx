@@ -17,10 +17,11 @@ import {
   useRef,
   useState,
 } from "react";
+import ReactTooltip from "react-tooltip";
 import { HeroPage } from "components/HeroPage";
+import { PlayerTab } from "pages/room/Room/playerTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
-import ReactTooltip from "react-tooltip";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -104,7 +105,7 @@ const RoomDetails = () => {
     <HStack>
       <Image src={vulcast} />
       <VStack justifyContent="space-between" h="100px">
-        <Heading as="h3" size="sm" w="320px">
+        <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
         <Button
@@ -175,14 +176,6 @@ const TabButtons = () => {
 };
 
 // TODO: Move these tabs into their own file
-const PlayerTab = () => {
-  return (
-    <Box>
-      <Heading> Player Tab </Heading>
-    </Box>
-  );
-};
-
 const ControllerTab = () => {
   return (
     <Box>

@@ -2,14 +2,14 @@ import { ApolloProvider } from "@apollo/client";
 
 import "@fontsource/montserrat";
 
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { apolloClient } from "./apollo";
 import { Pages } from "./pages";
-import { theme } from "./theme";
+import { vulcanTheme } from "./theme";
 
 export const App = () => (
-  <ChakraProvider theme={theme}>
+  <ChakraProvider theme={vulcanTheme}>
     <ApolloProvider client={apolloClient}>
       <BrowserRouter>
         <Pages />
