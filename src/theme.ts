@@ -9,6 +9,9 @@ export const theme = extendTheme({
   },
   colors: {
     black: "#282828",
+    grey: "#434343",
+    normPurple: "#9F7AEA",
+    darkPurple: "#733BE7",
   },
   components: {
     Heading: {
@@ -25,6 +28,22 @@ export const theme = extendTheme({
     Button: {
       baseStyle: {
         boxShadow: "md",
+      },
+      variants: {
+        solid: {
+          sz: "lg",
+          bg: "normPurple",
+          color: "white",
+          _hover: {
+            bg: "darkPurple",
+          },
+        },
+        link: {
+          _hover: {
+            color: "normPurple",
+            textDecoration: "none",
+          },
+        },
       },
     },
     Input: {

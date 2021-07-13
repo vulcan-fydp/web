@@ -4,256 +4,191 @@ import {
   Box,
   Button,
   ButtonGroup,
-  Center,
-  Input,
   Image,
+  VStack,
+  HStack,
+  Divider,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { useCreateRoomMutation } from "./dashboard.generated";
-import { Link } from "react-router-dom";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "./playerTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
-
-// TODO: Cleanup
-const INPUT_WIDTH = "300px";
-
-export const Dashboard = () => {
-  const [showDashboard, setShowDashboard] = useState(true);
-  return (
-    <Center
-      background="linear-gradient(132.85deg, #30292F 0%, #413F54 100%);"
-      alignItems="center"
-      padding="0 20px 100px 20px"
-      minHeight="100vh"
-    >
-      {showDashboard ? <DashboardImpl /> : <JoinOrHostRoom />}
-    </Center>
-  );
-};
+import ReactTooltip from "react-tooltip";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-const DashboardImpl = () => {
-  const dashboardTab: DashboardTab = "player";
+interface TabState {
+  tab: DashboardTab;
+}
+
+type TabAction =
+  | { type: "player" }
+  | { type: "controller" }
+  | { type: "stream" };
+
+function tabReducer(state: TabState, action: TabAction) {
+  return { tab: action.type };
+}
+
+const initialTabState: TabState = {
+  tab: "player",
+};
+
+const DashboardContext = createContext<{
+  state: TabState;
+  dispatch: React.Dispatch<TabAction>;
+}>({ state: initialTabState, dispatch: () => null });
+
+export const Dashboard = () => {
   const dashboardTabs = {
     player: <PlayerTab />,
     controller: <ControllerTab />,
     stream: <StreamTab />,
   };
 
+  // Create state and dispatch for the tab state
+  const [state, dispatch] = useReducer(tabReducer, initialTabState);
+  // Keep the object reference stable if nothing in the state has changed
+  const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+
   return (
-    <Stack spacing="40px" alignItems="left" paddingTop="100px">
-      <DashboardHeader />
-      <TabButtons />
-      {dashboardTabs[dashboardTab]}
-    </Stack>
+    <DashboardContext.Provider value={contextValue}>
+      <HeroPage isDashboard={true}>
+        <VStack spacing="20px" paddingTop="64px" alignItems="left" w="1000px">
+          <ShareAndCloseRoomHeader />
+          <TabButtons />
+          <Divider borderWidth="1px" borderColor="white" opacity={1} />
+          {dashboardTabs[state.tab]}
+        </VStack>
+      </HeroPage>
+    </DashboardContext.Provider>
   );
 };
 
-// TODO: Replace this with the JoinOrHostRoom changes
-const JoinOrHostRoom = () => {
-  const [vulcastLinked, setVulcastLinked] = useState(true);
-
+const ShareAndCloseRoomHeader = () => {
   return (
-    <Stack direction="row" spacing="240px">
-      {vulcastLinked ? <CreateRoom /> : <LinkVulcast />}
-      <JoinRoom />
-    </Stack>
-  );
-};
-
-const LinkVulcast = () => {
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Link your Vulcast
-      </Heading>
-      <Button
-        w="200px"
-        sz="lg"
-        bg="#9F7AEA"
-        color="white"
-        onClick={() => {
-          // Call backend to start the room
-          // IF ready:
-          //   setShowDashboard(true)
-          // ELSE:
-          //   return an error modal
-        }}
-      >
-        Link Vulcast
-      </Button>
-    </Stack>
-  );
-};
-
-const CreateRoom = () => {
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Host a room
-      </Heading>
-      <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
-        Host Room
-      </Button>
-    </Stack>
-  );
-};
-
-const JoinRoom = () => {
-  const [roomCode, setRoomCode] = useState("");
-  const [name, setName] = useState("");
-
-  // TODO: hardcode that the user is logged in
-  // TODO: vulcastGuid will be passed in as a param
-  // const vulcastGuid = "guid";
-  // const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
-  //   variables: {
-  //     vulcastGuid: vulcastGuid,
-  //   },
-  // });
-  // const [roomCode, setRoomCode] = useState("");
-  // // Accessing the data
-  // if (data?.createRoom.__typename === "Room") {
-  //   setRoomCode(data.createRoom.guid);
-  // }
-
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Join a room
-      </Heading>
-      {/* TODO: if loading, show spinner instead of join room form */}
-      <Input
-        placeholder="Nickname"
-        variant="Filled"
-        bg="black"
-        color="white"
-        w={INPUT_WIDTH}
-        sz="lg"
-        value={name}
-        onChange={(event) => {
-          setName(event.target.value);
-        }}
-      />
-      <Input
-        placeholder="Room Code"
-        variant="Filled"
-        bg="black"
-        color="white"
-        w={INPUT_WIDTH}
-        sz="lg"
-        value={roomCode}
-        onChange={(event) => {
-          // createRoomMutation();
-          setRoomCode(event.target.value);
-        }}
-      />
-      <Link to={`/room/${roomCode}`}>
-        <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
-          Join Room
-        </Button>
-      </Link>
-    </Stack>
-  );
-};
-
-const DashboardHeader = () => {
-  return (
-    <Stack direction="row" align="center">
+    <HStack direction="row" justifyContent="space-between">
       <RoomDetails />
       <EndRoom />
-    </Stack>
+    </HStack>
   );
 };
 
 const CopyIcon = <Image src={copy}></Image>;
 const RoomDetails = () => {
   const roomLink = "vulcan.play/pink-bear-porcupine";
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const [tooltipShowing, setTooltipShowing] = useState(false);
+  useEffect(() => {
+    if (tooltipShowing) {
+      const timerID = setTimeout(() => {
+        setTooltipShowing(false);
+        if (buttonRef.current !== null) {
+          ReactTooltip.hide(buttonRef.current);
+        }
+      }, 1000);
+      return () => {
+        clearTimeout(timerID);
+      };
+    }
+  }, [tooltipShowing, buttonRef]);
 
   return (
-    <Stack direction="row">
+    <HStack>
       <Image src={vulcast} />
-      <Stack>
-        <Heading as="h3" size="medium">
+      <VStack justifyContent="space-between" h="100px">
+        <Heading as="h3" size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
         <Button
-          sz="lg"
-          bg="#9F7AEA"
-          color="white"
+          variant="solid"
           rightIcon={CopyIcon}
-          _hover={{ bg: "#733BE7" }}
+          justifyContent="space-between"
+          ref={buttonRef}
+          data-tip="Copied!"
+          data-event="click" // data-event overrides the default onClick handler
         >
           {roomLink}
         </Button>
-      </Stack>
-    </Stack>
+        <ReactTooltip
+          // TODO: style this tooltip with styled components
+          place="right"
+          type="light"
+          effect="solid"
+          globalEventOff="click"
+          afterShow={() => {
+            navigator.clipboard.writeText(roomLink);
+            setTooltipShowing(true);
+          }}
+        />
+      </VStack>
+    </HStack>
   );
 };
 
 const EndRoom = () => {
+  // TODO: Hoist this session status upwards or into a redux store
   const [isHost, setIsHost] = useState(true);
-  return (
-    <Stack spacing="40px" alignItems="center" paddingTop="34px">
-      <Button sz="lg" bg="#9F7AEA" color="white" _hover={{ bg: "#733BE7" }}>
-        {isHost ? "End Room" : "Leave Room"}
-      </Button>
-    </Stack>
-  );
+  return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
 };
 
-const grey = "#434343";
-const purple = "#9F7AEA";
-
 const TabButtons = () => {
-  const [curTab, setCurTab] = useState("player");
+  const { state, dispatch } = useContext(DashboardContext);
   return (
-    <Box align="left">
-      <ButtonGroup>
-        <Button
-          sz="lg"
-          bg={curTab === "player" ? grey : purple}
-          color="white"
-          _hover={{ bg: "#733BE7" }}
-          onClick={() => {
-            setCurTab("player");
-          }}
-        >
-          Players
-        </Button>
-        <Button
-          sz="lg"
-          bg={curTab === "controller" ? grey : purple}
-          color="white"
-          _hover={{ bg: "#733BE7" }}
-          onClick={() => {
-            setCurTab("controller");
-          }}
-        >
-          Controller Settings
-        </Button>
-        <Button
-          sz="lg"
-          bg={curTab === "stream" ? grey : purple}
-          color="white"
-          _hover={{ bg: "#733BE7" }}
-          onClick={() => {
-            setCurTab("stream");
-          }}
-        >
-          Game Stream
-        </Button>
-      </ButtonGroup>
-    </Box>
+    <ButtonGroup paddingTop="40px" w="400px" justifyContent="space-between">
+      <Button
+        variant="link"
+        color={state.tab === "player" ? "normPurple" : "white"}
+        onClick={() => {
+          dispatch({ type: "player" });
+        }}
+      >
+        Players
+      </Button>
+      <Button
+        variant="link"
+        color={state.tab === "controller" ? "normPurple" : "white"}
+        onClick={() => {
+          dispatch({ type: "controller" });
+        }}
+      >
+        Controller Settings
+      </Button>
+      <Button
+        variant="link"
+        color={state.tab === "stream" ? "normPurple" : "white"}
+        onClick={() => {
+          dispatch({ type: "stream" });
+        }}
+      >
+        Game Stream
+      </Button>
+    </ButtonGroup>
   );
 };
 
 const ControllerTab = () => {
-  return <Box>Controller Tab</Box>;
+  return (
+    <Box>
+      <Heading> Controller Tab </Heading>
+    </Box>
+  );
 };
 
 const StreamTab = () => {
-  return <Box>Stream Tab</Box>;
+  return (
+    <Box>
+      <Heading> Stream Tab </Heading>
+    </Box>
+  );
 };
