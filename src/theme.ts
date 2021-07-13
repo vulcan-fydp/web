@@ -7,12 +7,6 @@ export const theme = extendTheme({
     heading: "montserrat",
     body: "montserrat",
   },
-  fontSizes: {
-    sm: "18px",
-    md: "22px",
-    lg: "42px",
-    xl: "64px",
-  },
   colors: {
     black: "#282828",
   },

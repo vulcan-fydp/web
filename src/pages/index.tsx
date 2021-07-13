@@ -1,6 +1,6 @@
 import { Route, Switch } from "react-router";
 import { Home } from "./Home";
-import { Dashboard } from "./Dashboard/dashboard";
+import { Dashboard } from "pages/room/Room";
 import { LoginRouter } from "pages/login";
 import { RoomRouter } from "./room";
 

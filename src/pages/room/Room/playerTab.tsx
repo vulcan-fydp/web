@@ -1,6 +1,6 @@
 import { Stack, Heading, Button, Flex, Image } from "@chakra-ui/react";
-import profile from "./profile.png";
-import controller from "./controller.png";
+import profile from "resources/profile.png";
+import controller from "resources/controller.png";
 
 type PlayerInfo = {
   name: String;

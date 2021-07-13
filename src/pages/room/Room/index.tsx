@@ -12,8 +12,8 @@ import { useState } from "react";
 import { useCreateRoomMutation } from "./dashboard.generated";
 import { Link } from "react-router-dom";
 import { PlayerTab } from "./playerTab";
-import vulcast from "./vulcast.png";
-import copy from "./copy.png";
+import vulcast from "resources/vulcast.png";
+import copy from "resources/copy.png";
 
 // TODO: Cleanup
 const INPUT_WIDTH = "300px";
@@ -27,7 +27,7 @@ export const Dashboard = () => {
       padding="0 20px 100px 20px"
       minHeight="100vh"
     >
-      {showDashboard ? <DashboardImpl /> : <PreDashboard />}
+      {showDashboard ? <DashboardImpl /> : <JoinOrHostRoom />}
     </Center>
   );
 };
@@ -35,20 +35,6 @@ export const Dashboard = () => {
 type DashboardTab = "player" | "controller" | "stream";
 
 const DashboardImpl = () => {
-  // TODO: hardcode that the user is logged in
-  // TODO: vulcastGuid will be passed in as a param
-  const vulcastGuid = "guid";
-  const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
-    variables: {
-      vulcastGuid: vulcastGuid,
-    },
-  });
-  const [roomCode, setRoomCode] = useState("");
-
-  // Accessing the data
-  if (data?.createRoom.__typename === "Room") {
-    setRoomCode(data.createRoom.guid);
-  }
   const dashboardTab: DashboardTab = "player";
   const dashboardTabs = {
     player: <PlayerTab />,
@@ -61,47 +47,114 @@ const DashboardImpl = () => {
       <DashboardHeader />
       <TabButtons />
       {dashboardTabs[dashboardTab]}
-      {/* <Heading size="lg" textAlign="center" minWidth="80vw">
-        <Text as="span" color="#AEAEAE">
-          {roomCode === ""
-            ? "Start a room to start playing with your friends."
-            : "Room code: "}
-        </Text>
-        {roomCode}
-      </Heading>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <Button
-          w="150px"
-          sz="lg"
-          bg="#9F7AEA"
-          color="white"
-          marginTop="-0.5"
-          onClick={() => {
-            if (roomCode === "") {
-              createRoomMutation();
-              setRoomCode("vulcan.play/room/pink-bear-porcupine");
-            } else {
-              // TODO: call api to close the room
-              setRoomCode("");
-            }
-          }}
-        >
-          {roomCode === "" ? "Start a room" : "Close Room"}
-        </Button>
-        )} */}
     </Stack>
   );
 };
 
-const PreDashboard = () => {
+// TODO: Replace this with the JoinOrHostRoom changes
+const JoinOrHostRoom = () => {
   const [vulcastLinked, setVulcastLinked] = useState(true);
 
   return (
     <Stack direction="row" spacing="240px">
       {vulcastLinked ? <CreateRoom /> : <LinkVulcast />}
       <JoinRoom />
+    </Stack>
+  );
+};
+
+const LinkVulcast = () => {
+  return (
+    <Stack spacing="40px" alignItems="center">
+      <Heading as="h3" size="lg">
+        Link your Vulcast
+      </Heading>
+      <Button
+        w="200px"
+        sz="lg"
+        bg="#9F7AEA"
+        color="white"
+        onClick={() => {
+          // Call backend to start the room
+          // IF ready:
+          //   setShowDashboard(true)
+          // ELSE:
+          //   return an error modal
+        }}
+      >
+        Link Vulcast
+      </Button>
+    </Stack>
+  );
+};
+
+const CreateRoom = () => {
+  return (
+    <Stack spacing="40px" alignItems="center">
+      <Heading as="h3" size="lg">
+        Host a room
+      </Heading>
+      <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
+        Host Room
+      </Button>
+    </Stack>
+  );
+};
+
+const JoinRoom = () => {
+  const [roomCode, setRoomCode] = useState("");
+  const [name, setName] = useState("");
+
+  // TODO: hardcode that the user is logged in
+  // TODO: vulcastGuid will be passed in as a param
+  // const vulcastGuid = "guid";
+  // const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
+  //   variables: {
+  //     vulcastGuid: vulcastGuid,
+  //   },
+  // });
+  // const [roomCode, setRoomCode] = useState("");
+  // // Accessing the data
+  // if (data?.createRoom.__typename === "Room") {
+  //   setRoomCode(data.createRoom.guid);
+  // }
+
+  return (
+    <Stack spacing="40px" alignItems="center">
+      <Heading as="h3" size="lg">
+        Join a room
+      </Heading>
+      {/* TODO: if loading, show spinner instead of join room form */}
+      <Input
+        placeholder="Nickname"
+        variant="Filled"
+        bg="black"
+        color="white"
+        w={INPUT_WIDTH}
+        sz="lg"
+        value={name}
+        onChange={(event) => {
+          setName(event.target.value);
+        }}
+      />
+      <Input
+        placeholder="Room Code"
+        variant="Filled"
+        bg="black"
+        color="white"
+        w={INPUT_WIDTH}
+        sz="lg"
+        value={roomCode}
+        onChange={(event) => {
+          // createRoomMutation();
+          setRoomCode(event.target.value);
+        }}
+      />
+      <Link to={`/room/${roomCode}`}>
+        <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
+          Join Room
+        </Button>
+      </Link>
     </Stack>
   );
 };
@@ -203,83 +256,4 @@ const ControllerTab = () => {
 
 const StreamTab = () => {
   return <Box>Stream Tab</Box>;
-};
-
-const LinkVulcast = () => {
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Link your Vulcast
-      </Heading>
-      <Button
-        w="200px"
-        sz="lg"
-        bg="#9F7AEA"
-        color="white"
-        onClick={() => {
-          // Call backend to start the room
-          // IF ready:
-          //   setShowDashboard(true)
-          // ELSE:
-          //   return an error modal
-        }}
-      >
-        Link Vulcast
-      </Button>
-    </Stack>
-  );
-};
-
-const CreateRoom = () => {
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Host a room
-      </Heading>
-      <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
-        Start Room
-      </Button>
-    </Stack>
-  );
-};
-
-const JoinRoom = () => {
-  const [roomCode, setRoomCode] = useState("");
-  const [name, setName] = useState("");
-  return (
-    <Stack spacing="40px" alignItems="center">
-      <Heading as="h3" size="lg">
-        Join a room
-      </Heading>
-      <Input
-        placeholder="Nickname"
-        variant="Filled"
-        bg="black"
-        color="white"
-        w={INPUT_WIDTH}
-        sz="lg"
-        value={name}
-        onChange={(event) => {
-          setName(event.target.value);
-        }}
-      ></Input>
-      <Input
-        placeholder="Room Code"
-        variant="Filled"
-        bg="black"
-        color="white"
-        w={INPUT_WIDTH}
-        sz="lg"
-        value={roomCode}
-        onChange={(event) => {
-          setRoomCode(event.target.value);
-        }}
-      ></Input>
-      <Link to={`/room/${roomCode}`}>
-        <Button w="200px" sz="lg" bg="#9F7AEA" color="white">
-          Join Room
-        </Button>
-      </Link>
-    </Stack>
-  );
 };
