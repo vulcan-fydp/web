@@ -1,5 +1,4 @@
 import {
-  Stack,
   Heading,
   Box,
   Button,
@@ -19,7 +18,6 @@ import {
   useState,
 } from "react";
 import { HeroPage } from "components/HeroPage";
-import { PlayerTab } from "./playerTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 import ReactTooltip from "react-tooltip";
@@ -83,7 +81,6 @@ const ShareAndCloseRoomHeader = () => {
   );
 };
 
-const CopyIcon = <Image src={copy}></Image>;
 const RoomDetails = () => {
   const roomLink = "vulcan.play/pink-bear-porcupine";
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -112,7 +109,7 @@ const RoomDetails = () => {
         </Heading>
         <Button
           variant="solid"
-          rightIcon={CopyIcon}
+          rightIcon={<Image src={copy}></Image>}
           justifyContent="space-between"
           ref={buttonRef}
           data-tip="Copied!"
@@ -174,6 +171,15 @@ const TabButtons = () => {
         Game Stream
       </Button>
     </ButtonGroup>
+  );
+};
+
+// TODO: Move these tabs into their own file
+const PlayerTab = () => {
+  return (
+    <Box>
+      <Heading> Player Tab </Heading>
+    </Box>
   );
 };
 
