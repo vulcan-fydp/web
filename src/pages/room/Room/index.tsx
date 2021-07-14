@@ -11,11 +11,9 @@ import {
 } from "@chakra-ui/react";
 import {
   useEffect,
-  useRef,
   useState,
 } from "react";
 import {
-  BrowserRouter as Router,
   Link,
   Switch,
   Route,
@@ -116,7 +114,7 @@ const RoomDetails = () => {
 
 const EndRoom = () => {
   // TODO: Hoist this session status upwards or into a redux store
-  const [isHost, setIsHost] = useState(true);
+  const isHost = true;
   return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
 };
 
@@ -127,7 +125,7 @@ const TabButtons = () => {
     <HStack w="400px" justifyContent="space-between">
       <Link to={`/room/${roomCode}/players`}>
         <Text
-          color={tab == "player" ? "purple" : "white"}
+          color={tab === "player" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
@@ -140,7 +138,7 @@ const TabButtons = () => {
       </Link>
       <Link to={`/room/${roomCode}/controller`}>
         <Text
-          color={tab == "controller" ? "purple" : "white"}
+          color={tab === "controller" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
@@ -153,7 +151,7 @@ const TabButtons = () => {
       </Link>
       <Link to={`/room/${roomCode}/stream`}>
         <Text
-          color={tab == "stream" ? "purple" : "white"}
+          color={tab === "stream" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
