@@ -28,7 +28,7 @@ type DashboardTab = "player" | "controller" | "stream";
 
 // TODO: Replace hardcoded values
 const roomCode = "pink-bear-porcupine";
-const roomUrl = "vulcan.play/room/" + roomCode;
+const roomUrl = "localhost:3000/room/" + roomCode;
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
