@@ -108,6 +108,7 @@ const EndRoom = () => {
 };
 
 const TabButtons = () => {
+  // TODO: Fix bug where initially landing on a dashboard tab will make the stream tab look selected
   const [tab, setTab] = useState<DashboardTab>("stream");
 
   return (
