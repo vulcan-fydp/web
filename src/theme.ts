@@ -10,7 +10,7 @@ export const vulcanTheme = extendTheme({
   colors: {
     black: "#282828",
     grey: "#434343",
-    normPurple: "#9F7AEA",
+    purple: "#9F7AEA",
     darkPurple: "#733BE7",
   },
   components: {
@@ -33,7 +33,7 @@ export const vulcanTheme = extendTheme({
       variants: {
         solid: {
           sz: "lg",
-          bg: "normPurple",
+          bg: "purple",
           _hover: {
             bg: "darkPurple",
           },
@@ -41,7 +41,8 @@ export const vulcanTheme = extendTheme({
         solidSmall: {
           height: "28px",
           padding: "0 12px",
-          bg: "normPurple",
+          bg: "purple",
+          color: "white",
           _hover: {
             bg: "darkPurple",
           },
@@ -49,7 +50,7 @@ export const vulcanTheme = extendTheme({
         link: {
           color: "white",
           _hover: {
-            color: "normPurple",
+            color: "purple",
             textDecoration: "none",
           },
         },
@@ -57,7 +58,7 @@ export const vulcanTheme = extendTheme({
           ...theme.components.Button.variants.link,
           height: "28px",
           padding: "0 12px",
-          color: "normPurple",
+          color: "purple",
           _hover: {
             color: "darkPurple",
             textDecoration: "none",
