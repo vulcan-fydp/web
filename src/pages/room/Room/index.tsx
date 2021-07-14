@@ -96,17 +96,6 @@ const RoomDetails = () => {
             {roomUrl}
           </Button>
         </Tooltip>
-        {/* <ReactTooltip
-          // TODO: style this tooltip with styled components
-          place="right"
-          type="light"
-          effect="solid"
-          globalEventOff="click"
-          afterShow={() => {
-            
-            setTooltipShowing(true);
-          }}
-        /> */}
       </VStack>
     </HStack>
   );
