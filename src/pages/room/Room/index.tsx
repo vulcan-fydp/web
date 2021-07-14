@@ -11,12 +11,9 @@ import {
 } from "@chakra-ui/react";
 import {
   useEffect,
-  useRef,
   useState,
 } from "react";
-import ReactTooltip from "react-tooltip";
 import {
-  BrowserRouter as Router,
   Link,
   Switch,
   Route,
@@ -89,7 +86,7 @@ const RoomDetails = () => {
   return (
     <HStack>
       <Image src={vulcast} />
-      <VStack justifyContent="space-between" h="100px">
+      <VStack align="left" justifyContent="space-between" h="100px">
         <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
@@ -106,17 +103,6 @@ const RoomDetails = () => {
             {roomUrl}
           </Button>
         </Tooltip>
-        {/* <ReactTooltip
-          // TODO: style this tooltip with styled components
-          place="right"
-          type="light"
-          effect="solid"
-          globalEventOff="click"
-          afterShow={() => {
-            
-            setTooltipShowing(true);
-          }}
-        /> */}
       </VStack>
     </HStack>
   );
@@ -124,18 +110,19 @@ const RoomDetails = () => {
 
 const EndRoom = () => {
   // TODO: Hoist this session status upwards or into a redux store
-  const [isHost, setIsHost] = useState(true);
+  const isHost = true;
   return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
 };
 
 const TabButtons = () => {
+  // TODO: Fix bug where initially landing on a dashboard tab will make the stream tab look selected
   const [tab, setTab] = useState<DashboardTab>("stream");
 
   return (
     <HStack w="400px" justifyContent="space-between">
       <Link to={`/room/${roomCode}/players`}>
         <Text
-          color={tab == "player" ? "purple" : "white"}
+          color={tab === "player" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
@@ -148,7 +135,7 @@ const TabButtons = () => {
       </Link>
       <Link to={`/room/${roomCode}/controller`}>
         <Text
-          color={tab == "controller" ? "purple" : "white"}
+          color={tab === "controller" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
@@ -161,7 +148,7 @@ const TabButtons = () => {
       </Link>
       <Link to={`/room/${roomCode}/stream`}>
         <Text
-          color={tab == "stream" ? "purple" : "white"}
+          color={tab === "stream" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
           _hover={{
