@@ -2,21 +2,23 @@ import {
   Heading,
   Box,
   Button,
-  ButtonGroup,
   Image,
   VStack,
   HStack,
   Divider,
+  Text,
 } from "@chakra-ui/react";
 import {
-  createContext,
-  useContext,
   useEffect,
-  useMemo,
-  useReducer,
   useRef,
   useState,
 } from "react";
+import {
+  BrowserRouter as Router,
+  Link,
+  Switch,
+  Route,
+} from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
@@ -24,51 +26,32 @@ import ReactTooltip from "react-tooltip";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-interface TabState {
-  tab: DashboardTab;
-}
-
-type TabAction =
-  | { type: "player" }
-  | { type: "controller" }
-  | { type: "stream" };
-
-function tabReducer(state: TabState, action: TabAction) {
-  return { tab: action.type };
-}
-
-const initialTabState: TabState = {
-  tab: "player",
-};
-
-const DashboardContext = createContext<{
-  state: TabState;
-  dispatch: React.Dispatch<TabAction>;
-}>({ state: initialTabState, dispatch: () => null });
+// TODO: Replace hardcoded values
+const roomCode = "pink-bear-porcupine";
+const roomUrl = "vulcan.play/room/" + roomCode;
 
 export const Dashboard = () => {
-  const dashboardTabs = {
-    player: <PlayerTab />,
-    controller: <ControllerTab />,
-    stream: <StreamTab />,
-  };
-
-  // Create state and dispatch for the tab state
-  const [state, dispatch] = useReducer(tabReducer, initialTabState);
-  // Keep the object reference stable if nothing in the state has changed
-  const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-
   return (
-    <DashboardContext.Provider value={contextValue}>
+    <Router>
       <HeroPage isDashboard={true}>
         <VStack spacing="20px" paddingTop="64px" alignItems="left" w="1000px">
           <ShareAndCloseRoomHeader />
           <TabButtons />
           <Divider borderWidth="1px" borderColor="white" opacity={1} />
-          {dashboardTabs[state.tab]}
+          <Switch>
+            <Route path="/players">
+              <PlayerTab />
+            </Route>
+            <Route path="/controller">
+              <ControllerTab />
+            </Route>
+            <Route path="/stream">
+              <StreamTab />
+            </Route>
+          </Switch>
         </VStack>
       </HeroPage>
-    </DashboardContext.Provider>
+    </Router>
   );
 };
 
@@ -82,7 +65,6 @@ const ShareAndCloseRoomHeader = () => {
 };
 
 const RoomDetails = () => {
-  const roomLink = "vulcan.play/pink-bear-porcupine";
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [tooltipShowing, setTooltipShowing] = useState(false);
@@ -115,7 +97,7 @@ const RoomDetails = () => {
           data-tip="Copied!"
           data-event="click" // data-event overrides the default onClick handler
         >
-          {roomLink}
+          {roomUrl}
         </Button>
         <ReactTooltip
           // TODO: style this tooltip with styled components
@@ -124,7 +106,7 @@ const RoomDetails = () => {
           effect="solid"
           globalEventOff="click"
           afterShow={() => {
-            navigator.clipboard.writeText(roomLink);
+            navigator.clipboard.writeText(roomUrl);
             setTooltipShowing(true);
           }}
         />
@@ -140,37 +122,50 @@ const EndRoom = () => {
 };
 
 const TabButtons = () => {
-  const { state, dispatch } = useContext(DashboardContext);
+  const [tab, setTab] = useState<DashboardTab>("stream");
+
   return (
-    <ButtonGroup paddingTop="40px" w="400px" justifyContent="space-between">
-      <Button
-        variant="link"
-        color={state.tab === "player" ? "normPurple" : "white"}
-        onClick={() => {
-          dispatch({ type: "player" });
-        }}
-      >
-        Players
-      </Button>
-      <Button
-        variant="link"
-        color={state.tab === "controller" ? "normPurple" : "white"}
-        onClick={() => {
-          dispatch({ type: "controller" });
-        }}
-      >
-        Controller Settings
-      </Button>
-      <Button
-        variant="link"
-        color={state.tab === "stream" ? "normPurple" : "white"}
-        onClick={() => {
-          dispatch({ type: "stream" });
-        }}
-      >
-        Game Stream
-      </Button>
-    </ButtonGroup>
+    <HStack w="400px" justifyContent="space-between">
+      <Link to={`/room/${roomCode}/players`}>
+        <Text
+          color={tab == "player" ? "purple" : "white"}
+          fontWeight="semibold"
+          textDecoration="none"
+          _onHover={{
+            color: "purple",
+          }}
+          _onClick={() => setTab("player")}
+        >
+          Players
+        </Text>
+      </Link>
+      <Link to={`/room/${roomCode}/controller`}>
+        <Text
+          color={tab == "controller" ? "purple" : "white"}
+          fontWeight="semibold"
+          textDecoration="none"
+          _onHover={{
+            color: "purple",
+          }}
+          _onClick={() => setTab("controller")}
+        >
+          Controller Settings
+        </Text>
+      </Link>
+      <Link to={`/room/${roomCode}/stream`}>
+        <Text
+          color={tab == "stream" ? "purple" : "white"}
+          fontWeight="semibold"
+          textDecoration="none"
+          _onHover={{
+            color: "purple",
+          }}
+          _onClick={() => setTab("stream")}
+        >
+          Game Stream
+        </Text>
+      </Link>
+    </HStack>
   );
 };
 

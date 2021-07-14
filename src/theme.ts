@@ -10,7 +10,7 @@ export const theme = extendTheme({
   colors: {
     black: "#282828",
     grey: "#434343",
-    normPurple: "#9F7AEA",
+    purple: "#9F7AEA",
     darkPurple: "#733BE7",
   },
   components: {
@@ -32,7 +32,7 @@ export const theme = extendTheme({
       variants: {
         solid: {
           sz: "lg",
-          bg: "normPurple",
+          bg: "purple",
           color: "white",
           _hover: {
             bg: "darkPurple",
@@ -40,7 +40,7 @@ export const theme = extendTheme({
         },
         link: {
           _hover: {
-            color: "normPurple",
+            color: "purple",
             textDecoration: "none",
           },
         },

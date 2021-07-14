@@ -12,11 +12,6 @@ export const Pages = () => (
     <Route path="/room" render={() => <RoomRouter />} />
     <Route path="/login" render={() => <LoginRouter />} />
 
-    <Route path="/dashboard" render={() => <Dashboard />} />
-    <Route path="/dashboard/controller" />
-    <Route path="/dashboard/rooms" />
-    <Route path="/dashboard/account" />
-
     <Route path="/help-center" />
     <Route path="/help-center/:helpCenterArticleGuid" />
 
