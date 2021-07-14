@@ -7,6 +7,7 @@ import {
   HStack,
   Divider,
   Text,
+  Tooltip
 } from "@chakra-ui/react";
 import {
   useEffect,
@@ -23,7 +24,6 @@ import {
 import { HeroPage } from "components/HeroPage";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
-import ReactTooltip from "react-tooltip";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -66,22 +66,17 @@ const ShareAndCloseRoomHeader = () => {
 };
 
 const RoomDetails = () => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
       const timerID = setTimeout(() => {
         setTooltipShowing(false);
-        if (buttonRef.current !== null) {
-          ReactTooltip.hide(buttonRef.current);
-        }
       }, 1000);
       return () => {
         clearTimeout(timerID);
       };
     }
-  }, [tooltipShowing, buttonRef]);
+  }, [tooltipShowing]);
 
   return (
     <HStack>
@@ -90,27 +85,30 @@ const RoomDetails = () => {
         <Heading as="h3" size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
-        <Button
-          variant="solid"
-          rightIcon={<Image src={copy}></Image>}
-          justifyContent="space-between"
-          ref={buttonRef}
-          data-tip="Copied!"
-          data-event="click" // data-event overrides the default onClick handler
-        >
-          {roomUrl}
-        </Button>
-        <ReactTooltip
+        <Tooltip label="Copied!" placement="right" isOpen={tooltipShowing} bg="purple" color="white">
+          <Button
+            variant="solid"
+            rightIcon={<Image src={copy}></Image>}
+            justifyContent="space-between"
+            onClick={() => {
+              navigator.clipboard.writeText(roomUrl);
+              setTooltipShowing(true);
+            }}
+          >
+            {roomUrl}
+          </Button>
+        </Tooltip>
+        {/* <ReactTooltip
           // TODO: style this tooltip with styled components
           place="right"
           type="light"
           effect="solid"
           globalEventOff="click"
           afterShow={() => {
-            navigator.clipboard.writeText(roomUrl);
+            
             setTooltipShowing(true);
           }}
-        />
+        /> */}
       </VStack>
     </HStack>
   );
