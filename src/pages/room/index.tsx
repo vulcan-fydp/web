@@ -7,8 +7,8 @@ export const RoomRouter = () => {
 
   return (
     <Switch>
-      <Route exact path={path} render={() => null} />
-      <Route exact path={`${path}/:roomGuid`} render={() =><Dashboard />} />
+      <Route exact path={`${path}/:roomGuid`} render={() => null} />
+      <Route path={`${path}/:roomGuid`} render={() => <Dashboard />} />
     </Switch>
   );
 };

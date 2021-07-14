@@ -18,6 +18,7 @@ import {
   Link,
   Switch,
   Route,
+  useRouteMatch
 } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import vulcast from "resources/vulcast.png";
@@ -31,27 +32,27 @@ const roomCode = "pink-bear-porcupine";
 const roomUrl = "vulcan.play/room/" + roomCode;
 
 export const Dashboard = () => {
+  const { path } = useRouteMatch();
+
   return (
-    <Router>
       <HeroPage isDashboard={true}>
         <VStack spacing="20px" paddingTop="64px" alignItems="left" w="1000px">
           <ShareAndCloseRoomHeader />
           <TabButtons />
           <Divider borderWidth="1px" borderColor="white" opacity={1} />
           <Switch>
-            <Route path="/players">
+            <Route path={`${path}/players`}>
               <PlayerTab />
             </Route>
-            <Route path="/controller">
+            <Route path={`${path}/controller`}>
               <ControllerTab />
             </Route>
-            <Route path="/stream">
+            <Route path={`${path}/stream`}>
               <StreamTab />
             </Route>
           </Switch>
         </VStack>
       </HeroPage>
-    </Router>
   );
 };
 
@@ -131,10 +132,10 @@ const TabButtons = () => {
           color={tab == "player" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
-          _onHover={{
+          _hover={{
             color: "purple",
           }}
-          _onClick={() => setTab("player")}
+          onClick={() => setTab("player")}
         >
           Players
         </Text>
@@ -144,10 +145,10 @@ const TabButtons = () => {
           color={tab == "controller" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
-          _onHover={{
+          _hover={{
             color: "purple",
           }}
-          _onClick={() => setTab("controller")}
+          onClick={() => setTab("controller")}
         >
           Controller Settings
         </Text>
@@ -157,10 +158,10 @@ const TabButtons = () => {
           color={tab == "stream" ? "purple" : "white"}
           fontWeight="semibold"
           textDecoration="none"
-          _onHover={{
+          _hover={{
             color: "purple",
           }}
-          _onClick={() => setTab("stream")}
+          onClick={() => setTab("stream")}
         >
           Game Stream
         </Text>
