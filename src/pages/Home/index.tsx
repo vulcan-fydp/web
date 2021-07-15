@@ -31,8 +31,8 @@ export const Home = () => {
           with your friends.
         </Heading>
       </Stack>
-      <MailingListForm />
-      {/* <JoinRoomForm /> */}
+      {/* <MailingListForm /> */}
+      <JoinRoomForm />
     </Box>
   );
 };
@@ -79,18 +79,6 @@ const JoinRoomForm = () => {
   return (
     <Stack paddingTop={FORM_TOP_PADDING} spacing="16px" alignItems="center">
       <Input
-        placeholder="Room Code"
-        variant="Filled"
-        bg="black"
-        color="white"
-        w={INPUT_WIDTH}
-        sz="lg"
-        value={roomCode}
-        onChange={(event) => {
-          setRoomCode(event.target.value);
-        }}
-      ></Input>
-      <Input
         placeholder="Nickname"
         variant="Filled"
         bg="black"
@@ -100,6 +88,18 @@ const JoinRoomForm = () => {
         value={name}
         onChange={(event) => {
           setName(event.target.value);
+        }}
+      ></Input>
+      <Input
+        placeholder="Room Code"
+        variant="Filled"
+        bg="black"
+        color="white"
+        w={INPUT_WIDTH}
+        sz="lg"
+        value={roomCode}
+        onChange={(event) => {
+          setRoomCode(event.target.value);
         }}
       ></Input>
       <Link to={`/room/${roomCode}`}>

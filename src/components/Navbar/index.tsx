@@ -1,4 +1,4 @@
-import { Flex, Link, Center, Heading, Box, Text } from "@chakra-ui/react";
+import { Flex, Link, Center, Box, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 interface NavbarProps {
@@ -23,7 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       >
         <Box>
           <Link as={RouterLink} to="/">
-            <Text fontSize="32px" color="purple.400" fontWeight="bold">
+            <Text fontSize="32px" color="purple" fontWeight="bold">
               V
             </Text>
           </Link>
