@@ -14,7 +14,6 @@ export const RoomRouter = () => {
         path={`${path}/:roomGuid`}
         render={() => <JoinOrHostRoom />}
       />
-      <Route exact path={`${path}/:roomGuid`} render={() => null} />
       <Route path={`${path}/:roomGuid`} render={() => <Dashboard />} />
     </Switch>
   );

@@ -1,20 +1,16 @@
-import React from "react";
-import { HeroPage } from "components/HeroPage";
 import {
+  Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   Input,
-  Button,
   Text,
-  Box,
-  VStack,
-  Flex,
 } from "@chakra-ui/react";
+import { HeroPage } from "components/HeroPage";
+import React, { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import { useLogInMutation } from "./logIn.generated";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { useState } from "react";
 
 interface LoginForm {
   email: string;
@@ -50,7 +46,7 @@ export const LoginPage = () => {
 
       switch (logInResult.logInAsUser.__typename) {
         case "User":
-          history.push("/dashboard");
+          history.push("/room");
           break;
         case "AuthenticationError":
           setResponseError(logInResult.logInAsUser.message);
