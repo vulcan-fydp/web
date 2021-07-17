@@ -1,0 +1,14 @@
+
+query PlayersInRoom {
+  user {
+    vulcasts {
+      room {
+        roomSessions {
+          id
+          nickname
+          controllerNumber
+        }
+      }
+    }
+  }
+}

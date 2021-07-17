@@ -7,18 +7,10 @@ import {
   HStack,
   Divider,
   Text,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react";
-import {
-  useEffect,
-  useState,
-} from "react";
-import {
-  Link,
-  Switch,
-  Route,
-  useRouteMatch
-} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
 import vulcast from "resources/vulcast.png";
@@ -34,30 +26,34 @@ export const Dashboard = () => {
   const { path } = useRouteMatch();
 
   return (
-      <HeroPage isDashboard={true}>
-        <VStack
-          spacing="20px"
-          paddingTop="64px"
-          alignItems="left"
-          width="100%"
-          maxWidth="1000px"
-        >
-          <ShareAndCloseRoomHeader />
-          <TabButtons />
-          <Divider borderWidth="1px" borderColor="white" opacity={1} />
-          <Switch>
-            <Route path={`${path}/players`}>
+    <HeroPage isDashboard={true}>
+      <VStack
+        spacing="20px"
+        paddingTop="64px"
+        alignItems="left"
+        width="100%"
+        maxWidth="1000px"
+      >
+        <ShareAndCloseRoomHeader />
+        <Switch>
+          <Route path={`${path}/players`}>
+            <TabContainer tab="player">
               <PlayerTab />
-            </Route>
-            <Route path={`${path}/controller`}>
+            </TabContainer>
+          </Route>
+          <Route path={`${path}/controller`}>
+            <TabContainer tab="controller">
               <ControllerTab />
-            </Route>
-            <Route path={`${path}/stream`}>
+            </TabContainer>
+          </Route>
+          <Route path={`${path}/stream`}>
+            <TabContainer tab="stream">
               <StreamTab />
-            </Route>
-          </Switch>
-        </VStack>
-      </HeroPage>
+            </TabContainer>
+          </Route>
+        </Switch>
+      </VStack>
+    </HeroPage>
   );
 };
 
@@ -90,7 +86,13 @@ const RoomDetails = () => {
         <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
-        <Tooltip label="Copied!" placement="right" isOpen={tooltipShowing} bg="purple" color="white">
+        <Tooltip
+          label="Copied!"
+          placement="right"
+          isOpen={tooltipShowing}
+          bg="purple"
+          color="white"
+        >
           <Button
             variant="solid"
             rightIcon={<Image src={copy}></Image>}
@@ -109,57 +111,60 @@ const RoomDetails = () => {
 };
 
 const EndRoom = () => {
-  // TODO: Hoist this session status upwards or into a redux store
+  // TODO: Use the session context
   const isHost = true;
   return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
 };
 
-const TabButtons = () => {
-  // TODO: Fix bug where initially landing on a dashboard tab will make the stream tab look selected
-  const [tab, setTab] = useState<DashboardTab>("stream");
+interface TabContainerProps {
+  tab: DashboardTab;
+  children: React.ReactNode;
+}
 
+const TabContainer: React.FC<TabContainerProps> = ({ tab, children }) => {
   return (
-    <HStack w="400px" justifyContent="space-between">
-      <Link to={`/room/${roomCode}/players`}>
-        <Text
-          color={tab === "player" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("player")}
-        >
-          Players
-        </Text>
-      </Link>
-      <Link to={`/room/${roomCode}/controller`}>
-        <Text
-          color={tab === "controller" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("controller")}
-        >
-          Controller Settings
-        </Text>
-      </Link>
-      <Link to={`/room/${roomCode}/stream`}>
-        <Text
-          color={tab === "stream" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("stream")}
-        >
-          Game Stream
-        </Text>
-      </Link>
-    </HStack>
+    <>
+      <HStack w="400px" justifyContent="space-between">
+        <Link to={`/room/${roomCode}/players`}>
+          <Text
+            color={tab === "player" ? "purple" : "white"}
+            fontWeight="semibold"
+            textDecoration="none"
+            _hover={{
+              color: "purple",
+            }}
+          >
+            Players
+          </Text>
+        </Link>
+        <Link to={`/room/${roomCode}/controller`}>
+          <Text
+            color={tab === "controller" ? "purple" : "white"}
+            fontWeight="semibold"
+            textDecoration="none"
+            _hover={{
+              color: "purple",
+            }}
+          >
+            Controller Settings
+          </Text>
+        </Link>
+        <Link to={`/room/${roomCode}/stream`}>
+          <Text
+            color={tab === "stream" ? "purple" : "white"}
+            fontWeight="semibold"
+            textDecoration="none"
+            _hover={{
+              color: "purple",
+            }}
+          >
+            Game Stream
+          </Text>
+        </Link>
+      </HStack>
+      <Divider borderWidth="1px" borderColor="white" opacity={1} />
+      {children}
+    </>
   );
 };
 
