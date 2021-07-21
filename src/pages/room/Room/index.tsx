@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
+import { StreamTab } from "pages/room/Room/streamTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 
@@ -154,14 +155,6 @@ const ControllerTab = () => {
   return (
     <Box>
       <Heading> Controller Tab </Heading>
-    </Box>
-  );
-};
-
-const StreamTab = () => {
-  return (
-    <Box>
-      <Heading> Stream Tab </Heading>
     </Box>
   );
 };

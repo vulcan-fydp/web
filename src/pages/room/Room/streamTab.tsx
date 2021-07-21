@@ -6,8 +6,8 @@ import {
 export const StreamTab: React.FC = () => {
   return (
     <>
-      <Heading size="md">Connected Players</Heading>
-      <VStack alignItems="left" spacing="20px">
+      <VStack alignItems="center" spacing="20px">
+        <video></video>
       </VStack>
     </>
   );
