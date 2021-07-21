@@ -74,7 +74,7 @@ const MailingListForm = () => {
 };
 
 const JoinRoomForm = () => {
-  const [roomCode, setRoomCode] = useState("");
+  const [roomId, setRoomId] = useState("");
   const [name, setName] = useState("");
   return (
     <Stack paddingTop={FORM_TOP_PADDING} spacing="16px" alignItems="center">
@@ -97,12 +97,12 @@ const JoinRoomForm = () => {
         color="white"
         w={INPUT_WIDTH}
         sz="lg"
-        value={roomCode}
+        value={roomId}
         onChange={(event) => {
-          setRoomCode(event.target.value);
+          setRoomId(event.target.value);
         }}
       ></Input>
-      <Link to={`/room/${roomCode}`}>
+      <Link to={`/room/${roomId}/stream`}>
         <Button w="100px" sz="lg" bg="#9F7AEA" color="white" marginTop="-0.5">
           Play
         </Button>
