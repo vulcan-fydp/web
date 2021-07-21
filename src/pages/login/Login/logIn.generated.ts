@@ -13,7 +13,7 @@ export type LogInMutation = (
   { __typename?: 'Mutation' }
   & { logInAsUser: (
     { __typename: 'User' }
-    & Pick<Types.User, 'guid' | 'email' | 'firstName' | 'lastName'>
+    & Pick<Types.User, 'id' | 'email' | 'firstName' | 'lastName'>
   ) | (
     { __typename: 'AuthenticationError' }
     & Pick<Types.AuthenticationError, 'message'>
@@ -26,7 +26,7 @@ export const LogInDocument = gql`
   logInAsUser(email: $email, password: $password) {
     __typename
     ... on User {
-      guid
+      id
       email
       firstName
       lastName
