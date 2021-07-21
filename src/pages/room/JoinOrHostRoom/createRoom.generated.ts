@@ -13,6 +13,10 @@ export type CreateRoomMutation = (
   & { createRoom: (
     { __typename: 'Room' }
     & Pick<Types.Room, 'id'>
+    & { relay: (
+      { __typename?: 'Relay' }
+      & Pick<Types.Relay, 'hostName'>
+    ) }
   ) | (
     { __typename: 'AuthenticationError' }
     & Pick<Types.AuthenticationError, 'message'>
@@ -30,11 +34,14 @@ export type CreateRoomMutation = (
 
 
 export const CreateRoomDocument = gql`
-    mutation CreateRoom($vulcastId: ID!) {
+    mutation createRoom($vulcastId: ID!) {
   createRoom(vulcastId: $vulcastId) {
     __typename
     ... on Room {
       id
+      relay {
+        hostName
+      }
     }
     ... on AuthenticationError {
       message

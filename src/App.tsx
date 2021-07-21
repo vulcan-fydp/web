@@ -7,13 +7,16 @@ import { BrowserRouter } from "react-router-dom";
 import { apolloClient } from "./apollo";
 import { Pages } from "./pages";
 import { vulcanTheme } from "./theme";
+import { SessionContext } from "contexts/session";
 
 export const App = () => (
   <ChakraProvider theme={vulcanTheme}>
     <ApolloProvider client={apolloClient}>
-      <BrowserRouter>
-        <Pages />
-      </BrowserRouter>
+      <SessionContext>
+        <BrowserRouter>
+          <Pages />
+        </BrowserRouter>
+      </SessionContext>
     </ApolloProvider>
   </ChakraProvider>
 );

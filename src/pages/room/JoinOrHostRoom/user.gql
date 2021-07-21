@@ -1,0 +1,10 @@
+query User {
+  user {
+    vulcasts {
+      id
+    }
+  }
+  room {
+    id
+  }
+}

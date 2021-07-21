@@ -1,0 +1,14 @@
+mutation joinRoom($roomId: ID!, $nickname: String!) {
+  joinRoom(roomId: $roomId, nickname: $nickname) {
+    __typename
+    ... on RoomConnection {
+      accessToken
+      room {
+        id
+        relay {
+          hostName
+        }
+      }
+    }
+  }
+}

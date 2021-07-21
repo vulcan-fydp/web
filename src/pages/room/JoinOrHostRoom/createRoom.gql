@@ -1,8 +1,11 @@
-mutation CreateRoom($vulcastId: ID!) {
+mutation createRoom($vulcastId: ID!) {
   createRoom(vulcastId: $vulcastId) {
     __typename
     ... on Room {
       id
+      relay {
+        hostName
+      }
     }
     ... on AuthenticationError {
       message
