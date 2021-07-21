@@ -14,6 +14,25 @@ export const vulcanTheme = extendTheme({
     darkPurple: "#733BE7",
   },
   components: {
+    Tabs: {
+      variants: {
+        line: {
+          tab: {
+            color: "white",
+            fontWeight: "semibold",
+            _selected: {
+              color: "purple",
+              borderColor: "purple",
+              borderTopColor: "purple",
+              borderBottomColor: "purple",
+            },
+            _active: {
+              color: "purple",
+            },
+          },
+        },
+      },
+    },
     Heading: {
       baseStyle: {
         color: "white",

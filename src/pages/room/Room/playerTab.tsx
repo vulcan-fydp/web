@@ -11,27 +11,12 @@ import controllerIcon from "resources/controller.png";
 import spectatorIcon from "resources/spectator.png";
 import { usePlayersInRoomQuery } from "./playersInRoom.generated";
 
-type Controller =
-  | "Controller 1"
-  | "Controller 2"
-  | "Controller 3"
-  | "Controller 4"
-  | "Controller 5"
-  | "Controller 6"
-  | "Controller 7"
-  | "Controller 8"
-  | "Spectator";
-
-const numberToController: Map<Number, Controller> = new Map([
-  [1, "Controller 1"],
-  [2, "Controller 2"],
-  [3, "Controller 3"],
-  [4, "Controller 4"],
-  [5, "Controller 5"],
-  [6, "Controller 6"],
-  [7, "Controller 7"],
-  [8, "Controller 8"],
-]);
+function getControllerText(controller: number | null | undefined) {
+  if (controller === null || controller === undefined) {
+    return "Spectator";
+  }
+  return `Controller ${controller}`;
+}
 
 const playerLoadingError =
   "There was an error loading players, please try again.";
@@ -63,12 +48,8 @@ export function PlayerTab() {
             return (
               <Player
                 key={nickname}
-                player={nickname}
-                controller={
-                  controllerNumber && numberToController.has(controllerNumber)
-                    ? numberToController.get(controllerNumber)!
-                    : "Spectator"
-                }
+                nickname={nickname}
+                controller={controllerNumber}
               />
             );
           }
@@ -78,12 +59,12 @@ export function PlayerTab() {
   );
 }
 
-interface PlayerProperties {
-  player: String;
-  controller: Controller;
+interface PlayerProps {
+  nickname: String;
+  controller: number | null | undefined;
 }
 
-const Player = (playerProps: PlayerProperties) => {
+const Player = ({ nickname, controller }: PlayerProps) => {
   return (
     <HStack
       borderWidth="1px"
@@ -94,31 +75,31 @@ const Player = (playerProps: PlayerProperties) => {
       alignItems="center"
       maxWidth="1000px"
     >
-      <PlayerModal playerName={playerProps.player} />
-      <ControllerModal controller={playerProps.controller} />
-      <ModerationModal />
+      <PlayerInfo nickname={nickname} />
+      <ControllerWidget controller={getControllerText(controller)} />
+      <ModerationWidget />
     </HStack>
   );
 };
 
 interface PlayerModalProps {
-  playerName: String;
+  nickname: String;
 }
 
-const PlayerModal: React.FC<PlayerModalProps> = ({ playerName }) => {
+const PlayerInfo: React.FC<PlayerModalProps> = ({ nickname }) => {
   return (
     <HStack direction="row" alignItems="center" width="160px">
       <Image src={profile} />
-      <Heading size="sm">{playerName}</Heading>
+      <Heading size="sm">{nickname}</Heading>
     </HStack>
   );
 };
 
 interface ControllerModalProps {
-  controller: Controller;
+  controller: String;
 }
 
-const ControllerModal: React.FC<ControllerModalProps> = ({ controller }) => {
+const ControllerWidget: React.FC<ControllerModalProps> = ({ controller }) => {
   return (
     <HStack direction="row" alignItems="center">
       <HStack width="160px">
@@ -132,6 +113,6 @@ const ControllerModal: React.FC<ControllerModalProps> = ({ controller }) => {
   );
 };
 
-const ModerationModal = () => {
+const ModerationWidget = () => {
   return <Button variant="kickLink">Kick</Button>;
 };

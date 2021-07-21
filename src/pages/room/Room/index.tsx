@@ -5,12 +5,15 @@ import {
   Image,
   VStack,
   HStack,
-  Divider,
-  Text,
   Tooltip,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  TabPanels,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { NavLink, Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
 import vulcast from "resources/vulcast.png";
@@ -35,19 +38,13 @@ export const Dashboard = () => {
         <ShareAndCloseRoomHeader />
         <Switch>
           <Route path={`${path}/players`}>
-            <TabContainer tab="player">
-              <PlayerTab />
-            </TabContainer>
+            <TabContainer tab="player" />
           </Route>
           <Route path={`${path}/controller`}>
-            <TabContainer tab="controller">
-              <ControllerTab />
-            </TabContainer>
+            <TabContainer tab="controller" />
           </Route>
           <Route path={`${path}/stream`}>
-            <TabContainer tab="stream">
-              <StreamTab />
-            </TabContainer>
+            <TabContainer tab="stream" />
           </Route>
         </Switch>
       </VStack>
@@ -118,34 +115,36 @@ const EndRoom = () => {
 
 interface TabContainerProps {
   tab: DashboardTab;
-  children: React.ReactNode;
 }
 
-const TabContainer: React.FC<TabContainerProps> = ({ tab, children }) => {
+const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
   const { params } = useRouteMatch<{ roomId?: string }>();
-  const purple = "#9F7AEA";
+  const dashboardTabs: DashboardTab[] = ["player", "controller", "stream"];
   return (
-    <>
-      <HStack w="400px" justifyContent="space-between">
-        <NavLink to={`/room/${params.roomId}/players`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
-          color: `${purple}`
-        }}>
-            Players
-        </NavLink>
-        <NavLink to={`/room/${params.roomId}/controller`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
-          color: `${purple}`
-        }}>
-            Controller Settings
-        </NavLink>
-        <NavLink to={`/room/${params.roomId}/stream`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
-          color: `${purple}`
-        }}>
-            Game Stream
-        </NavLink>
-      </HStack>
-      <Divider borderWidth="1px" borderColor="white" opacity={1} />
-      {children}
-    </>
+    <Tabs isLazy variant="line" defaultIndex={dashboardTabs.indexOf(tab)}>
+      <TabList>
+        <Tab as={NavLink} to={`/room/${params.roomId}/players`}>
+          Players
+        </Tab>
+        <Tab as={NavLink} to={`/room/${params.roomId}/controller`}>
+          Controller Settings
+        </Tab>
+        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
+          Game Stream
+        </Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <PlayerTab />
+        </TabPanel>
+        <TabPanel>
+          <ControllerTab />
+        </TabPanel>
+        <TabPanel>
+          <StreamTab />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 
