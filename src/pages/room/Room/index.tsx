@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Link, Switch, Route, useRouteMatch } from "react-router-dom";
+import { NavLink, Link, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
 import vulcast from "resources/vulcast.png";
@@ -18,10 +18,7 @@ import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-// TODO: Replace hardcoded value with the actual room code from the join room screen
-const roomCode = "pink-bear-porcupine";
-
-const roomUrl = "localhost:3000/room/" + roomCode;
+const roomUrl = "localhost:3000/room/";
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
@@ -68,6 +65,8 @@ const ShareAndCloseRoomHeader = () => {
 };
 
 const RoomDetails = () => {
+  const { params } = useRouteMatch<{ roomId?: string }>();
+
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
@@ -99,7 +98,7 @@ const RoomDetails = () => {
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(roomUrl);
+              navigator.clipboard.writeText(roomUrl + params.roomId);
               setTooltipShowing(true);
             }}
           >
@@ -123,45 +122,26 @@ interface TabContainerProps {
 }
 
 const TabContainer: React.FC<TabContainerProps> = ({ tab, children }) => {
+  const { params } = useRouteMatch<{ roomId?: string }>();
+  const purple = "#9F7AEA";
   return (
     <>
       <HStack w="400px" justifyContent="space-between">
-        <Link to={`/room/${roomCode}/players`}>
-          <Text
-            color={tab === "player" ? "purple" : "white"}
-            fontWeight="semibold"
-            textDecoration="none"
-            _hover={{
-              color: "purple",
-            }}
-          >
+        <NavLink to={`/room/${params.roomId}/players`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
+          color: `${purple}`
+        }}>
             Players
-          </Text>
-        </Link>
-        <Link to={`/room/${roomCode}/controller`}>
-          <Text
-            color={tab === "controller" ? "purple" : "white"}
-            fontWeight="semibold"
-            textDecoration="none"
-            _hover={{
-              color: "purple",
-            }}
-          >
+        </NavLink>
+        <NavLink to={`/room/${params.roomId}/controller`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
+          color: `${purple}`
+        }}>
             Controller Settings
-          </Text>
-        </Link>
-        <Link to={`/room/${roomCode}/stream`}>
-          <Text
-            color={tab === "stream" ? "purple" : "white"}
-            fontWeight="semibold"
-            textDecoration="none"
-            _hover={{
-              color: "purple",
-            }}
-          >
+        </NavLink>
+        <NavLink to={`/room/${params.roomId}/stream`} style={{ color: "white", fontWeight: 600 }} activeStyle={{
+          color: `${purple}`
+        }}>
             Game Stream
-          </Text>
-        </Link>
+        </NavLink>
       </HStack>
       <Divider borderWidth="1px" borderColor="white" opacity={1} />
       {children}

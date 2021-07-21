@@ -39,34 +39,39 @@ const playerLoadingError =
 export function PlayerTab() {
   const { data, loading, error } = usePlayersInRoomQuery();
 
-  if (loading) return <Spinner color="purple" />;
-  if (error) return <Heading> {playerLoadingError} </Heading>;
+  if (loading) {
+    return <Spinner color="purple" />;
+  }
+  if (error) {
+    return <Heading> {playerLoadingError} </Heading>;
+  }
 
-  // TODO: Introduce better error messages and remove the following
-  if (!data) return <Heading> No data found </Heading>;
-  if (!data.user)  return <Heading> No user found </Heading>;
+  // TODO: Introduce better error messages/handling and remove the following
+  if (!data) {
+    return <Heading> No data found </Heading>;
+  }
+  if (!data.user) {
+    return <Heading> No user found </Heading>;
+  }
 
   return (
     <>
       <Heading size="md">Connected Players</Heading>
       <VStack alignItems="left" spacing="20px">
-        {data ? (
-          data.user?.vulcasts[0].room?.roomSessions.map(
-            ({ nickname, controllerNumber }) => {
-              return (
-                <Player
-                  player={nickname}
-                  controller={
-                    controllerNumber && numberToController.has(controllerNumber)
-                      ? numberToController.get(controllerNumber)!
-                      : "Spectator"
-                  }
-                />
-              );
-            }
-          )
-        ) : (
-          <Heading> {playerLoadingError} </Heading>
+        {(data.user.vulcasts[0].room?.roomSessions ?? []).map(
+          ({ nickname, controllerNumber }) => {
+            return (
+              <Player
+                key={nickname}
+                player={nickname}
+                controller={
+                  controllerNumber && numberToController.has(controllerNumber)
+                    ? numberToController.get(controllerNumber)!
+                    : "Spectator"
+                }
+              />
+            );
+          }
         )}
       </VStack>
     </>
