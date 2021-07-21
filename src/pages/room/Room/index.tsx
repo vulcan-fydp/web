@@ -18,8 +18,9 @@ import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-// TODO: Replace hardcoded values
+// TODO: Replace hardcoded value with the actual room code from the join room screen
 const roomCode = "pink-bear-porcupine";
+
 const roomUrl = "localhost:3000/room/" + roomCode;
 
 export const Dashboard = () => {

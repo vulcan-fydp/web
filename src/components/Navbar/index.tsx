@@ -36,20 +36,9 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
 export const DefaultNavbarContent = () => {
   const isLoggedIn = true;
-  // TODO: Add a more polished menu here
-  // TODO: Get roomcode from some global store/apollo
-  const roomCode = "pink-bear-porcupine";
-
-  const dashboard = (
-    <Link as={RouterLink} to={`/room/${roomCode}/stream`}>
-      <Text textAlign="center" height="48px" lineHeight="48px" color="white">
-        Dashboard
-      </Text>
-    </Link>
-  );
   if (isLoggedIn) {
-    return dashboard;
+    return null;
   } else {
-    return dashboard;
+    return null;
   }
 };
