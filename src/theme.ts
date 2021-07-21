@@ -1,8 +1,8 @@
 import "@fontsource/montserrat";
 
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, theme } from "@chakra-ui/react";
 
-export const theme = extendTheme({
+export const vulcanTheme = extendTheme({
   fonts: {
     heading: "montserrat",
     body: "montserrat",
@@ -14,6 +14,25 @@ export const theme = extendTheme({
     darkPurple: "#733BE7",
   },
   components: {
+    Tabs: {
+      variants: {
+        line: {
+          tab: {
+            color: "white",
+            fontWeight: "semibold",
+            _selected: {
+              color: "purple",
+              borderColor: "purple",
+              borderTopColor: "purple",
+              borderBottomColor: "purple",
+            },
+            _active: {
+              color: "purple",
+            },
+          },
+        },
+      },
+    },
     Heading: {
       baseStyle: {
         color: "white",
@@ -27,11 +46,20 @@ export const theme = extendTheme({
     },
     Button: {
       baseStyle: {
+        color: "white",
         boxShadow: "md",
       },
       variants: {
         solid: {
           sz: "lg",
+          bg: "purple",
+          _hover: {
+            bg: "darkPurple",
+          },
+        },
+        solidSmall: {
+          height: "28px",
+          padding: "0 12px",
           bg: "purple",
           color: "white",
           _hover: {
@@ -39,8 +67,19 @@ export const theme = extendTheme({
           },
         },
         link: {
+          color: "white",
           _hover: {
             color: "purple",
+            textDecoration: "none",
+          },
+        },
+        kickLink: {
+          ...theme.components.Button.variants.link,
+          height: "28px",
+          padding: "0 12px",
+          color: "purple",
+          _hover: {
+            color: "darkPurple",
             textDecoration: "none",
           },
         },

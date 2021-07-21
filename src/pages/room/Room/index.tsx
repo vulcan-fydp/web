@@ -5,58 +5,56 @@ import {
   Image,
   VStack,
   HStack,
-  Divider,
-  Text,
-  Tooltip
+  Tooltip,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  TabPanels,
 } from "@chakra-ui/react";
-import {
-  useEffect,
-  useState,
-} from "react";
-import {
-  Link,
-  Switch,
-  Route,
-  useRouteMatch
-} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
+import { PlayerTab } from "pages/room/Room/playerTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-// TODO: Replace hardcoded values
-const roomCode = "pink-bear-porcupine";
-const roomUrl = "vulcan.play/room/" + roomCode;
+const roomUrl = "localhost:3000/room/";
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
 
   return (
-      <HeroPage isDashboard={true}>
-        <VStack spacing="20px" paddingTop="64px" alignItems="left" w="1000px">
-          <ShareAndCloseRoomHeader />
-          <TabButtons />
-          <Divider borderWidth="1px" borderColor="white" opacity={1} />
-          <Switch>
-            <Route path={`${path}/players`}>
-              <PlayerTab />
-            </Route>
-            <Route path={`${path}/controller`}>
-              <ControllerTab />
-            </Route>
-            <Route path={`${path}/stream`}>
-              <StreamTab />
-            </Route>
-          </Switch>
-        </VStack>
-      </HeroPage>
+    <HeroPage isDashboard={true}>
+      <VStack
+        spacing="20px"
+        paddingTop="64px"
+        alignItems="left"
+        width="100%"
+        maxWidth="1000px"
+      >
+        <ShareAndCloseRoomHeader />
+        <Switch>
+          <Route path={`${path}/players`}>
+            <TabContainer tab="player" />
+          </Route>
+          <Route path={`${path}/controller`}>
+            <TabContainer tab="controller" />
+          </Route>
+          <Route path={`${path}/stream`}>
+            <TabContainer tab="stream" />
+          </Route>
+        </Switch>
+      </VStack>
+    </HeroPage>
   );
 };
 
 const ShareAndCloseRoomHeader = () => {
   return (
-    <HStack direction="row" justifyContent="space-between">
+    <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
       <RoomDetails />
       <EndRoom />
     </HStack>
@@ -64,6 +62,8 @@ const ShareAndCloseRoomHeader = () => {
 };
 
 const RoomDetails = () => {
+  const { params } = useRouteMatch<{ roomId?: string }>();
+
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
@@ -79,17 +79,23 @@ const RoomDetails = () => {
   return (
     <HStack>
       <Image src={vulcast} />
-      <VStack justifyContent="space-between" h="100px">
-        <Heading as="h3" size="sm" w="320px">
+      <VStack align="left" justifyContent="space-between" h="100px">
+        <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
-        <Tooltip label="Copied!" placement="right" isOpen={tooltipShowing} bg="purple" color="white">
+        <Tooltip
+          label="Copied!"
+          placement="right"
+          isOpen={tooltipShowing}
+          bg="purple"
+          color="white"
+        >
           <Button
             variant="solid"
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(roomUrl);
+              navigator.clipboard.writeText(roomUrl + params.roomId);
               setTooltipShowing(true);
             }}
           >
@@ -102,69 +108,47 @@ const RoomDetails = () => {
 };
 
 const EndRoom = () => {
-  // TODO: Hoist this session status upwards or into a redux store
+  // TODO: Use the session context
   const isHost = true;
   return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
 };
 
-const TabButtons = () => {
-  // TODO: Fix bug where initially landing on a dashboard tab will make the stream tab look selected
-  const [tab, setTab] = useState<DashboardTab>("stream");
+interface TabContainerProps {
+  tab: DashboardTab;
+}
 
+const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
+  const { params } = useRouteMatch<{ roomId?: string }>();
+  const dashboardTabs: DashboardTab[] = ["player", "controller", "stream"];
   return (
-    <HStack w="400px" justifyContent="space-between">
-      <Link to={`/room/${roomCode}/players`}>
-        <Text
-          color={tab === "player" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("player")}
-        >
+    <Tabs isLazy variant="line" defaultIndex={dashboardTabs.indexOf(tab)}>
+      <TabList>
+        <Tab as={NavLink} to={`/room/${params.roomId}/players`}>
           Players
-        </Text>
-      </Link>
-      <Link to={`/room/${roomCode}/controller`}>
-        <Text
-          color={tab === "controller" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("controller")}
-        >
+        </Tab>
+        <Tab as={NavLink} to={`/room/${params.roomId}/controller`}>
           Controller Settings
-        </Text>
-      </Link>
-      <Link to={`/room/${roomCode}/stream`}>
-        <Text
-          color={tab === "stream" ? "purple" : "white"}
-          fontWeight="semibold"
-          textDecoration="none"
-          _hover={{
-            color: "purple",
-          }}
-          onClick={() => setTab("stream")}
-        >
+        </Tab>
+        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
           Game Stream
-        </Text>
-      </Link>
-    </HStack>
+        </Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <PlayerTab />
+        </TabPanel>
+        <TabPanel>
+          <ControllerTab />
+        </TabPanel>
+        <TabPanel>
+          <StreamTab />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 
 // TODO: Move these tabs into their own file
-const PlayerTab = () => {
-  return (
-    <Box>
-      <Heading> Player Tab </Heading>
-    </Box>
-  );
-};
-
 const ControllerTab = () => {
   return (
     <Box>

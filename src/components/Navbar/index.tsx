@@ -16,7 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       bottom="calc(100% - 50px)"
     >
       <Flex
-        alignItems="space-between"
+        justifyContent="space-between"
         w="100%"
         maxWidth="1000px"
         padding="0 100px"
@@ -36,7 +36,6 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
 export const DefaultNavbarContent = () => {
   const isLoggedIn = true;
-
   if (isLoggedIn) {
     return null;
   } else {
