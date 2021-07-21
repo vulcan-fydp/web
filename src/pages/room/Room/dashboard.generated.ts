@@ -4,12 +4,12 @@ import { gql } from "@apollo/client";
 import * as Apollo from "@apollo/client";
 const defaultOptions = {};
 export type CreateRoomMutationVariables = Types.Exact<{
-  vulcastGuid: Types.Scalars["ID"];
+  vulcastId: Types.Scalars["ID"];
 }>;
 
 export type CreateRoomMutation = { __typename?: "Mutation" } & {
   createRoom:
-    | ({ __typename: "Room" } & Pick<Types.Room, "guid">)
+    | ({ __typename: "Room" } & Pick<Types.Room, "id">)
     | ({ __typename: "AuthenticationError" } & Pick<
         Types.AuthenticationError,
         "message"
@@ -29,11 +29,11 @@ export type CreateRoomMutation = { __typename?: "Mutation" } & {
 };
 
 export const CreateRoomDocument = gql`
-  mutation createRoom($vulcastGuid: ID!) {
-    createRoom(vulcastGuid: $vulcastGuid) {
+  mutation createRoom($vulcastId: ID!) {
+    createRoom(vulcastId: $vulcastId) {
       __typename
       ... on Room {
-        guid
+        id
       }
       ... on AuthenticationError {
         message
@@ -68,7 +68,7 @@ export type CreateRoomMutationFn = Apollo.MutationFunction<
  * @example
  * const [createRoomMutation, { data, loading, error }] = useCreateRoomMutation({
  *   variables: {
- *      vulcastGuid: // value for 'vulcastGuid'
+ *      vulcastId: // value for 'vulcastId'
  *   },
  * });
  */
