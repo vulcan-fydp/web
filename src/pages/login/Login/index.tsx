@@ -1,15 +1,17 @@
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   Input,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import { HeroPage } from "components/HeroPage";
 import React, { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { useLogInMutation } from "./logIn.backend.generated";
 
 interface LoginForm {
@@ -58,13 +60,20 @@ export const LoginPage = () => {
 
   return (
     <HeroPage>
+      <Text fontSize="6xl" mb="60px" fontWeight="bold">
+        Log{" "}
+        <Text as="span" color="purple.300">
+          In.
+        </Text>
+      </Text>
       <Flex
         as="form"
         onSubmit={handleSubmit(onFormSubmit)}
         flexDir="column"
         alignItems="center"
+        mb="60px"
       >
-        <FormControl isInvalid={!!errors.email} mb="15px">
+        <FormControl isInvalid={!!errors.email} mb="10px">
           <Input
             type="email"
             placeholder="Email"
@@ -76,7 +85,7 @@ export const LoginPage = () => {
             <FormErrorMessage>{errors.email.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <FormControl isInvalid={!!errors.password} mb="40px">
+        <FormControl isInvalid={!!errors.password} mb="20px">
           <Input
             type="password"
             placeholder="Password"
@@ -92,13 +101,22 @@ export const LoginPage = () => {
           isDisabled={isSubmitting}
           type="submit"
           colorScheme="purple"
-          fontSize="sm"
           size="lg"
         >
           Log In
         </Button>
         {responseError !== undefined ? <Text>{responseError}</Text> : null}
       </Flex>
+      <Text size="sm" mb="10px">
+        <Link as={RouterLink} to="/reset-password">
+          Forgot your password?
+        </Link>
+      </Text>
+      <Text size="sm">
+        <Link as={RouterLink} to="/sign-up">
+          Create an account
+        </Link>
+      </Text>
     </HeroPage>
   );
 };
