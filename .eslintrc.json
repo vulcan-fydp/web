@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "react-app",
+    "prettier"
+  ],
+  "plugins": [
+    "graphql"
+  ],
+  "rules": {
+    "graphql/template-strings": "off"
+  },
+  "overrides": [
+    {
+        "files": ["./src/**/*.backend.gql"],
+        "rules": {
+            "graphql/template-strings": ["error", {
+                "env": "literal",
+                "schemaJsonFilepath": "graphql-backend.schema.json",
+                "projectName": "backend"
+            }]
+        }
+    },
+    {
+        "files": ["./src/**/*.relay.gql"],
+        "rules": {
+            "graphql/template-strings": ["error", {
+                "env": "literal",
+                "schemaJsonFilepath": "graphql-relay.schema.json",
+                "projectName": "relay"
+            }]
+        }
+    }
+]
+}
