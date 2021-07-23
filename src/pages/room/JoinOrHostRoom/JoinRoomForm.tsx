@@ -14,7 +14,7 @@ import {
   JoinRoomDocument,
   JoinRoomMutation,
   JoinRoomMutationVariables,
-} from "./joinRoom.generated";
+} from "./joinRoom.backend.generated";
 
 interface JoinRoomFormData {
   roomId: string;

@@ -9,7 +9,7 @@ import {
 import profile from "resources/profile.png";
 import controllerIcon from "resources/controller.png";
 import spectatorIcon from "resources/spectator.png";
-import { usePlayersInRoomQuery } from "./playersInRoom.generated";
+import { usePlayersInRoomQuery } from "./playersInRoom.backend.generated";
 
 function getControllerText(controller: number | null | undefined) {
   if (controller === null || controller === undefined) {
