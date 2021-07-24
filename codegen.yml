@@ -1,8 +1,9 @@
 overwrite: true
-schema: "./node_modules/@vulcan-fydp/schema/schema.gql"
+schema: "./node_modules/@vulcan-fydp/schema/backend_schema.gql"
 documents: "src/**/*.gql"
 generates:
   src/graphql.ts:
+    schema: "./node_modules/@vulcan-fydp/schema/signal_schema.gql"
     plugins:
       - "typescript"
   src/:

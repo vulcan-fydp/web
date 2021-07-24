@@ -9,6 +9,20 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  ConsumerId: any;
+  ConsumerOptions: any;
+  DataConsumerOptions: any;
+  DataProducerId: any;
+  DtlsParameters: any;
+  MediaKind: any;
+  PlainTransportOptions: any;
+  ProducerId: any;
+  RtpCapabilities: any;
+  RtpCapabilitiesFinalized: any;
+  RtpParameters: any;
+  SctpStreamParameters: any;
+  TransportId: any;
+  WebRtcTransportOptions: any;
 };
 
 
@@ -25,9 +39,14 @@ export type ClientInRoomError = {
   message: Scalars['String'];
 };
 
+
+
 export type CreateRoomResult = Room | AuthenticationError | VulcastNotFoundError | VulcastInRoomError | VulcastNotAssignedToRelayError;
 
 export type CreateUserResult = User | AuthenticationError | EmailInUseError | InvalidEmailError | InvalidFirstNameError | InvalidLastNameError | InvalidPasswordError;
+
+
+
 
 export type EmailInUseError = {
   __typename?: 'EmailInUseError';
@@ -71,6 +90,7 @@ export type LogInAsUserResult = User | AuthenticationError;
 export type LogInAsVulcastResult = VulcastAuthentication | AuthenticationError;
 
 export type LogOutFromUserResult = Success | AuthenticationError;
+
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -131,6 +151,80 @@ export type MutationJoinRoomArgs = {
   nickname: Scalars['String'];
 };
 
+export type MutationRoot = {
+  __typename?: 'MutationRoot';
+  /** Client-side RTP capabilities for WebRTC negotiation. */
+  rtpCapabilities: Scalars['Boolean'];
+  /** WebRTC transport parameters. */
+  createWebrtcTransport: Scalars['WebRtcTransportOptions'];
+  /** Plain receive transport connection parameters. */
+  createPlainTransport: Scalars['PlainTransportOptions'];
+  /** Provide connection parameters for server-side WebRTC transport. */
+  connectWebrtcTransport: Scalars['TransportId'];
+  /** Request consumption of media stream. */
+  consume: Scalars['ConsumerOptions'];
+  /** Resume existing consumer. */
+  consumerResume: Scalars['Boolean'];
+  /** Request production of media stream. */
+  produce: Scalars['ProducerId'];
+  /** Request production of a media stream on plain transport. */
+  producePlain: Scalars['ProducerId'];
+  /** Request consumption of data stream. */
+  consumeData: Scalars['DataConsumerOptions'];
+  /** Request production of data stream. */
+  produceData: Scalars['DataProducerId'];
+};
+
+
+export type MutationRootRtpCapabilitiesArgs = {
+  rtpCapabilities: Scalars['RtpCapabilities'];
+};
+
+
+export type MutationRootConnectWebrtcTransportArgs = {
+  transportId: Scalars['TransportId'];
+  dtlsParameters: Scalars['DtlsParameters'];
+};
+
+
+export type MutationRootConsumeArgs = {
+  transportId: Scalars['TransportId'];
+  producerId: Scalars['ProducerId'];
+};
+
+
+export type MutationRootConsumerResumeArgs = {
+  consumerId: Scalars['ConsumerId'];
+};
+
+
+export type MutationRootProduceArgs = {
+  transportId: Scalars['TransportId'];
+  kind: Scalars['MediaKind'];
+  rtpParameters: Scalars['RtpParameters'];
+};
+
+
+export type MutationRootProducePlainArgs = {
+  transportId: Scalars['TransportId'];
+  kind: Scalars['MediaKind'];
+  rtpParameters: Scalars['RtpParameters'];
+};
+
+
+export type MutationRootConsumeDataArgs = {
+  transportId: Scalars['TransportId'];
+  dataProducerId: Scalars['DataProducerId'];
+};
+
+
+export type MutationRootProduceDataArgs = {
+  transportId: Scalars['TransportId'];
+  sctpStreamParameters: Scalars['SctpStreamParameters'];
+};
+
+
+
 export type Query = {
   __typename?: 'Query';
   helpCenterArticles: Array<HelpCenterArticle>;
@@ -143,6 +237,12 @@ export type Query = {
 
 export type QueryUserArgs = {
   id?: Maybe<Scalars['ID']>;
+};
+
+export type QueryRoot = {
+  __typename?: 'QueryRoot';
+  /** Server-side WebRTC RTP capabilities for WebRTC negotiation. */
+  serverRtpCapabilities: Scalars['RtpCapabilitiesFinalized'];
 };
 
 export type Relay = {
@@ -185,10 +285,23 @@ export type RoomSession = {
   controllerNumber?: Maybe<Scalars['Int']>;
 };
 
+
+
+
+
+export type SubscriptionRoot = {
+  __typename?: 'SubscriptionRoot';
+  /** Notify when new producers are available. */
+  producerAvailable: Scalars['ProducerId'];
+  /** Notify when new data producers are available. */
+  dataProducerAvailable: Scalars['DataProducerId'];
+};
+
 export type Success = {
   __typename?: 'Success';
   _?: Maybe<Scalars['Boolean']>;
 };
+
 
 export type User = {
   __typename?: 'User';
@@ -238,3 +351,4 @@ export type VulcastNotFoundError = {
   __typename?: 'VulcastNotFoundError';
   message: Scalars['String'];
 };
+
