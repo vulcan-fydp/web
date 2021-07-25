@@ -24,3 +24,7 @@ yarn-error.log*
 
 # introspected schema
 graphql.schema.json
+graphql-*.schema.json
+
+*.generated.ts
+src/graphql.ts

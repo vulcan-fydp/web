@@ -1,31 +1,7 @@
-import { useSession } from "contexts/session";
-import React, { useCallback, useEffect } from "react";
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouteMatch } from "react-router";
-import { Redirect, useHistory } from "react-router-dom";
-import { HeroPage } from "components/HeroPage";
-import {
-  Text,
-  Flex,
-  FormControl,
-  Input,
-  FormErrorMessage,
-  Button,
-  HStack,
-} from "@chakra-ui/react";
-import { apolloClient } from "apollo";
-import {
-  JoinRoomDocument,
-  JoinRoomMutation,
-  JoinRoomMutationVariables,
-} from "./joinRoom.generated";
-import { useUserQuery } from "./user.generated";
-import { useApolloClient } from "@apollo/client";
-import {
-  CreateRoomDocument,
-  useCreateRoomMutation,
-} from "./createRoom.generated";
+import { Button, Flex } from "@chakra-ui/react";
+import React, { useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import { useCreateRoomMutation } from "./createRoom.backend.generated";
 
 export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
   vulcastId,
@@ -57,7 +33,7 @@ export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
         history.push(`/room/${result.data.createRoom.id}/players`);
         return;
     }
-  }, [createRoomMutation, vulcastId]);
+  }, [createRoomMutation, vulcastId, history]);
 
   return (
     <Flex>

@@ -1,0 +1,22 @@
+overwrite: true
+schema: "./node_modules/@vulcan-fydp/schema/backend_schema.gql"
+documents: "src/**/*.backend.gql"
+generates:
+  src/graphql.ts:
+    schema: "./node_modules/@vulcan-fydp/schema/signal_schema.gql"
+    plugins:
+      - "typescript"
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: graphql.ts
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      defaultBaseOptions:
+        context:
+          target: backend
+  ./graphql-backend.schema.json:
+    plugins:
+      - "introspection"

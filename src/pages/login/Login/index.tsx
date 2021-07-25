@@ -10,7 +10,7 @@ import { HeroPage } from "components/HeroPage";
 import React, { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { useLogInMutation } from "./logIn.generated";
+import { useLogInMutation } from "./logIn.backend.generated";
 
 interface LoginForm {
   email: string;

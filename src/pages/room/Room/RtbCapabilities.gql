@@ -1,3 +1,0 @@
-mutation rtpCapabilities($rtpCapabilities: RtpCapabilities!) {
-  rtpCapabilities(rtpCapabilities: $rtpCapabilities)
-}

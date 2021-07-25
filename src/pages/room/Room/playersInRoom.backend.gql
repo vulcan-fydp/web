@@ -1,4 +1,4 @@
-query PlayersInRoom {
+query playersInRoom {
   user {
     vulcasts {
       room {

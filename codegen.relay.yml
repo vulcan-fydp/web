@@ -1,9 +1,8 @@
 overwrite: true
-schema: "./node_modules/@vulcan-fydp/schema/backend_schema.gql"
-documents: "src/**/*.gql"
+schema: "./node_modules/@vulcan-fydp/schema/signal_schema.gql"
+documents: "src/**/*.relay.gql"
 generates:
   src/graphql.ts:
-    schema: "./node_modules/@vulcan-fydp/schema/signal_schema.gql"
     plugins:
       - "typescript"
   src/:
@@ -13,6 +12,10 @@ generates:
     plugins:
       - "typescript-operations"
       - "typescript-react-apollo"
-  ./graphql.schema.json:
+    config:
+      defaultBaseOptions:
+        context:
+          target: relay
+  ./graphql-relay.schema.json:
     plugins:
       - "introspection"

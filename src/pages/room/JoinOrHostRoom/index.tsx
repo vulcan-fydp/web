@@ -6,7 +6,7 @@ import { Redirect } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
 import { JoinRoomForm } from "./JoinRoomForm";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
-import { useUserQuery } from "./user.generated";
+import { useUserQuery } from "./user.backend.generated";
 
 export const JoinOrHostRoom: React.FC = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
