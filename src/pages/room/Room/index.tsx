@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
-import { StreamTab } from "components/StreamVideo/streamTab";
+import { StreamTab } from "pages/room/Room/streamTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 

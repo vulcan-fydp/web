@@ -6,12 +6,11 @@ import { Device } from 'mediasoup-client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { ApolloClient, InMemoryCache, gql, FetchResult, HttpLink } from '@apollo/client/core';
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { useRtpCapabilitiesMutation, useGetRtpCapabilitiesQuery, GetRtpCapabilitiesQueryVariables } from "./RtbCapabilities.relay.generated";
+import { DtlsParameters } from 'mediasoup-client/lib/Transport';
 
 // TODO: Get these dynamically (from backend?)
-const controlAddress = "https://localhost:9443";
-const signalAddress = "wss://localhost:8443";
-const clientToken = "token";
+const signalAddress = "ws://localhost:8443";
+const clientToken = "22a75aab-1297-4fd5-b180-fce6abb7a8a1";
 
 
 let receiveMediaStream: MediaStream | undefined;
@@ -24,7 +23,7 @@ function jsonClone(x: Object) {
 const StreamVideo: React.FC = () => {
   const stream = useRef<HTMLVideoElement>(null);
 
-  const { client } = getSignalConnection(clientToken);
+  const { client, sub } = getSignalConnection(clientToken);
   const device = new Device();
 
   let init_promise = client.query({ // query relay for init parameters
@@ -148,16 +147,18 @@ const StreamVideo: React.FC = () => {
 
               // display media streams
               if (receiveMediaStream) {
-                  if (consumer.track.kind == "video") {
+                  if (consumer.track.kind === "video") {
                       receiveMediaStream.getVideoTracks().forEach(track => receiveMediaStream?.removeTrack(track));
-                  } else if (consumer.track.kind == "audio") {
+                  } else if (consumer.track.kind === "audio") {
                       receiveMediaStream.getAudioTracks().forEach(track => receiveMediaStream?.removeTrack(track));
                   }
                   receiveMediaStream.addTrack(consumer.track);
                   stream.current!.srcObject = receiveMediaStream;
+                  console.log("Stream Component:", stream);
               } else {
                   receiveMediaStream = new MediaStream([consumer.track]);
-                  stream.current!.srcObject = receiveMediaStream;
+                  stream.current!.srcObject = receiveMediaStream;                  console.log("Stream Component:", stream);
+                  console.log("Stream Component:", stream);
               }
               return consumer.id;
           }).then(consumerId => {
@@ -191,36 +192,11 @@ const StreamVideo: React.FC = () => {
           }, 10000);
       });
   });
-  // const [rtpCapabilitiesMutation, { data: rtpMData, loading: rtpMLoading, error: rtpMError }] = useRtpCapabilitiesMutation();
 
-  // // query relay for init parameters
-  // const { data: initData, loading: initLoading, error: initError } = useGetRtpCapabilitiesQuery();
-  
-  // // load init params into device
-  // const device = new Device();
-  // const [rtpLoadedIntoDevice, setRtpHasLoadedIntoDevice] = useState(false);
-  // device.load({ routerRtpCapabilities: jsonClone(initData?.serverRtpCapabilities) });
-  // useEffect(() => {
-  //   if (device.loaded) {
-  //     setRtpHasLoadedIntoDevice(true);
-  //   }
-  // }, [device.loaded, setRtpHasLoadedIntoDevice]);
+  clientSub?.close();
+  clientSub = sub;
 
-  // if (!rtpLoadedIntoDevice) {
-  //   return null;
-  // }
-
-  // send init params back to relay
-  // rtpCapabilitiesMutation({ variables: {
-  //   rtpCapabilities: device.rtpCapabilities
-  // }});
-  
-  
-
-  // if (!device.loaded) {
-  //   return null
-  // }
-  return <video ref={stream}/>
+  return <video ref={stream} width="100%" muted controls/>
 }
 
 export const StreamTab: React.FC = () => {

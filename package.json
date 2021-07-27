@@ -37,7 +37,7 @@
     "eject": "react-scripts eject",
     "codegen:backend": "graphql-codegen --config codegen.backend.yml",
     "codegen:relay": "graphql-codegen --config codegen.relay.yml",
-    "postinstall": "npm run codegen:backend && npm run codegen:relay",
+    "postinstall": "npm run codegen",
     "lint": "eslint src --fix"
   },
   "browserslist": {
