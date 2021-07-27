@@ -10,7 +10,7 @@ import { DtlsParameters } from 'mediasoup-client/lib/Transport';
 
 // TODO: Get these dynamically (from backend?)
 const signalAddress = "ws://localhost:8443";
-const clientToken = "22a75aab-1297-4fd5-b180-fce6abb7a8a1";
+// const clientToken = "22a75aab-1297-4fd5-b180-fce6abb7a8a1";
 
 
 let receiveMediaStream: MediaStream | undefined;
@@ -20,7 +20,7 @@ function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x))
 }
 
-const StreamVideo: React.FC = () => {
+const StreamVideo: React.FC<string> = (clientToken: string) => {
   const stream = useRef<HTMLVideoElement>(null);
 
   const { client, sub } = getSignalConnection(clientToken);

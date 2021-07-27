@@ -9,12 +9,8 @@ export const RoomRouter = () => {
   return (
     <Switch>
       <Route exact path={path} render={() => <JoinOrHostRoom />} />
-      <Route
-        exact
-        path={`${path}/:roomGuid`}
-        render={() => <JoinOrHostRoom />}
-      />
-      <Route path={`${path}/:roomGuid`} render={() => <Dashboard />} />
+      <Route exact path={`${path}/:roomId`} render={() => <JoinOrHostRoom />} />
+      <Route path={`${path}/:roomId`} render={() => <Dashboard />} />
     </Switch>
   );
 };

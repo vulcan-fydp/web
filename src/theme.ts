@@ -1,76 +1,62 @@
 import "@fontsource/montserrat";
 
-import { extendTheme, theme } from "@chakra-ui/react";
+import { extendTheme, withDefaultColorScheme, theme } from "@chakra-ui/react";
 
-export const vulcanTheme = extendTheme({
-  fonts: {
-    heading: "montserrat",
-    body: "montserrat",
-  },
-  colors: {
-    black: "#282828",
-    grey: "#434343",
-    purple: "#9F7AEA",
-    darkPurple: "#733BE7",
-  },
-  components: {
-    Tabs: {
-      variants: {
-        line: {
-          tab: {
-            color: "white",
-            fontWeight: "semibold",
-            _selected: {
-              color: "purple",
-              borderColor: "purple",
-              borderTopColor: "purple",
-              borderBottomColor: "purple",
-            },
-            _active: {
-              color: "purple",
-            },
-          },
-        },
-      },
+export const vulcanTheme = extendTheme(
+  {
+    config: {
+      initialColorMode: "dark",
     },
-    Heading: {
-      baseStyle: {
-        color: "white",
-        fontWeight: "regular",
-      },
-      sizes: {
-        "4xl": {
-          fontWeight: "black",
-        },
-      },
+    fonts: {
+      heading: "montserrat",
+      body: "montserrat",
     },
-    Button: {
-      baseStyle: {
-        color: "white",
-        boxShadow: "md",
+    colors: {
+      black: "#282828",
+      grey: "#434343",
+    },
+    components: {
+      Tabs: {
+        variants: {
+          line: {
+            tab: {
+              color: "white",
+              fontWeight: "semibold",
+              _selected: {
+                color: "purple",
+                borderColor: "purple",
+                borderTopColor: "purple",
+                borderBottomColor: "purple",
+              },
+              _active: {
+                color: "purple",
+              },
+            },
+          },
+        },
       },
-      variants: {
-        solid: {
-          sz: "lg",
-          bg: "purple",
-          _hover: {
-            bg: "darkPurple",
+      Heading: {
+        baseStyle: {
+          color: "white",
+          fontWeight: "regular",
+        },
+        sizes: {
+          "4xl": {
+            fontWeight: "black",
           },
         },
-        solidSmall: {
-          height: "28px",
-          padding: "0 12px",
-          bg: "purple",
-          color: "white",
-          _hover: {
-            bg: "darkPurple",
-          },
+      },
+      Button: {
+        baseStyle: {
+          boxShadow: "md",
         },
-        link: {
-          color: "white",
-          _hover: {
-            color: "purple",
-            textDecoration: "none",
+        variants: {
+          solid: {},
+          link: {
+            _hover: {
+              color: "purple",
+              textDecoration: "none",
+            },
           },
         },
         kickLink: {
@@ -84,11 +70,21 @@ export const vulcanTheme = extendTheme({
           },
         },
       },
-    },
-    Input: {
-      baseStyle: {
-        boxShadow: "md",
+      Input: {
+        baseStyle: {},
+        defaultProps: {
+          variant: "filled",
+          focusBorderColor: "purple.500",
+        },
+      },
+      Link: {
+        baseStyle: {
+          color: "purple.300",
+        },
       },
     },
   },
-});
+  withDefaultColorScheme({
+    colorScheme: "purple",
+  })
+);

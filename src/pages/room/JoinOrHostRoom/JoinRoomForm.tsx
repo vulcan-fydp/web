@@ -8,6 +8,8 @@ import {
 } from "@chakra-ui/react";
 import { apolloClient } from "apollo";
 import React, { useCallback, useState } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import {
@@ -33,12 +35,17 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
+    setFocus,
   } = useForm<JoinRoomFormData>({
     defaultValues: {
       roomId: roomId ?? "",
       nickname: "",
     },
   });
+
+  useEffect(() => {
+    setFocus("nickname");
+  }, [setFocus]);
 
   const history = useHistory();
 
@@ -86,19 +93,6 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
       align="center"
       onSubmit={handleSubmit(onFormSubmit)}
     >
-      {promptRoomId ? (
-        <FormControl isInvalid={!!errors.roomId}>
-          <Input
-            placeholder="Room Code"
-            {...register("roomId", {
-              required: "Room code cannot be empty",
-            })}
-          />
-          {errors.roomId ? (
-            <FormErrorMessage>{errors.roomId.message}</FormErrorMessage>
-          ) : null}
-        </FormControl>
-      ) : null}
       <FormControl isInvalid={!!errors.nickname}>
         <Input
           placeholder="Nickname"
@@ -110,7 +104,20 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
           <FormErrorMessage>{errors.nickname.message}</FormErrorMessage>
         ) : null}
       </FormControl>
-      <Button type="submit" isDisabled={isSubmitting}>
+      {promptRoomId ? (
+        <FormControl isInvalid={!!errors.roomId} mt="10px">
+          <Input
+            placeholder="Room Code"
+            {...register("roomId", {
+              required: "Room code cannot be empty",
+            })}
+          />
+          {errors.roomId ? (
+            <FormErrorMessage>{errors.roomId.message}</FormErrorMessage>
+          ) : null}
+        </FormControl>
+      ) : null}
+      <Button type="submit" isDisabled={isSubmitting} mt="40px">
         Join Room
       </Button>
       {submissionErrorMessage !== undefined ? (
