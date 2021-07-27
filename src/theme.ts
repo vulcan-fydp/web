@@ -72,21 +72,6 @@ export const vulcanTheme = extendTheme(
       },
       Input: {
         baseStyle: {},
-        // variants: {
-        //   filled: {
-        //     field: {
-        //       boxShadow: "md",
-        //       bg: "black",
-        //       _hover: {
-        //         bg: "black",
-        //       },
-        //       _focus: {
-        //         bg: "black",
-        //         boxShadow: ["0", "red"],
-        //       },
-        //     },
-        //   },
-        // },
         defaultProps: {
           variant: "filled",
           focusBorderColor: "purple.500",
