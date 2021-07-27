@@ -40,7 +40,26 @@ export const JoinOrHostRoom: React.FC = () => {
 const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <HeroPage>
-      <Text>Hello</Text>
+      <Text
+        fontSize={["3xl", "6xl"]}
+        fontWeight="bold"
+        w="500px"
+        maxW="calc(100% - 40px)"
+        textAlign="center"
+        mb="20px"
+      >
+        Join a room to start{" "}
+        <Text as="span" color="purple.300">
+          playing.
+        </Text>
+      </Text>
+      <Text textAlign="center" mb="40px" w="500px" maxW="calc(100% - 20px)">
+        Vulcan makes it easy to play on your friend's{" "}
+        <Text as="span" color="yellow.300">
+          Nintendo Switch
+        </Text>{" "}
+        straight from your web browser. No console or even controller required!
+      </Text>
       <JoinRoomForm roomId={roomId} />
     </HeroPage>
   );

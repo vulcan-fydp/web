@@ -12,7 +12,7 @@ const sessionContext = createContext<SessionContextValue>({
 });
 
 export const SessionContext: React.FC = ({ children }) => {
-  const { data } = useSessionQuery({});
+  const { data, error } = useSessionQuery({});
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
 
   useEffect(() => {
@@ -20,6 +20,12 @@ export const SessionContext: React.FC = ({ children }) => {
       setHasLoadedOnce(true);
     }
   }, [data, setHasLoadedOnce]);
+
+  useEffect(() => {
+    if (error) {
+      throw error;
+    }
+  }, [error]);
 
   // Block further rendering until we load the session. Some routes are conditional
   // based on session type so we need to identify who we are before we can continue.

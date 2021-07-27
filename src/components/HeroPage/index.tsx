@@ -1,6 +1,6 @@
 import React from "react";
 import { Navbar } from "components/Navbar";
-import { VStack, Box } from "@chakra-ui/layout";
+import { Flex, Box } from "@chakra-ui/layout";
 
 interface HeroProps {
   isDashboard?: boolean;
@@ -16,9 +16,9 @@ export const HeroPage: React.FC<HeroProps> = ({ children, isDashboard }) => {
       }
     >
       <Navbar />
-      <VStack pt="80px" minHeight="100vh">
+      <Flex pt="80px" minHeight="100vh" flexDir="column" align="center">
         {children}
-      </VStack>
+      </Flex>
     </Box>
   );
 };

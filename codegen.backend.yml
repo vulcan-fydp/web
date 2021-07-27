@@ -2,13 +2,13 @@ overwrite: true
 schema: "./node_modules/@vulcan-fydp/schema/schema.gql"
 documents: "src/**/*.backend.gql"
 generates:
-  src/graphql.ts:
+  src/backend-types.ts:
     plugins:
       - "typescript"
   src/:
     preset: near-operation-file
     presetConfig:
-      baseTypesPath: graphql.ts
+      baseTypesPath: backend-types.ts
     plugins:
       - "typescript-operations"
       - "typescript-react-apollo"
