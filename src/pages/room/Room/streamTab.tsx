@@ -11,35 +11,39 @@ import {
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters } from "mediasoup-client/lib/Transport";
+import {
+  GetRtpCapabilitiesDocument,
+  GetRtpCapabilitiesQuery,
+  GetRtpCapabilitiesQueryVariables,
+} from "./rtbCapabilities.relay.generated";
 
 // TODO: Get these dynamically (from backend?)
 const signalAddress = "ws://localhost:8443";
-const CLIENT_TEST_TOKEN = "22a75aab-1297-4fd5-b180-fce6abb7a8a1";
-
-let receiveMediaStream: MediaStream | undefined;
-let clientSub: SubscriptionClient | null = null;
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
 }
 
-const StreamVideo: React.FC<{ clientToken: string }> = ({ clientToken }) => {
-  const stream = useRef<HTMLVideoElement>(null);
+const StreamVideo: React.FC = () => {
+  // TODO: Researchh ref vs. mutable ref (init with null)
+  const streamRef = useRef<HTMLVideoElement>(null);
+
+  const receiveMediaStreamRef = useRef<MediaStream>();
+  const clientSubRef = useRef<SubscriptionClient>();
 
   console.log("StreamVideo render");
 
   useEffect(() => {
     async function setupStream() {
-      const { client, sub } = getSignalConnection(clientToken);
+      const { client, sub } = getSignalConnection();
       const device = new Device();
 
-      const initParams = await client.query({
+      const initParams = await client.query<
+        GetRtpCapabilitiesQuery,
+        GetRtpCapabilitiesQueryVariables
+      >({
         // query relay for init parameters
-        query: gql`
-          query {
-            serverRtpCapabilities
-          }
-        `,
+        query: GetRtpCapabilitiesDocument,
       });
 
       console.log("received server init", initParams.data);
@@ -119,157 +123,145 @@ const StreamVideo: React.FC<{ clientToken: string }> = ({ clientToken }) => {
         success();
       });
 
-      
-        sendTransport.on("producedata", ({ sctpStreamParameters }, success) => {
+      sendTransport.on(
+        "producedata",
+        async ({ sctpStreamParameters }, success) => {
           // this callback is called on produceData to request connection from relay
-          client
-            .mutate({
-              mutation: gql`
-                mutation(
-                  $transportId: TransportId!
-                  $sctpStreamParameters: SctpStreamParameters!
-                ) {
-                  produceData(
-                    transportId: $transportId
-                    sctpStreamParameters: $sctpStreamParameters
-                  )
-                }
-              `,
-              variables: {
-                transportId: sendTransport.id,
-                sctpStreamParameters,
-              },
-            })
-            .then((response) => {
-              console.log("produced data", response.data);
-              // the mutation returns a producerId, which we need to yield
-              success({ id: response.data.produce_data });
-            });
-
-        stream.current!.srcObject = null;
-        receiveMediaStream = undefined;
-
-        // listen for when new media producers are available
-        client
-          .subscribe({
-            query: gql`
-              subscription {
-                producerAvailable
+          const response = await client.mutate({
+            mutation: gql`
+              mutation(
+                $transportId: TransportId!
+                $sctpStreamParameters: SctpStreamParameters!
+              ) {
+                produceData(
+                  transportId: $transportId
+                  sctpStreamParameters: $sctpStreamParameters
+                )
               }
             `,
-          })
-          .subscribe((result: FetchResult<Record<string, any>>) => {
-            // callback is called when new producer is available
-            console.log("producer available", result.data);
-
-            // request consumerOptions for new producer from relay
-            client
-              .mutate({
-                mutation: gql`
-                  mutation(
-                    $transportId: TransportId!
-                    $producerId: ProducerId!
-                  ) {
-                    consume(transportId: $transportId, producerId: $producerId)
-                  }
-                `,
-                variables: {
-                  transportId: recvTransport.id,
-                  producerId: result.data?.producerAvailable,
-                },
-              })
-              .then(async (response) => {
-                console.log("consumed", response.data);
-                // use consumerOptions to connect to producer from relay
-                const consumer = await recvTransport.consume(
-                  response.data.consume
-                );
-                console.log("consumer created", consumer);
-
-                // display media streams
-                if (receiveMediaStream) {
-                  if (consumer.track.kind === "video") {
-                    receiveMediaStream
-                      .getVideoTracks()
-                      .forEach((track) =>
-                        receiveMediaStream?.removeTrack(track)
-                      );
-                  } else if (consumer.track.kind === "audio") {
-                    receiveMediaStream
-                      .getAudioTracks()
-                      .forEach((track) =>
-                        receiveMediaStream?.removeTrack(track)
-                      );
-                  }
-                  receiveMediaStream.addTrack(consumer.track);
-                  stream.current!.srcObject = receiveMediaStream;
-                  console.log("Stream Component:", stream);
-                } else {
-                  receiveMediaStream = new MediaStream([consumer.track]);
-                  stream.current!.srcObject = receiveMediaStream;
-                  console.log("Stream Component:", stream);
-                  console.log("Stream Component:", stream);
-                }
-                return consumer.id;
-              })
-              .then((consumerId) => {
-                // the stream begins paused for technical reasons, request stream to resume
-                return client.mutate({
-                  mutation: gql`
-                    mutation($consumerId: ConsumerId!) {
-                      consumerResume(consumerId: $consumerId)
-                    }
-                  `,
-                  variables: {
-                    consumerId: consumerId,
-                  },
-                });
-              })
-              .then((response) => {
-                console.log("consumer resume", response.data);
-              });
+            variables: {
+              transportId: sendTransport.id,
+              sctpStreamParameters,
+            },
           });
+          console.log("produced data", response.data);
+          // the mutation returns a producerId, which we need to yield
+          success({ id: response.data.produce_data });
+        }
+      );
 
-        // start producing data (this would be controller inputs in binary format)
-        let dataProducer = await sendTransport.produceData({ ordered: false });
-        dataProducer.on("open", () => {
-          let handle = setInterval(() => {
-            let data = "hello " + Math.floor(1000 * Math.random());
-            console.log("send data", data);
-            if (dataProducer.closed) {
-              clearInterval(handle);
-              return;
+      streamRef.current!.srcObject = null;
+      receiveMediaStreamRef.current = undefined;
+
+      // listen for when new media producers are available
+      client
+        .subscribe({
+          query: gql`
+            subscription {
+              producerAvailable
             }
-            dataProducer.send(data);
-          }, 10000);
+          `,
+        })
+        .subscribe(async (result: FetchResult<Record<string, any>>) => {
+          // callback is called when new producer is available
+          console.log("producer available", result.data);
+
+          // request consumerOptions for new producer from relay
+          const response = await client.mutate({
+            mutation: gql`
+              mutation($transportId: TransportId!, $producerId: ProducerId!) {
+                consume(transportId: $transportId, producerId: $producerId)
+              }
+            `,
+            variables: {
+              transportId: recvTransport.id,
+              producerId: result.data?.producerAvailable,
+            },
+          });
+          console.log("consumed", response.data);
+          // use consumerOptions to connect to producer from relay
+          const consumer = await recvTransport.consume(response.data.consume);
+          console.log("consumer created", consumer);
+
+          // display media streams
+          if (receiveMediaStreamRef.current) {
+            if (consumer.track.kind === "video") {
+              receiveMediaStreamRef.current
+                .getVideoTracks()
+                .forEach((track) =>
+                  receiveMediaStreamRef.current!.removeTrack(track)
+                );
+            } else if (consumer.track.kind === "audio") {
+              receiveMediaStreamRef.current
+                .getAudioTracks()
+                .forEach((track) =>
+                  receiveMediaStreamRef.current!.removeTrack(track)
+                );
+            }
+            receiveMediaStreamRef.current.addTrack(consumer.track);
+            streamRef.current!.srcObject = receiveMediaStreamRef.current;
+            console.log("Stream Component:", streamRef);
+          } else {
+            receiveMediaStreamRef.current = new MediaStream([consumer.track]);
+            streamRef.current!.srcObject = receiveMediaStreamRef.current;
+            console.log("Stream Component:", streamRef);
+            console.log("Stream Component:", streamRef);
+          }
+          const consumerId = consumer.id;
+          // the stream begins paused for technical reasons, request stream to resume
+          await client.mutate({
+            mutation: gql`
+              mutation($consumerId: ConsumerId!) {
+                consumerResume(consumerId: $consumerId)
+              }
+            `,
+            variables: {
+              consumerId: consumerId,
+            },
+          });
         });
+
+      // start producing data (this would be controller inputs in binary format)
+      let dataProducer = await sendTransport.produceData({ ordered: false });
+      dataProducer.on("open", () => {
+        let handle = setInterval(() => {
+          let data = "hello " + Math.floor(1000 * Math.random());
+          console.log("send data", data);
+          if (dataProducer.closed) {
+            clearInterval(handle);
+            return;
+          }
+          dataProducer.send(data);
+        }, 10000);
       });
 
-      clientSub?.close();
-      clientSub = sub;
+      clientSubRef.current = sub;
     }
 
     setupStream();
-  }, [clientToken]);
 
-  return <video ref={stream} width="100%" muted controls />;
+    return () => {
+      clientSubRef.current?.close();
+      clientSubRef.current = undefined;
+    };
+  }, []);
+
+  return <video ref={streamRef} width="100%" muted controls />;
 };
 
 export const StreamTab: React.FC = () => {
-  clientSub?.close();
-
   return (
     <VStack alignItems="center" spacing="20px">
-      <StreamVideo clientToken={CLIENT_TEST_TOKEN} />
+      <StreamVideo />
     </VStack>
   );
 };
 
-function getSignalConnection(token: string) {
+function getSignalConnection() {
   let sub = new SubscriptionClient(signalAddress, {
-    connectionParams: {
-      token,
-    },
+    // connectionParams: {
+    //   token,
+    // },
   });
   const wsLink = new WebSocketLink(sub);
   let client = new ApolloClient({
