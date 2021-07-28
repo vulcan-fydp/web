@@ -1,5 +1,5 @@
 import { VStack } from "@chakra-ui/react";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { Device } from "mediasoup-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
@@ -7,7 +7,6 @@ import {
   InMemoryCache,
   gql,
   FetchResult,
-  HttpLink,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters } from "mediasoup-client/lib/Transport";
@@ -204,7 +203,6 @@ const StreamVideo: React.FC = () => {
           } else {
             receiveMediaStreamRef.current = new MediaStream([consumer.track]);
             streamRef.current!.srcObject = receiveMediaStreamRef.current;
-            console.log("Stream Component:", streamRef);
             console.log("Stream Component:", streamRef);
           }
           const consumerId = consumer.id;
