@@ -1,0 +1,21 @@
+overwrite: true
+schema: "./node_modules/@vulcan-fydp/schema/control_schema.gql"
+documents: "src/**/*.relay-control.gql"
+generates:
+  src/relay-control-types.ts:
+    plugins:
+      - "typescript"
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: relay-control-types.ts
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      defaultBaseOptions:
+        context:
+          target: relay-control
+  ./graphql-relay-control.schema.json:
+    plugins:
+      - "introspection"

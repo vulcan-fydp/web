@@ -12,7 +12,7 @@ const link = split(
     credentials: "include",
   }),
   createHttpLink({
-    uri: "http://localhost:5000/graphql",
+    uri: "http://localhost:9443",
   })
 );
 

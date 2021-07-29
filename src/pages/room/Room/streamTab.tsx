@@ -14,9 +14,15 @@ import {
   GetRtpCapabilitiesDocument,
   GetRtpCapabilitiesQuery,
   GetRtpCapabilitiesQueryVariables,
-} from "./rtbCapabilities.relay.generated";
+} from "./rtpCapabilities.relay.generated";
+import {
+  RegisterClientSessionMutation,
+  RegisterClientSessionMutationVariables,
+  RegisterClientSessionDocument,
+} from "./control.relay-control.generated";
+import { useSession } from "contexts/session";
+import { apolloClient } from "apollo";
 
-// TODO: Get these dynamically (from backend?)
 const signalAddress = "ws://localhost:8443";
 
 function jsonClone(x: Object) {
@@ -24,7 +30,9 @@ function jsonClone(x: Object) {
 }
 
 const StreamVideo: React.FC = () => {
-  // TODO: Researchh ref vs. mutable ref (init with null)
+  const { userId } = useSession();
+
+  // Init this with null to make it compatible with a different ref type for DOM elements
   const streamRef = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
@@ -33,16 +41,64 @@ const StreamVideo: React.FC = () => {
   console.log("StreamVideo render");
 
   useEffect(() => {
+    async function getClientToken(): Promise<string | undefined> {
+      let validUserId = userId;
+      if (!validUserId || validUserId === null) {
+        validUserId = "10354";
+        // TODO: Should just throw here
+        // return;
+      }
+      console.log("run");
+      let response = await apolloClient.mutate<
+        RegisterClientSessionMutation,
+        RegisterClientSessionMutationVariables
+      >({
+        mutation: RegisterClientSessionDocument,
+        variables: {
+          sessionId: validUserId,
+          roomId: "ayush",
+        },
+      });
+
+      if (!response.data) {
+        return undefined;
+      }
+
+      let data = response.data.registerClientSession;
+      console.log("registerClientSession", data.__typename, data);
+
+      if (data?.__typename !== "SessionWithToken") {
+        return undefined;
+      }
+      let clientToken = data?.accessToken;
+      return clientToken;
+    }
+
     async function setupStream() {
-      const { client, sub } = getSignalConnection();
+      const clientToken = await getClientToken();
+
+      if (!clientToken) {
+        return;
+      }
+
+      console.log("Access token: ", clientToken);
+
+      const { client, sub } = getSignalConnection(clientToken);
       const device = new Device();
 
-      const initParams = await client.query<
-        GetRtpCapabilitiesQuery,
-        GetRtpCapabilitiesQueryVariables
-      >({
-        // query relay for init parameters
-        query: GetRtpCapabilitiesDocument,
+      //   const initParams = await client.query<
+      //     GetRtpCapabilitiesQuery,
+      //     GetRtpCapabilitiesQueryVariables
+      //   >({
+      //     // query relay for init parameters
+      //     query: GetRtpCapabilitiesDocument,
+      //   });
+      const initParams = await client.query({
+        query: gql`
+          query {
+            serverRtpCapabilities
+          }
+        `,
       });
 
       console.log("received server init", initParams.data);
@@ -242,7 +298,7 @@ const StreamVideo: React.FC = () => {
       clientSubRef.current?.close();
       clientSubRef.current = undefined;
     };
-  }, []);
+  }, [userId]);
 
   return <video ref={streamRef} width="100%" muted controls />;
 };
@@ -255,11 +311,11 @@ export const StreamTab: React.FC = () => {
   );
 };
 
-function getSignalConnection() {
+function getSignalConnection(clientToken: string) {
   let sub = new SubscriptionClient(signalAddress, {
-    // connectionParams: {
-    //   token,
-    // },
+    connectionParams: {
+      clientToken,
+    },
   });
   const wsLink = new WebSocketLink(sub);
   let client = new ApolloClient({
