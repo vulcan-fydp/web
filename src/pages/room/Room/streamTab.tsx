@@ -1,30 +1,50 @@
 import { VStack } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Device } from "mediasoup-client";
-import { useRouteMatch } from "react-router-dom";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
   ApolloClient,
   InMemoryCache,
   gql,
   FetchResult,
+  HttpLink,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters } from "mediasoup-client/lib/Transport";
-import {
-  GetRtpCapabilitiesDocument,
-  GetRtpCapabilitiesQuery,
-  GetRtpCapabilitiesQueryVariables,
-} from "./rtpCapabilities.relay.generated";
 import {
   RegisterClientSessionMutation,
   RegisterClientSessionMutationVariables,
   RegisterClientSessionDocument,
 } from "./control.relay-control.generated";
-import { useSession } from "contexts/session";
+import { useRouteMatch } from "react-router-dom";
 import { apolloClient } from "apollo";
-const signalAddress = "ws://localhost:8443";
+import { useSession } from "contexts/session";
+import {
+  GetRtpCapabilitiesDocument,
+  GetRtpCapabilitiesQuery,
+  GetRtpCapabilitiesQueryVariables,
+  RtpCapabilitiesMutation,
+  RtpCapabilitiesMutationVariables,
+  RtpCapabilitiesDocument,
+  CreateWebrtcTransportDocument,
+  CreateWebrtcTransportMutation,
+  CreateWebrtcTransportMutationVariables,
+  ConnectWebrtcTransportDocument,
+  ConnectWebrtcTransportMutation,
+  ConnectWebrtcTransportMutationVariables,
+  ConsumeDocument,
+  ConsumeMutation,
+  ConsumeMutationVariables,
+  ConsumerResumeDocument,
+  ConsumerResumeMutation,
+  ConsumerResumeMutationVariables,
+  ProduceDataDocument,
+  ProduceDataMutation,
+  ProduceDataMutationVariables,
+} from "./signal.relay.generated";
 
+const signalAddress = "ws://localhost:8443";
+const TEST_USER_ID = "10479";
 let cachedClientToken: string;
 
 function jsonClone(x: Object) {
@@ -32,81 +52,72 @@ function jsonClone(x: Object) {
 }
 
 const StreamVideo: React.FC = () => {
-  const { params } = useRouteMatch<{ roomId?: string }>();
-  const { userId } = useSession();
-
-  // Init this with null to make it compatible with a different ref type for DOM elements
-  const streamRef = useRef<HTMLVideoElement>(null);
+  const stream = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
   const clientSubRef = useRef<SubscriptionClient>();
 
-  console.log("StreamVideo render");
+  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { userId } = useSession();
 
   useEffect(() => {
     async function getClientToken(): Promise<string | undefined> {
-      if (cachedClientToken) {
-        return cachedClientToken;
-      }
-      console.log("getClientToken run");
-      let validUserId = userId;
-      if (!validUserId || validUserId === null) {
-        validUserId = "10356";
-        // TODO: Should just throw here
-        // return;
-      }
-      console.log("run");
-      let response = await apolloClient.mutate<
-        RegisterClientSessionMutation,
-        RegisterClientSessionMutationVariables
-      >({
-        mutation: RegisterClientSessionDocument,
-        variables: {
-          sessionId: validUserId,
-          roomId: params.roomId!,
-        },
-      });
+      if (!cachedClientToken) {
+        let validUserId = userId;
+        if (!validUserId || validUserId === null) {
+          validUserId = TEST_USER_ID;
+          // TODO: In the future, should just throw here
+          console.log("Invalid user id, using test ID instead", TEST_USER_ID);
+          // return;
+        }
 
-      if (!response.data) {
-        return undefined;
+        let response = await apolloClient.mutate<
+          RegisterClientSessionMutation,
+          RegisterClientSessionMutationVariables
+        >({
+          mutation: RegisterClientSessionDocument,
+          variables: {
+            sessionId: validUserId,
+            roomId: params.roomId!,
+          },
+        });
+
+        if (!response.data) {
+          console.log("Error getting client access token:", response);
+          return undefined;
+        }
+
+        let data = response.data.registerClientSession;
+        if (data?.__typename !== "SessionWithToken") {
+          console.log("Error getting client access token:", data);
+          return undefined;
+        }
+
+        cachedClientToken = data?.accessToken;
       }
 
-      let data = response.data.registerClientSession;
-      console.log("registerClientSession", data.__typename, data);
-
-      if (data?.__typename !== "SessionWithToken") {
-        return undefined;
-      }
-      cachedClientToken = data?.accessToken;
       return cachedClientToken;
     }
 
     async function setupStream() {
-      console.log("setupStream run");
       const clientToken = await getClientToken();
+      console.log("clientToken", clientToken);
 
       if (!clientToken) {
+        // TODO: Throw some error where client can't get access token from relay control
+        console.log("Invalid client token: ", clientToken);
         return;
       }
-
-      console.log("Access token: ", clientToken);
 
       const { client: signalClient, sub } = getSignalConnection(clientToken);
       const device = new Device();
 
-      //   const initParams = await client.query<
-      //     GetRtpCapabilitiesQuery,
-      //     GetRtpCapabilitiesQueryVariables
-      //   >({
-      //     // query relay for init parameters
-      //     query: GetRtpCapabilitiesDocument,
-      //   });
-      const initParams = await signalClient.query({
-        query: gql`
-          query {
-            serverRtpCapabilities
-          }
-        `,
+      const initParams = await signalClient.query<
+        GetRtpCapabilitiesQuery,
+        GetRtpCapabilitiesQueryVariables
+      >({
+        // query relay for init parameters
+        query: GetRtpCapabilitiesDocument,
       });
 
       console.log("received server init", initParams.data);
@@ -116,30 +127,26 @@ const StreamVideo: React.FC = () => {
       });
 
       // send init params back to relay
-      await signalClient.mutate({
-        mutation: gql`
-          mutation($rtpCapabilities: RtpCapabilities!) {
-            rtpCapabilities(rtpCapabilities: $rtpCapabilities)
-          }
-        `,
+      await signalClient.mutate<
+        RtpCapabilitiesMutation,
+        RtpCapabilitiesMutationVariables
+      >({
+        mutation: RtpCapabilitiesDocument,
         variables: {
           rtpCapabilities: device.rtpCapabilities,
         },
       });
 
       async function createWebrtcTransport() {
-        return (
-          await signalClient.mutate({
-            mutation: gql`
-              mutation {
-                createWebrtcTransport
-              }
-            `,
-          })
-        ).data.createWebrtcTransport;
+        const response = await signalClient.mutate<
+          CreateWebrtcTransportMutation,
+          CreateWebrtcTransportMutationVariables
+        >({
+          mutation: CreateWebrtcTransportDocument,
+        });
+        return response.data?.createWebrtcTransport;
       }
 
-      // create bidirectional transport
       let sendTransportOptions = await createWebrtcTransport();
       let recvTransportOptions = await createWebrtcTransport();
       // console.log(role, "received transport options", sendTransportOptions, recvTransportOptions);
@@ -149,24 +156,18 @@ const StreamVideo: React.FC = () => {
         dtlsParameters: DtlsParameters
       ) {
         // this callback is called on first consume/produce to link transport to relay
-        await signalClient.mutate({
-          mutation: gql`
-            mutation(
-              $transportId: TransportId!
-              $dtlsParameters: DtlsParameters!
-            ) {
-              connectWebrtcTransport(
-                transportId: $transportId
-                dtlsParameters: $dtlsParameters
-              )
-            }
-          `,
+        await signalClient.mutate<
+          ConnectWebrtcTransportMutation,
+          ConnectWebrtcTransportMutationVariables
+        >({
+          mutation: ConnectWebrtcTransportDocument,
           variables: {
             transportId,
             dtlsParameters,
           },
         });
       }
+
       let sendTransport = device.createSendTransport(
         jsonClone(sendTransportOptions)
       );
@@ -182,26 +183,20 @@ const StreamVideo: React.FC = () => {
       recvTransport.on("connect", async ({ dtlsParameters }, success) => {
         // this callback is called on first consume/produce to link transport to relay
         await connectWebrtcTransport(recvTransport.id, dtlsParameters);
-        console.log("connected recv transport");
+
         success();
       });
 
+      // this callback is called on produceData to request connection from relay
       sendTransport.on(
         "producedata",
         async ({ sctpStreamParameters }, success) => {
           // this callback is called on produceData to request connection from relay
-          const response = await signalClient.mutate({
-            mutation: gql`
-              mutation(
-                $transportId: TransportId!
-                $sctpStreamParameters: SctpStreamParameters!
-              ) {
-                produceData(
-                  transportId: $transportId
-                  sctpStreamParameters: $sctpStreamParameters
-                )
-              }
-            `,
+          const response = await signalClient.mutate<
+            ProduceDataMutation,
+            ProduceDataMutationVariables
+          >({
+            mutation: ProduceDataDocument,
             variables: {
               transportId: sendTransport.id,
               sctpStreamParameters,
@@ -209,11 +204,10 @@ const StreamVideo: React.FC = () => {
           });
           console.log("produced data", response.data);
           // the mutation returns a producerId, which we need to yield
-          success({ id: response.data.produce_data });
         }
       );
 
-      streamRef.current!.srcObject = null;
+      stream.current!.srcObject = null;
       receiveMediaStreamRef.current = undefined;
 
       // listen for when new media producers are available
@@ -230,20 +224,19 @@ const StreamVideo: React.FC = () => {
           console.log("producer available", result.data);
 
           // request consumerOptions for new producer from relay
-          const response = await signalClient.mutate({
-            mutation: gql`
-              mutation($transportId: TransportId!, $producerId: ProducerId!) {
-                consume(transportId: $transportId, producerId: $producerId)
-              }
-            `,
+          const response = await signalClient.mutate<
+            ConsumeMutation,
+            ConsumeMutationVariables
+          >({
+            mutation: ConsumeDocument,
             variables: {
               transportId: recvTransport.id,
               producerId: result.data?.producerAvailable,
             },
           });
-          console.log("consumed", response.data);
+
           // use consumerOptions to connect to producer from relay
-          const consumer = await recvTransport.consume(response.data.consume);
+          const consumer = await recvTransport.consume(response.data?.consume);
           console.log("consumer created", consumer);
 
           // display media streams
@@ -262,23 +255,22 @@ const StreamVideo: React.FC = () => {
                 );
             }
             receiveMediaStreamRef.current.addTrack(consumer.track);
-            streamRef.current!.srcObject = receiveMediaStreamRef.current;
-            console.log("Stream Component:", streamRef);
+            stream.current!.srcObject = receiveMediaStreamRef.current;
+            console.log("Stream Component:", stream);
           } else {
             receiveMediaStreamRef.current = new MediaStream([consumer.track]);
-            streamRef.current!.srcObject = receiveMediaStreamRef.current;
-            console.log("Stream Component:", streamRef);
+            stream.current!.srcObject = receiveMediaStreamRef.current;
+            console.log("Stream Component:", stream);
+            console.log("Stream Component:", stream);
           }
-          const consumerId = consumer.id;
           // the stream begins paused for technical reasons, request stream to resume
-          await signalClient.mutate({
-            mutation: gql`
-              mutation($consumerId: ConsumerId!) {
-                consumerResume(consumerId: $consumerId)
-              }
-            `,
+          await signalClient.mutate<
+            ConsumerResumeMutation,
+            ConsumerResumeMutationVariables
+          >({
+            mutation: ConsumerResumeDocument,
             variables: {
-              consumerId: consumerId,
+              consumerId: consumer.id,
             },
           });
         });
@@ -293,22 +285,18 @@ const StreamVideo: React.FC = () => {
             clearInterval(handle);
             return;
           }
-          dataProducer.send(data);
         }, 10000);
+        return () => {
+          clientSubRef.current?.close();
+          clientSubRef.current = undefined;
+        };
       });
-
-      clientSubRef.current = sub;
     }
 
     setupStream();
+  }, [params.roomId, userId]);
 
-    return () => {
-      clientSubRef.current?.close();
-      clientSubRef.current = undefined;
-    };
-  }, [userId, params.roomId]);
-
-  return <video ref={streamRef} width="100%" muted controls />;
+  return <video ref={stream} width="100%" muted controls autoPlay />;
 };
 
 export const StreamTab: React.FC = () => {
@@ -319,10 +307,10 @@ export const StreamTab: React.FC = () => {
   );
 };
 
-function getSignalConnection(clientToken: string) {
+function getSignalConnection(token: string) {
   let sub = new SubscriptionClient(signalAddress, {
     connectionParams: {
-      clientToken,
+      token,
     },
   });
   const wsLink = new WebSocketLink(sub);
