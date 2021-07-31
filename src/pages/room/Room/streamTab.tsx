@@ -1,6 +1,7 @@
 import { VStack } from "@chakra-ui/react";
 import { useRef, useEffect } from "react";
 import { Device } from "mediasoup-client";
+import { useRouteMatch } from "react-router-dom";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
   ApolloClient,
@@ -22,14 +23,16 @@ import {
 } from "./control.relay-control.generated";
 import { useSession } from "contexts/session";
 import { apolloClient } from "apollo";
-
 const signalAddress = "ws://localhost:8443";
+
+let cachedClientToken: string;
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
 }
 
 const StreamVideo: React.FC = () => {
+  const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
 
   // Init this with null to make it compatible with a different ref type for DOM elements
@@ -42,9 +45,13 @@ const StreamVideo: React.FC = () => {
 
   useEffect(() => {
     async function getClientToken(): Promise<string | undefined> {
+      if (cachedClientToken) {
+        return cachedClientToken;
+      }
+      console.log("getClientToken run");
       let validUserId = userId;
       if (!validUserId || validUserId === null) {
-        validUserId = "10354";
+        validUserId = "10356";
         // TODO: Should just throw here
         // return;
       }
@@ -56,7 +63,7 @@ const StreamVideo: React.FC = () => {
         mutation: RegisterClientSessionDocument,
         variables: {
           sessionId: validUserId,
-          roomId: "ayush",
+          roomId: params.roomId!,
         },
       });
 
@@ -70,11 +77,12 @@ const StreamVideo: React.FC = () => {
       if (data?.__typename !== "SessionWithToken") {
         return undefined;
       }
-      let clientToken = data?.accessToken;
-      return clientToken;
+      cachedClientToken = data?.accessToken;
+      return cachedClientToken;
     }
 
     async function setupStream() {
+      console.log("setupStream run");
       const clientToken = await getClientToken();
 
       if (!clientToken) {
@@ -83,7 +91,7 @@ const StreamVideo: React.FC = () => {
 
       console.log("Access token: ", clientToken);
 
-      const { client, sub } = getSignalConnection(clientToken);
+      const { client: signalClient, sub } = getSignalConnection(clientToken);
       const device = new Device();
 
       //   const initParams = await client.query<
@@ -93,7 +101,7 @@ const StreamVideo: React.FC = () => {
       //     // query relay for init parameters
       //     query: GetRtpCapabilitiesDocument,
       //   });
-      const initParams = await client.query({
+      const initParams = await signalClient.query({
         query: gql`
           query {
             serverRtpCapabilities
@@ -108,7 +116,7 @@ const StreamVideo: React.FC = () => {
       });
 
       // send init params back to relay
-      await client.mutate({
+      await signalClient.mutate({
         mutation: gql`
           mutation($rtpCapabilities: RtpCapabilities!) {
             rtpCapabilities(rtpCapabilities: $rtpCapabilities)
@@ -121,7 +129,7 @@ const StreamVideo: React.FC = () => {
 
       async function createWebrtcTransport() {
         return (
-          await client.mutate({
+          await signalClient.mutate({
             mutation: gql`
               mutation {
                 createWebrtcTransport
@@ -141,7 +149,7 @@ const StreamVideo: React.FC = () => {
         dtlsParameters: DtlsParameters
       ) {
         // this callback is called on first consume/produce to link transport to relay
-        await client.mutate({
+        await signalClient.mutate({
           mutation: gql`
             mutation(
               $transportId: TransportId!
@@ -182,7 +190,7 @@ const StreamVideo: React.FC = () => {
         "producedata",
         async ({ sctpStreamParameters }, success) => {
           // this callback is called on produceData to request connection from relay
-          const response = await client.mutate({
+          const response = await signalClient.mutate({
             mutation: gql`
               mutation(
                 $transportId: TransportId!
@@ -209,7 +217,7 @@ const StreamVideo: React.FC = () => {
       receiveMediaStreamRef.current = undefined;
 
       // listen for when new media producers are available
-      client
+      signalClient
         .subscribe({
           query: gql`
             subscription {
@@ -222,7 +230,7 @@ const StreamVideo: React.FC = () => {
           console.log("producer available", result.data);
 
           // request consumerOptions for new producer from relay
-          const response = await client.mutate({
+          const response = await signalClient.mutate({
             mutation: gql`
               mutation($transportId: TransportId!, $producerId: ProducerId!) {
                 consume(transportId: $transportId, producerId: $producerId)
@@ -263,7 +271,7 @@ const StreamVideo: React.FC = () => {
           }
           const consumerId = consumer.id;
           // the stream begins paused for technical reasons, request stream to resume
-          await client.mutate({
+          await signalClient.mutate({
             mutation: gql`
               mutation($consumerId: ConsumerId!) {
                 consumerResume(consumerId: $consumerId)
@@ -298,7 +306,7 @@ const StreamVideo: React.FC = () => {
       clientSubRef.current?.close();
       clientSubRef.current = undefined;
     };
-  }, [userId]);
+  }, [userId, params.roomId]);
 
   return <video ref={streamRef} width="100%" muted controls />;
 };
