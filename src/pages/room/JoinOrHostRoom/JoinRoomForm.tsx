@@ -63,7 +63,9 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
             nickname,
           },
         });
-      } catch {}
+      } catch (error) {
+        console.log(error);
+      }
 
       if (!result || !result.data) {
         setSubmissionErrorMessage(

@@ -10,18 +10,34 @@ mutation createWebrtcTransport {
   createWebrtcTransport
 }
 
-mutation connectWebrtcTransport($transportId: TransportId!, $dtlsParameters: DtlsParameters!) {
-  connectWebrtcTransport(transportId: $transportId, dtlsParameters: $dtlsParameters) 
+mutation connectWebrtcTransport(
+  $transportId: TransportId!
+  $dtlsParameters: DtlsParameters!
+) {
+  connectWebrtcTransport(
+    transportId: $transportId
+    dtlsParameters: $dtlsParameters
+  )
 }
 
-mutation produceData($transportId: TransportId!, $sctpStreamParameters: SctpStreamParameters!) {
-  produceData(transportId: $transportId, sctpStreamParameters: $sctpStreamParameters) 
+mutation produceData(
+  $transportId: TransportId!
+  $sctpStreamParameters: SctpStreamParameters!
+) {
+  produceData(
+    transportId: $transportId
+    sctpStreamParameters: $sctpStreamParameters
+  )
 }
 
 mutation consume($transportId: TransportId!, $producerId: ProducerId!) {
-  consume(transportId: $transportId, producerId: $producerId) 
+  consume(transportId: $transportId, producerId: $producerId)
 }
 
 mutation consumerResume($consumerId: ConsumerId!) {
-  consumerResume(consumerId: $consumerId) 
+  consumerResume(consumerId: $consumerId)
+}
+
+subscription producerAvailable {
+  producerAvailable
 }

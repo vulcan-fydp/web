@@ -1,9 +1,0 @@
-mutation registerClientSession($sessionId: ID!, $roomId: ID!) {
-  registerClientSession(sessionId: $sessionId, roomId: $roomId) {
-    __typename
-    ... on SessionWithToken {
-      id
-      accessToken
-    }
-  }
-}
