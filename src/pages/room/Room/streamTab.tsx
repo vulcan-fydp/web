@@ -35,69 +35,21 @@ import {
 } from "./signal.relay.generated";
 
 const signalAddress = "ws://localhost:8443";
-const TEST_USER_ID = "10485";
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
 }
 
 const StreamVideo: React.FC = () => {
-  const stream = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
-  const clientSubRef = useRef<SubscriptionClient>();
 
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
 
   useEffect(() => {
-    // async function getClientToken(): Promise<string | undefined> {
-    //   if (!cachedClientToken) {
-    //     let validUserId = userId;
-    //     if (!validUserId || validUserId === null) {
-    //       validUserId = TEST_USER_ID;
-    //       // TODO: In the future, should just throw here
-    //       console.log("Invalid user id, using test ID instead", TEST_USER_ID);
-    //       // return;
-    //     }
-
-    //     let response = await apolloClient.mutate<
-    //       RegisterClientSessionMutation,
-    //       RegisterClientSessionMutationVariables
-    //     >({
-    //       mutation: RegisterClientSessionDocument,
-    //       variables: {
-    //         sessionId: validUserId,
-    //         roomId: params.roomId!,
-    //       },
-    //     });
-
-    //     if (!response.data) {
-    //       console.log("Error getting client access token:", response);
-    //       return undefined;
-    //     }
-
-    //     let data = response.data.registerClientSession;
-    //     if (data?.__typename !== "SessionWithToken") {
-    //       console.log("Error getting client access token:", data);
-    //       return undefined;
-    //     }
-
-    //     cachedClientToken = data?.accessToken;
-    //   }
-
-    //   return cachedClientToken;
-    // }
-
     async function setupStream() {
-      //   const clientToken = await getClientToken();
-
-      //   if (!clientToken) {
-      //     // TODO: Throw some error where client can't get access token from relay control
-      //     console.log("Invalid client token: ", clientToken);
-      //     return;
-      //   }
-
       const { client: signalClient } = getSignalConnection();
       const device = new Device();
 
@@ -192,7 +144,7 @@ const StreamVideo: React.FC = () => {
         }
       );
 
-      stream.current!.srcObject = null;
+      streamRef.current!.srcObject = null;
       receiveMediaStreamRef.current = undefined;
 
       // listen for when new media producers are available
@@ -237,10 +189,10 @@ const StreamVideo: React.FC = () => {
                 );
             }
             receiveMediaStreamRef.current.addTrack(consumer.track);
-            stream.current!.srcObject = receiveMediaStreamRef.current;
+            streamRef.current!.srcObject = receiveMediaStreamRef.current;
           } else {
             receiveMediaStreamRef.current = new MediaStream([consumer.track]);
-            stream.current!.srcObject = receiveMediaStreamRef.current;
+            streamRef.current!.srcObject = receiveMediaStreamRef.current;
           }
           // the stream begins paused for technical reasons, request stream to resume
           await signalClient.mutate<
@@ -271,7 +223,7 @@ const StreamVideo: React.FC = () => {
     setupStream();
   }, [params.roomId, userId]);
 
-  return <video ref={stream} width="100%" muted controls autoPlay />;
+  return <video ref={streamRef} width="100%" muted controls autoPlay />;
 };
 
 export const StreamTab: React.FC = () => {
