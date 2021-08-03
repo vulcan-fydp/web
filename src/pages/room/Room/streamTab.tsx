@@ -10,7 +10,7 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
-import { DtlsParameters } from "mediasoup-client/lib/Transport";
+import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
 import { useRouteMatch } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -78,6 +78,21 @@ async function connectWebrtcTransport(
   });
 }
 
+async function setTransportOnConnect(
+  sendTransport: Transport,
+  signalClient: ApolloClient<NormalizedCacheObject>
+) {
+  sendTransport.on("connect", async ({ dtlsParameters }, success) => {
+    // this callback is called on first consume/produce to link transport to relay
+    await connectWebrtcTransport(
+      sendTransport.id,
+      dtlsParameters,
+      signalClient
+    );
+    success();
+  });
+}
+
 const StreamVideo: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 
@@ -116,34 +131,22 @@ const StreamVideo: React.FC = () => {
         },
       });
 
-      let sendTransportOptions = await createWebrtcTransport(signalClient);
-      let recvTransportOptions = await createWebrtcTransport(signalClient);
+      let [sendTransportOptions, recvTransportOptions] = await Promise.all([
+        createWebrtcTransport(signalClient),
+        createWebrtcTransport(signalClient),
+      ]);
 
+      // Link send transport to relay
       let sendTransport = device.createSendTransport(
         jsonClone(sendTransportOptions)
       );
-      sendTransport.on("connect", async ({ dtlsParameters }, success) => {
-        // this callback is called on first consume/produce to link transport to relay
-        await connectWebrtcTransport(
-          sendTransport.id,
-          dtlsParameters,
-          signalClient
-        );
-        success();
-      });
+      setTransportOnConnect(sendTransport, signalClient);
+
+      // Link recv transport to relay
       let recvTransport = device.createRecvTransport(
         jsonClone(recvTransportOptions)
       );
-      recvTransport.on("connect", async ({ dtlsParameters }, success) => {
-        // this callback is called on first consume/produce to link transport to relay
-        await connectWebrtcTransport(
-          recvTransport.id,
-          dtlsParameters,
-          signalClient
-        );
-
-        success();
-      });
+      setTransportOnConnect(recvTransport, signalClient);
 
       // this callback is called on produceData to request connection from relay
       sendTransport.on(
