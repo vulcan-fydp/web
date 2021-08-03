@@ -13,6 +13,7 @@ const link = split(
   }),
   createHttpLink({
     uri: "http://localhost:9443",
+    credentials: "include",
   })
 );
 

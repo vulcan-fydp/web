@@ -2,10 +2,17 @@ import { VStack } from "@chakra-ui/react";
 import { useRef, useEffect } from "react";
 import { Device } from "mediasoup-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { ApolloClient, InMemoryCache, FetchResult } from "@apollo/client/core";
+import {
+  ApolloClient,
+  InMemoryCache,
+  FetchResult,
+  createHttpLink,
+} from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters } from "mediasoup-client/lib/Transport";
 import { useRouteMatch } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 import { useSession } from "contexts/session";
 import {
   GetRtpCapabilitiesDocument,
@@ -47,10 +54,11 @@ const StreamVideo: React.FC = () => {
 
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
+  const [cookies] = useCookies();
 
   useEffect(() => {
     async function setupStream() {
-      const { client: signalClient } = getSignalConnection();
+      const { client: signalClient } = getSignalConnection(cookies.token);
       const device = new Device();
 
       const initParams = await signalClient.query<
@@ -221,7 +229,7 @@ const StreamVideo: React.FC = () => {
     }
 
     setupStream();
-  }, [params.roomId, userId]);
+  }, [cookies.token, params.roomId, userId]);
 
   return <video ref={streamRef} width="100%" muted controls autoPlay />;
 };
@@ -234,12 +242,16 @@ export const StreamTab: React.FC = () => {
   );
 };
 
-function getSignalConnection() {
-  let sub = new SubscriptionClient(signalAddress);
-  const wsLink = new WebSocketLink(sub);
+function getSignalConnection(token: string) {
+  let sub = new SubscriptionClient(signalAddress, {
+    connectionParams: {
+      token,
+    },
+  });
+  let wsLink = new WebSocketLink(sub);
   let client = new ApolloClient({
     link: wsLink,
     cache: new InMemoryCache(),
   });
-  return { client, sub };
+  return { client };
 }
