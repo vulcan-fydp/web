@@ -7,6 +7,7 @@ import {
   InMemoryCache,
   FetchResult,
   createHttpLink,
+  NormalizedCacheObject,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters } from "mediasoup-client/lib/Transport";
@@ -41,10 +42,40 @@ import {
   ProducerAvailableSubscriptionVariables,
 } from "./signal.relay.generated";
 
-const signalAddress = "ws://localhost:8443";
+const SIGNAL_ADDRESS = "ws://localhost:8443";
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
+}
+
+async function createWebrtcTransport(
+  signalClient: ApolloClient<NormalizedCacheObject>
+) {
+  const response = await signalClient.mutate<
+    CreateWebrtcTransportMutation,
+    CreateWebrtcTransportMutationVariables
+  >({
+    mutation: CreateWebrtcTransportDocument,
+  });
+  return response.data?.createWebrtcTransport;
+}
+
+async function connectWebrtcTransport(
+  transportId: string,
+  dtlsParameters: DtlsParameters,
+  signalClient: ApolloClient<NormalizedCacheObject>
+) {
+  // this callback is called on first consume/produce to link transport to relay
+  await signalClient.mutate<
+    ConnectWebrtcTransportMutation,
+    ConnectWebrtcTransportMutationVariables
+  >({
+    mutation: ConnectWebrtcTransportDocument,
+    variables: {
+      transportId,
+      dtlsParameters,
+    },
+  });
 }
 
 const StreamVideo: React.FC = () => {
@@ -85,42 +116,19 @@ const StreamVideo: React.FC = () => {
         },
       });
 
-      async function createWebrtcTransport() {
-        const response = await signalClient.mutate<
-          CreateWebrtcTransportMutation,
-          CreateWebrtcTransportMutationVariables
-        >({
-          mutation: CreateWebrtcTransportDocument,
-        });
-        return response.data?.createWebrtcTransport;
-      }
-
-      let sendTransportOptions = await createWebrtcTransport();
-      let recvTransportOptions = await createWebrtcTransport();
-
-      async function connectWebrtcTransport(
-        transportId: string,
-        dtlsParameters: DtlsParameters
-      ) {
-        // this callback is called on first consume/produce to link transport to relay
-        await signalClient.mutate<
-          ConnectWebrtcTransportMutation,
-          ConnectWebrtcTransportMutationVariables
-        >({
-          mutation: ConnectWebrtcTransportDocument,
-          variables: {
-            transportId,
-            dtlsParameters,
-          },
-        });
-      }
+      let sendTransportOptions = await createWebrtcTransport(signalClient);
+      let recvTransportOptions = await createWebrtcTransport(signalClient);
 
       let sendTransport = device.createSendTransport(
         jsonClone(sendTransportOptions)
       );
       sendTransport.on("connect", async ({ dtlsParameters }, success) => {
         // this callback is called on first consume/produce to link transport to relay
-        await connectWebrtcTransport(sendTransport.id, dtlsParameters);
+        await connectWebrtcTransport(
+          sendTransport.id,
+          dtlsParameters,
+          signalClient
+        );
         success();
       });
       let recvTransport = device.createRecvTransport(
@@ -128,7 +136,11 @@ const StreamVideo: React.FC = () => {
       );
       recvTransport.on("connect", async ({ dtlsParameters }, success) => {
         // this callback is called on first consume/produce to link transport to relay
-        await connectWebrtcTransport(recvTransport.id, dtlsParameters);
+        await connectWebrtcTransport(
+          recvTransport.id,
+          dtlsParameters,
+          signalClient
+        );
 
         success();
       });
@@ -215,7 +227,10 @@ const StreamVideo: React.FC = () => {
         });
 
       // start producing data (this would be controller inputs in binary format)
-      let dataProducer = await sendTransport.produceData({ ordered: false });
+      let dataProducer = await sendTransport.produceData({
+        ordered: false,
+        maxRetransmits: 0,
+      });
       dataProducer.on("open", () => {
         let handle = setInterval(() => {
           let data = "hello " + Math.floor(1000 * Math.random());
@@ -243,7 +258,7 @@ export const StreamTab: React.FC = () => {
 };
 
 function getSignalConnection(token: string) {
-  let sub = new SubscriptionClient(signalAddress, {
+  let sub = new SubscriptionClient(SIGNAL_ADDRESS, {
     connectionParams: {
       token,
     },
