@@ -261,11 +261,7 @@ export const StreamTab: React.FC = () => {
 };
 
 function getSignalConnection(token: string) {
-  let sub = new SubscriptionClient(SIGNAL_ADDRESS, {
-    connectionParams: {
-      token,
-    },
-  });
+  let sub = new SubscriptionClient(SIGNAL_ADDRESS);
   let wsLink = new WebSocketLink(sub);
   let client = new ApolloClient({
     link: wsLink,
