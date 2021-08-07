@@ -6,13 +6,11 @@ import {
   ApolloClient,
   InMemoryCache,
   FetchResult,
-  createHttpLink,
   NormalizedCacheObject,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
 import { useRouteMatch } from "react-router-dom";
-import { useCookies } from "react-cookie";
 
 import { useSession } from "contexts/session";
 import {
@@ -100,11 +98,10 @@ const StreamVideo: React.FC = () => {
 
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
-  const [cookies] = useCookies();
 
   useEffect(() => {
     async function setupStream() {
-      const { client: signalClient } = getSignalConnection(cookies.token);
+      const { client: signalClient } = getSignalConnection();
       const device = new Device();
 
       const initParams = await signalClient.query<
@@ -247,7 +244,7 @@ const StreamVideo: React.FC = () => {
     }
 
     setupStream();
-  }, [cookies.token, params.roomId, userId]);
+  }, [params.roomId, userId]);
 
   return <video ref={streamRef} width="100%" muted controls autoPlay />;
 };
@@ -260,7 +257,7 @@ export const StreamTab: React.FC = () => {
   );
 };
 
-function getSignalConnection(token: string) {
+function getSignalConnection() {
   let sub = new SubscriptionClient(SIGNAL_ADDRESS);
   let wsLink = new WebSocketLink(sub);
   let client = new ApolloClient({
