@@ -4,7 +4,7 @@ import React from "react";
 import { useRouteMatch } from "react-router";
 import { Redirect } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
-import { JoinRoomForm } from "./JoinRoomForm";
+import { JoinRoomForm } from "components/JoinRoom";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
 import { useUserQuery } from "./user.backend.generated";
 
