@@ -22,7 +22,7 @@ import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-const roomUrl = "localhost:3000/room/";
+const roomUrl = `${window.location.hostname}/room/`;
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();

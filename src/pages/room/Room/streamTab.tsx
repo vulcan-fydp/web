@@ -40,7 +40,7 @@ import {
   ProducerAvailableSubscriptionVariables,
 } from "./signal.relay.generated";
 
-const SIGNAL_ADDRESS = "ws://localhost:8443";
+const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
