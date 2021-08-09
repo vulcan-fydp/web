@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/backend',
     createProxyMiddleware({
-      target: 'http://localhost:4000',
+      target: 'https://vulcangames.fun',
       changeOrigin: true,
       pathRewrite: path => path.replace('/backend', '')
     })
@@ -13,9 +13,9 @@ module.exports = function(app) {
   app.use(
     '/relay',
     createProxyMiddleware({ 
-      target: 'http://localhost:8443', 
+      target: 'wss://vulcangames.fun:8443', 
       changeOrigin: true,
-      pathRewrite: path => path.replace('/relay', '')
+      pathRewrite: path => path.replace('/relay/graphql', '')
     })
   );
 };

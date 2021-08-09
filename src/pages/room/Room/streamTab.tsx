@@ -1,28 +1,19 @@
-import { Button, HStack, Input, VStack } from "@chakra-ui/react";
-import React, { useRef, useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
-import { WebSocketLink } from "@apollo/client/link/ws";
 import {
   ApolloClient,
-  InMemoryCache,
   FetchResult,
+  InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client/core";
-import { SubscriptionClient } from "subscriptions-transport-ws";
-import { Device } from "mediasoup-client";
-import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import { DataProducer } from "mediasoup-client/lib/DataProducer";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { Box, Button, chakra, HStack, Input } from "@chakra-ui/react";
 import { useSession } from "contexts/session";
+import { Device } from "mediasoup-client";
+import { DataProducer } from "mediasoup-client/lib/DataProducer";
+import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
+import React, { useEffect, useRef, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
+import { SubscriptionClient } from "subscriptions-transport-ws";
 import {
-  GetRtpCapabilitiesDocument,
-  GetRtpCapabilitiesQuery,
-  GetRtpCapabilitiesQueryVariables,
-  RtpCapabilitiesMutation,
-  RtpCapabilitiesMutationVariables,
-  RtpCapabilitiesDocument,
-  CreateWebrtcTransportDocument,
-  CreateWebrtcTransportMutation,
-  CreateWebrtcTransportMutationVariables,
   ConnectWebrtcTransportDocument,
   ConnectWebrtcTransportMutation,
   ConnectWebrtcTransportMutationVariables,
@@ -32,12 +23,21 @@ import {
   ConsumerResumeDocument,
   ConsumerResumeMutation,
   ConsumerResumeMutationVariables,
+  CreateWebrtcTransportDocument,
+  CreateWebrtcTransportMutation,
+  CreateWebrtcTransportMutationVariables,
+  GetRtpCapabilitiesDocument,
+  GetRtpCapabilitiesQuery,
+  GetRtpCapabilitiesQueryVariables,
   ProduceDataDocument,
   ProduceDataMutation,
   ProduceDataMutationVariables,
   ProducerAvailableDocument,
   ProducerAvailableSubscription,
   ProducerAvailableSubscriptionVariables,
+  RtpCapabilitiesDocument,
+  RtpCapabilitiesMutation,
+  RtpCapabilitiesMutationVariables,
 } from "./signal.relay.generated";
 
 const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
@@ -286,10 +286,36 @@ export const StreamTab: React.FC = () => {
   }, [params.roomId, userId]);
 
   return (
-    <VStack alignItems="center" spacing="20px">
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      borderWidth="2px"
+      borderColor="purple.400"
+      position="relative"
+    >
       <StreamVideo streamRef={streamRef} />
-      <ExampleControllerInputSender dataProducerRef={dataProducerRef} />
-    </VStack>
+      <ControllerCapture />
+    </Box>
+  );
+};
+
+const Canvas = chakra("canvas");
+
+const ControllerCapture = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  return (
+    <Canvas
+      ref={canvasRef}
+      position="absolute"
+      top="0"
+      left="0"
+      right="0"
+      bottom="0"
+      width="100%"
+      height="100%"
+    />
   );
 };
 
