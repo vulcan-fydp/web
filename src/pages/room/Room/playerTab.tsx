@@ -21,7 +21,7 @@ function getControllerText(controller: number | null | undefined) {
 const playerLoadingError =
   "There was an error loading players, please try again.";
 
-export function PlayerTab() {
+export const PlayerTab: React.FC = () => {
   const { data, loading, error } = usePlayersInRoomQuery();
 
   if (loading) {

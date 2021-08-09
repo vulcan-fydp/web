@@ -16,12 +16,11 @@ import { useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
+import { StreamTab } from "pages/room/Room/streamTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
-
-const roomUrl = "localhost:3000/room/";
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
@@ -64,6 +63,8 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
+  const room_url = `${window.location.hostname}/room/` + params.roomId;
+
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
@@ -75,6 +76,7 @@ const RoomDetails = () => {
       };
     }
   }, [tooltipShowing]);
+
 
   return (
     <HStack>
@@ -95,11 +97,11 @@ const RoomDetails = () => {
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(roomUrl + params.roomId);
+              navigator.clipboard.writeText(room_url);
               setTooltipShowing(true);
             }}
           >
-            {roomUrl}
+            {room_url}
           </Button>
         </Tooltip>
       </VStack>
@@ -153,14 +155,6 @@ const ControllerTab = () => {
   return (
     <Box>
       <Heading> Controller Tab </Heading>
-    </Box>
-  );
-};
-
-const StreamTab = () => {
-  return (
-    <Box>
-      <Heading> Stream Tab </Heading>
     </Box>
   );
 };

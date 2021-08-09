@@ -73,25 +73,27 @@ export const LoginPage = () => {
         alignItems="center"
         mb="60px"
       >
-        <FormControl isInvalid={!!errors.email} mb="10px">
+        <FormControl isInvalid={!!errors.email} mb="10px" align="center">
           <Input
             type="email"
             placeholder="Email"
             {...register("email", {
               required: "Please provide an email",
             })}
+            width="266px"
           />
           {errors.email ? (
             <FormErrorMessage>{errors.email.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <FormControl isInvalid={!!errors.password} mb="20px">
+        <FormControl isInvalid={!!errors.password} mb="20px" align="center">
           <Input
             type="password"
             placeholder="Password"
             {...register("password", {
               required: "Please provide a password",
             })}
+            width="266px"
           />
           {errors.password ? (
             <FormErrorMessage>{errors.password.message}</FormErrorMessage>
@@ -102,6 +104,7 @@ export const LoginPage = () => {
           type="submit"
           colorScheme="purple"
           size="lg"
+          mb="20px"
         >
           Log In
         </Button>

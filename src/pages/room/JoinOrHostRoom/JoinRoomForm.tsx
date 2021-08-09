@@ -9,7 +9,6 @@ import {
 import { apolloClient } from "apollo";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import {
@@ -62,6 +61,9 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
             roomId,
             nickname,
           },
+          context: {
+            target: "backend",
+          },
         });
       } catch {}
 
@@ -93,31 +95,33 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
       align="center"
       onSubmit={handleSubmit(onFormSubmit)}
     >
-      <FormControl isInvalid={!!errors.nickname}>
+      <FormControl isInvalid={!!errors.nickname} align="center">
         <Input
           placeholder="Nickname"
           {...register("nickname", {
             required: "Nickname cannot be empty",
           })}
+          width="266px"
         />
         {errors.nickname ? (
           <FormErrorMessage>{errors.nickname.message}</FormErrorMessage>
         ) : null}
       </FormControl>
       {promptRoomId ? (
-        <FormControl isInvalid={!!errors.roomId} mt="10px">
+        <FormControl isInvalid={!!errors.roomId} mt="10px" align="center">
           <Input
             placeholder="Room Code"
             {...register("roomId", {
               required: "Room code cannot be empty",
             })}
+            width="266px"
           />
           {errors.roomId ? (
             <FormErrorMessage>{errors.roomId.message}</FormErrorMessage>
           ) : null}
         </FormControl>
       ) : null}
-      <Button type="submit" isDisabled={isSubmitting} mt="40px">
+      <Button type="submit" isDisabled={isSubmitting} mt="40px" mb="20px">
         Join Room
       </Button>
       {submissionErrorMessage !== undefined ? (

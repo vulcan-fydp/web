@@ -1,5 +1,5 @@
 overwrite: true
-schema: "./node_modules/@vulcan-fydp/schema/schema.gql"
+schema: "./node_modules/@vulcan-fydp/schema/backend_schema.gql"
 documents: "src/**/*.backend.gql"
 generates:
   src/backend-types.ts:
