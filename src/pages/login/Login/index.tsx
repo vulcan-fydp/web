@@ -73,7 +73,7 @@ export const LoginPage = () => {
         alignItems="center"
         mb="60px"
       >
-        <FormControl isInvalid={!!errors.email} mb="10px" /* align="center" */>
+        <FormControl isInvalid={!!errors.email} mb="10px" align="center">
           <Input
             type="email"
             placeholder="Email"

@@ -101,7 +101,7 @@ const StreamVideo: React.FC = () => {
 
   useEffect(() => {
     const { client: signalClient, sub: clientSub } = getSignalConnection();
-    
+
     async function setupStream() {
       const device = new Device();
 
@@ -180,7 +180,7 @@ const StreamVideo: React.FC = () => {
           // callback is called when new producer is available
 
           // request consumerOptions for new producer from relay
-          // TODO: this mutation might fail if the relay is unavailable, add some error handling here 
+          // TODO: this mutation might fail if the relay is unavailable, add some error handling here
           const response = await signalClient.mutate<
             ConsumeMutation,
             ConsumeMutationVariables
@@ -250,8 +250,7 @@ const StreamVideo: React.FC = () => {
     // TODO: Handle cleanup
     return () => {
       clientSub?.close();
-    }
-
+    };
   }, [params.roomId, userId]);
 
   return <video ref={streamRef} width="100%" muted controls autoPlay />;
