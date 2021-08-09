@@ -22,8 +22,6 @@ import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
 
-const roomUrl = `${window.location.hostname}/room/`;
-
 export const Dashboard = () => {
   const { path } = useRouteMatch();
 
@@ -65,6 +63,8 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
+  const room_url = `${window.location.hostname}/room/` + params.roomId;
+
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
@@ -76,6 +76,7 @@ const RoomDetails = () => {
       };
     }
   }, [tooltipShowing]);
+
 
   return (
     <HStack>
@@ -96,11 +97,11 @@ const RoomDetails = () => {
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(roomUrl + params.roomId);
+              navigator.clipboard.writeText(room_url);
               setTooltipShowing(true);
             }}
           >
-            {roomUrl}
+            {room_url}
           </Button>
         </Tooltip>
       </VStack>

@@ -76,7 +76,7 @@ async function connectWebrtcTransport(
   });
 }
 
-async function setTransportOnConnect(
+function setTransportOnConnect(
   sendTransport: Transport,
   signalClient: ApolloClient<NormalizedCacheObject>
 ) {
@@ -100,8 +100,9 @@ const StreamVideo: React.FC = () => {
   const { userId } = useSession();
 
   useEffect(() => {
+    const { client: signalClient, sub: clientSub } = getSignalConnection();
+    
     async function setupStream() {
-      const { client: signalClient } = getSignalConnection();
       const device = new Device();
 
       const initParams = await signalClient.query<
@@ -179,6 +180,7 @@ const StreamVideo: React.FC = () => {
           // callback is called when new producer is available
 
           // request consumerOptions for new producer from relay
+          // TODO: this mutation might fail if the relay is unavailable, add some error handling here 
           const response = await signalClient.mutate<
             ConsumeMutation,
             ConsumeMutationVariables
@@ -244,6 +246,12 @@ const StreamVideo: React.FC = () => {
     }
 
     setupStream();
+
+    // TODO: Handle cleanup
+    return () => {
+      clientSub?.close();
+    }
+
   }, [params.roomId, userId]);
 
   return <video ref={streamRef} width="100%" muted controls autoPlay />;
@@ -264,5 +272,5 @@ function getSignalConnection() {
     link: wsLink,
     cache: new InMemoryCache(),
   });
-  return { client };
+  return { client, sub };
 }
