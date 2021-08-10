@@ -1,6 +1,6 @@
 import { Button, HStack, Input, VStack } from "@chakra-ui/react";
 import React, { useRef, useEffect, useState } from "react";
-import { Device } from "mediasoup-client";
+import { useRouteMatch } from "react-router-dom";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
   ApolloClient,
@@ -9,9 +9,9 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { Device } from "mediasoup-client";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import { useRouteMatch } from "react-router-dom";
-
+import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { useSession } from "contexts/session";
 import {
   GetRtpCapabilitiesDocument,
@@ -39,7 +39,6 @@ import {
   ProducerAvailableSubscription,
   ProducerAvailableSubscriptionVariables,
 } from "./signal.relay.generated";
-import { DataProducer } from "mediasoup-client/lib/DataProducer";
 
 const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
 
