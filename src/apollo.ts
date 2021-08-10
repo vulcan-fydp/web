@@ -1,7 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 const link = createHttpLink({
-  uri: (operation) => `/${operation.getContext().target}/graphql`,
+  uri: "https://vulcangames.fun/graphql",
 });
 
 export const apolloClient = new ApolloClient({

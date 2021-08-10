@@ -1,5 +1,5 @@
-import { VStack } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
+import { Button, HStack, Input, VStack } from "@chakra-ui/react";
+import React, { useRef, useEffect, useState } from "react";
 import { Device } from "mediasoup-client";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
@@ -39,6 +39,7 @@ import {
   ProducerAvailableSubscription,
   ProducerAvailableSubscriptionVariables,
 } from "./signal.relay.generated";
+import { DataProducer } from "mediasoup-client/lib/DataProducer";
 
 const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
 
@@ -91,11 +92,20 @@ function setTransportOnConnect(
   });
 }
 
-const StreamVideo: React.FC = () => {
+interface StreamVideoProps {
+  streamRef: React.RefObject<HTMLVideoElement>;
+}
+
+const StreamVideo: React.FC<StreamVideoProps> = ({ streamRef }) => {
+  return <video ref={streamRef} width="100%" muted controls autoPlay />;
+};
+
+export const StreamTab: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
-
+  const dataProducerRef = useRef<DataProducer>();
+  
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
 
@@ -152,7 +162,7 @@ const StreamVideo: React.FC = () => {
         async ({ sctpStreamParameters }, success) => {
           // this callback is called on produceData to request connection from relay
           // the mutation returns a producerId, which we need to yield
-          await signalClient.mutate<
+          const response = await signalClient.mutate<
             ProduceDataMutation,
             ProduceDataMutationVariables
           >({
@@ -162,6 +172,9 @@ const StreamVideo: React.FC = () => {
               sctpStreamParameters,
             },
           });
+          
+          // the mutation returns a producerId, which we need to yield 
+          success({ id: response.data?.produceData })
         }
       );
 
@@ -229,19 +242,9 @@ const StreamVideo: React.FC = () => {
         });
 
       // start producing data (this would be controller inputs in binary format)
-      let dataProducer = await sendTransport.produceData({
+      dataProducerRef.current = await sendTransport.produceData({
         ordered: false,
         maxRetransmits: 0,
-      });
-      dataProducer.on("open", () => {
-        let handle = setInterval(() => {
-          let data = "hello " + Math.floor(1000 * Math.random());
-          console.log("send data", data);
-          if (dataProducer.closed) {
-            clearInterval(handle);
-            return;
-          }
-        }, 10000);
       });
     }
 
@@ -252,14 +255,21 @@ const StreamVideo: React.FC = () => {
       clientSub?.close();
     };
   }, [params.roomId, userId]);
+  const [sendData, setSendData] = useState("");
 
-  return <video ref={streamRef} width="100%" muted controls autoPlay />;
-};
-
-export const StreamTab: React.FC = () => {
   return (
     <VStack alignItems="center" spacing="20px">
-      <StreamVideo />
+      <StreamVideo streamRef={streamRef}/>
+      <HStack>
+      <Input onChange={(event) => setSendData(event.target.value)}>{sendData}</Input>
+      <Button onClick={() => {
+        if (dataProducerRef.current?.closed) {
+          console.log("Data Producer closed, unable to send inputs");
+        }
+        console.log("Sending input: ", sendData)
+        dataProducerRef.current?.send(sendData);
+      }}> Send input! </Button>
+      </HStack>
     </VStack>
   );
 };
