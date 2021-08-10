@@ -97,7 +97,7 @@ const RoomDetails = () => {
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(room_url);
+              navigator.clipboard.writeText("https://" + room_url);
               setTooltipShowing(true);
             }}
           >
