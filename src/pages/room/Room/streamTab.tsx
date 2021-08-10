@@ -106,7 +106,7 @@ interface ExampleControllerInputProps {
 
 // TODO: Replace this with the new Canvas component to gather and send controller inputs
 // Just need to create data and send with `dataProducerRef.current?.send(sendData);`
-const ExampleControllerInput: React.FC<ExampleControllerInputProps> = ({
+const ExampleControllerInputSender: React.FC<ExampleControllerInputProps> = ({
   dataProducerRef,
 }) => {
   const [sendData, setSendData] = useState("");
@@ -288,7 +288,7 @@ export const StreamTab: React.FC = () => {
   return (
     <VStack alignItems="center" spacing="20px">
       <StreamVideo streamRef={streamRef} />
-      <ExampleControllerInput dataProducerRef={dataProducerRef} />
+      <ExampleControllerInputSender dataProducerRef={dataProducerRef} />
     </VStack>
   );
 };
