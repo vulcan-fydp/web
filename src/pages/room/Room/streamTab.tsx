@@ -100,12 +100,41 @@ const StreamVideo: React.FC<StreamVideoProps> = ({ streamRef }) => {
   return <video ref={streamRef} width="100%" muted controls autoPlay />;
 };
 
+interface ExampleControllerInputProps {
+  dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
+}
+
+// TODO: Replace this with the new Canvas component to gather and send controller inputs
+// Just need to create data and send with `dataProducerRef.current?.send(sendData);`
+const ExampleControllerInput: React.FC<ExampleControllerInputProps> = ({
+  dataProducerRef,
+}) => {
+  const [sendData, setSendData] = useState("");
+  return (
+    <HStack>
+      <Input onChange={(event) => setSendData(event.target.value)} />
+      <Button
+        onClick={() => {
+          if (dataProducerRef.current?.closed) {
+            console.log("Data Producer is closed, unable to send inputs");
+          }
+          console.log("Sending input: ", sendData);
+          // Call the line below to send controller inputs!
+          dataProducerRef.current?.send(sendData);
+        }}
+      >
+        Send input!
+      </Button>
+    </HStack>
+  );
+};
+
 export const StreamTab: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
   const dataProducerRef = useRef<DataProducer>();
-  
+
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
 
@@ -172,9 +201,9 @@ export const StreamTab: React.FC = () => {
               sctpStreamParameters,
             },
           });
-          
-          // the mutation returns a producerId, which we need to yield 
-          success({ id: response.data?.produceData })
+
+          // the mutation returns a producerId, which we need to yield
+          success({ id: response.data?.produceData });
         }
       );
 
@@ -255,21 +284,11 @@ export const StreamTab: React.FC = () => {
       clientSub?.close();
     };
   }, [params.roomId, userId]);
-  const [sendData, setSendData] = useState("");
 
   return (
     <VStack alignItems="center" spacing="20px">
-      <StreamVideo streamRef={streamRef}/>
-      <HStack>
-      <Input onChange={(event) => setSendData(event.target.value)}>{sendData}</Input>
-      <Button onClick={() => {
-        if (dataProducerRef.current?.closed) {
-          console.log("Data Producer closed, unable to send inputs");
-        }
-        console.log("Sending input: ", sendData)
-        dataProducerRef.current?.send(sendData);
-      }}> Send input! </Button>
-      </HStack>
+      <StreamVideo streamRef={streamRef} />
+      <ExampleControllerInput dataProducerRef={dataProducerRef} />
     </VStack>
   );
 };
