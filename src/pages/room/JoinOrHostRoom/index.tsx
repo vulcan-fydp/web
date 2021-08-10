@@ -1,4 +1,4 @@
-import { Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { HeroPage } from "components/HeroPage";
 import React from "react";
 import { useRouteMatch } from "react-router";
@@ -69,13 +69,44 @@ const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
   vulcastId,
   roomId,
 }) => {
+  // TODO: Find a cleaner way to express these "Text + Input"
   return (
-    <Flex>
-      <HStack>
-        <JoinRoomForm roomId={roomId} />
-        {roomId === undefined ? <CreateRoomForm vulcastId={vulcastId} /> : null}
-      </HStack>
-    </Flex>
+    <HeroPage>
+      <Center paddingTop="140px">
+        <HStack alignItems="top" spacing={16}>
+          <Flex flexDir="column" align="center" maxW="400px">
+            <Text
+              fontSize={["2xl", "3xl"]}
+              fontWeight="bold"
+              textAlign="center"
+              mb="20px"
+            >
+              Create a room to start{" "}
+              <Text as="span" color="purple.300">
+                hosting a game.
+              </Text>
+            </Text>
+            {roomId === undefined ? (
+              <CreateRoomForm vulcastId={vulcastId} />
+            ) : null}
+          </Flex>
+          <Flex flexDir="column" align="center" maxW="400px">
+            <Text
+              fontSize={["2xl", "3xl"]}
+              fontWeight="bold"
+              textAlign="center"
+              mb="20px"
+            >
+              Join a room to start{" "}
+              <Text as="span" color="purple.300">
+                playing.
+              </Text>
+            </Text>
+            <JoinRoomForm roomId={roomId} />
+          </Flex>
+        </HStack>
+      </Center>
+    </HeroPage>
   );
 };
 
@@ -83,8 +114,8 @@ const JoinAndRegisterVulcast: React.FC = () => {
   return (
     <Flex>
       <HStack>
-        <JoinRoomForm />
         <RegisterVulcastForm />
+        <JoinRoomForm />
       </HStack>
     </Flex>
   );

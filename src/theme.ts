@@ -14,22 +14,46 @@ export const vulcanTheme = extendTheme(
     colors: {
       black: "#282828",
       grey: "#434343",
+      purple: {
+        50: "#f0eaff",
+        100: "#d1c1f4",
+        200: "#b199e7",
+        300: "#9171dc",
+        400: "#7248d0",
+        500: "#592fb7",
+        600: "#45248f",
+        700: "#311968",
+        800: "#1e0f40",
+        900: "#0c031b",
+      },
     },
     components: {
+      Text: {
+        variants: {
+          logo: {
+            color: "purple",
+          },
+        },
+      },
       Tabs: {
+        baseStyle: {
+          tabpanel: {
+            padding: "20px 0",
+          },
+        },
         variants: {
           line: {
             tab: {
               color: "white",
               fontWeight: "semibold",
               _selected: {
-                color: "purple",
-                borderColor: "purple",
-                borderTopColor: "purple",
-                borderBottomColor: "purple",
+                color: "purple.400",
+                borderColor: "purple.400",
+                borderTopColor: "purple.400",
+                borderBottomColor: "purple.400",
               },
               _active: {
-                color: "purple",
+                color: "purple.400",
               },
             },
           },
@@ -65,7 +89,7 @@ export const vulcanTheme = extendTheme(
           padding: "0 12px",
           color: "purple",
           _hover: {
-            color: "darkPurple",
+            color: "purple.700",
             textDecoration: "none",
           },
         },

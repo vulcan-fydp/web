@@ -17,12 +17,9 @@ import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
 import { StreamTab } from "pages/room/Room/streamTab";
-import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
 
 type DashboardTab = "player" | "controller" | "stream";
-
-const roomUrl = "localhost:3000/room/";
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
@@ -65,6 +62,9 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
+  const room_url = `https://${window.location.host}/room/${params.roomId}`;
+  // const room_url_with_https = `https://${room_url}`;
+
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
     if (tooltipShowing) {
@@ -79,7 +79,6 @@ const RoomDetails = () => {
 
   return (
     <HStack>
-      <Image src={vulcast} />
       <VStack align="left" justifyContent="space-between" h="100px">
         <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
@@ -96,11 +95,11 @@ const RoomDetails = () => {
             rightIcon={<Image src={copy}></Image>}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText(roomUrl + params.roomId);
+              navigator.clipboard.writeText(room_url);
               setTooltipShowing(true);
             }}
           >
-            {roomUrl}
+            {room_url}
           </Button>
         </Tooltip>
       </VStack>
@@ -120,29 +119,29 @@ interface TabContainerProps {
 
 const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
   const { params } = useRouteMatch<{ roomId?: string }>();
-  const dashboardTabs: DashboardTab[] = ["player", "controller", "stream"];
+  const dashboardTabs: DashboardTab[] = ["stream", "player", "controller"];
   return (
     <Tabs isLazy variant="line" defaultIndex={dashboardTabs.indexOf(tab)}>
       <TabList>
+        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
+          Game Stream
+        </Tab>
         <Tab as={NavLink} to={`/room/${params.roomId}/players`}>
           Players
         </Tab>
         <Tab as={NavLink} to={`/room/${params.roomId}/controller`}>
           Controller Settings
         </Tab>
-        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
-          Game Stream
-        </Tab>
       </TabList>
       <TabPanels>
+        <TabPanel>
+          <StreamTab />
+        </TabPanel>
         <TabPanel>
           <PlayerTab />
         </TabPanel>
         <TabPanel>
           <ControllerTab />
-        </TabPanel>
-        <TabPanel>
-          <StreamTab />
         </TabPanel>
       </TabPanels>
     </Tabs>
