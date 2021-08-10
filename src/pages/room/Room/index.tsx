@@ -19,6 +19,7 @@ import { PlayerTab } from "pages/room/Room/playerTab";
 import { StreamTab } from "pages/room/Room/streamTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
+import { ControllerTab } from "./ControllerTab";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -76,7 +77,6 @@ const RoomDetails = () => {
       };
     }
   }, [tooltipShowing]);
-
 
   return (
     <HStack>
@@ -147,14 +147,5 @@ const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
         </TabPanel>
       </TabPanels>
     </Tabs>
-  );
-};
-
-// TODO: Move these tabs into their own file
-const ControllerTab = () => {
-  return (
-    <Box>
-      <Heading> Controller Tab </Heading>
-    </Box>
   );
 };
