@@ -62,8 +62,7 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
-  const room_url = `https://${window.location.host}/room/${params.roomId}`;
-  // const room_url_with_https = `https://${room_url}`;
+  const room_url = `${window.location.host}/room/${params.roomId}`;
 
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {

@@ -38,6 +38,9 @@ export const PlayerTab: React.FC = () => {
   if (!data.user) {
     return <Heading> No user found </Heading>;
   }
+  if (data.user.vulcasts.length === 0) {
+    return <Heading> No room information found </Heading>;
+  }
 
   return (
     <>
@@ -57,7 +60,7 @@ export const PlayerTab: React.FC = () => {
       </VStack>
     </>
   );
-}
+};
 
 interface PlayerProps {
   nickname: String;
