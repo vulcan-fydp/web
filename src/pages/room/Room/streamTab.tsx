@@ -1,6 +1,6 @@
-import { VStack } from "@chakra-ui/react";
-import { useRef, useEffect } from "react";
-import { Device } from "mediasoup-client";
+import { Button, HStack, Input, VStack } from "@chakra-ui/react";
+import React, { useRef, useEffect, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import {
   ApolloClient,
@@ -9,9 +9,9 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client/core";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { Device } from "mediasoup-client";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import { useRouteMatch } from "react-router-dom";
-
+import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { useSession } from "contexts/session";
 import {
   GetRtpCapabilitiesDocument,
@@ -91,10 +91,49 @@ function setTransportOnConnect(
   });
 }
 
-const StreamVideo: React.FC = () => {
+interface StreamVideoProps {
+  streamRef: React.RefObject<HTMLVideoElement>;
+}
+
+const StreamVideo: React.FC<StreamVideoProps> = ({ streamRef }) => {
+  return <video ref={streamRef} width="100%" muted controls autoPlay />;
+};
+
+interface ExampleControllerInputProps {
+  dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
+}
+
+// TODO: Replace this with the new Canvas component to gather and send controller inputs
+// Just need to create data and send with `dataProducerRef.current?.send(sendData);`
+const ExampleControllerInputSender: React.FC<ExampleControllerInputProps> = ({
+  dataProducerRef,
+}) => {
+  const [sendData, setSendData] = useState("");
+  return (
+    <HStack>
+      <Input onChange={(event) => setSendData(event.target.value)} />
+      <Button
+        onClick={() => {
+          if (dataProducerRef.current?.closed) {
+            console.log("Data Producer is closed, unable to send inputs");
+            return;
+          }
+          console.log("Sending input: ", sendData);
+          // Call the line below to send controller inputs!
+          dataProducerRef.current?.send(sendData);
+        }}
+      >
+        Send input!
+      </Button>
+    </HStack>
+  );
+};
+
+export const StreamTab: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 
   const receiveMediaStreamRef = useRef<MediaStream>();
+  const dataProducerRef = useRef<DataProducer>();
 
   const { params } = useRouteMatch<{ roomId?: string }>();
   const { userId } = useSession();
@@ -152,7 +191,7 @@ const StreamVideo: React.FC = () => {
         async ({ sctpStreamParameters }, success) => {
           // this callback is called on produceData to request connection from relay
           // the mutation returns a producerId, which we need to yield
-          await signalClient.mutate<
+          const response = await signalClient.mutate<
             ProduceDataMutation,
             ProduceDataMutationVariables
           >({
@@ -162,6 +201,9 @@ const StreamVideo: React.FC = () => {
               sctpStreamParameters,
             },
           });
+
+          // the mutation returns a producerId, which we need to yield
+          success({ id: response.data?.produceData });
         }
       );
 
@@ -229,19 +271,9 @@ const StreamVideo: React.FC = () => {
         });
 
       // start producing data (this would be controller inputs in binary format)
-      let dataProducer = await sendTransport.produceData({
+      dataProducerRef.current = await sendTransport.produceData({
         ordered: false,
         maxRetransmits: 0,
-      });
-      dataProducer.on("open", () => {
-        let handle = setInterval(() => {
-          let data = "hello " + Math.floor(1000 * Math.random());
-          console.log("send data", data);
-          if (dataProducer.closed) {
-            clearInterval(handle);
-            return;
-          }
-        }, 10000);
       });
     }
 
@@ -253,13 +285,10 @@ const StreamVideo: React.FC = () => {
     };
   }, [params.roomId, userId]);
 
-  return <video ref={streamRef} width="100%" muted controls autoPlay />;
-};
-
-export const StreamTab: React.FC = () => {
   return (
     <VStack alignItems="center" spacing="20px">
-      <StreamVideo />
+      <StreamVideo streamRef={streamRef} />
+      <ExampleControllerInputSender dataProducerRef={dataProducerRef} />
     </VStack>
   );
 };
