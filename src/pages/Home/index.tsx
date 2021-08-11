@@ -1,12 +1,6 @@
 import { Navbar } from "components/Navbar";
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
 import { JoinRoomForm } from "components/JoinRoom";
-
-// TODO: possibly pull these out into the theme
-const INPUT_WIDTH = "300px";
-const FORM_TOP_PADDING = "48px";
 
 export const Home = () => {
   return (
@@ -18,7 +12,7 @@ export const Home = () => {
     >
       <Navbar />
       <Stack spacing="40px" alignItems="center" paddingTop="100px" mb="40px">
-        <Text variant="header" w="675px">
+        <Text variant="heading1" w="675px">
           Play with your friends
           <Text as="span" color="#9F7AEA">
             {" anywhere."}
