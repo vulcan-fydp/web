@@ -33,6 +33,18 @@ export const vulcanTheme = extendTheme(
           logo: {
             color: "purple",
           },
+          heading1: {
+            fontSize: ["3xl", "6xl"],
+            fontWeight: "bold",
+            textAlign: "center",
+            maxW: "calc(100% - 40px)",
+          },
+          heading2: {
+            fontSize: ["2xl", "3xl"],
+            fontWeight: "bold",
+            textAlign: "center",
+            maxW: "calc(100% - 40px)",
+          },
         },
       },
       Tabs: {

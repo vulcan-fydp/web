@@ -26,7 +26,7 @@ export const JoinOrHostRoom: React.FC = () => {
   }
 
   if (data.user.vulcasts.length === 0) {
-    return <JoinAndRegisterVulcast />;
+    return <JoinAndRegisterVulcast roomId={params.roomId} />;
   }
 
   return (
@@ -40,14 +40,7 @@ export const JoinOrHostRoom: React.FC = () => {
 const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <HeroPage>
-      <Text
-        fontSize={["3xl", "6xl"]}
-        fontWeight="bold"
-        w="500px"
-        maxW="calc(100% - 40px)"
-        textAlign="center"
-        mb="20px"
-      >
+      <Text variant="heading1" mb="20px" w="500px">
         Join a room to start{" "}
         <Text as="span" color="purple.300">
           playing.
@@ -65,44 +58,33 @@ const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   );
 };
 
-const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
-  vulcastId,
-  roomId,
-}) => {
-  // TODO: Find a cleaner way to express these "Text + Input"
+const JoinRoomSmall: React.FC<{ roomId?: string }> = ({ roomId }) => {
+  return (
+    <>
+      <Text variant="heading2" mb="20px">
+        Join a room to start{" "}
+        <Text as="span" color="purple.300">
+          playing.
+        </Text>
+      </Text>
+      <JoinRoomForm roomId={roomId} />
+    </>
+  );
+};
+
+const TwoActionsWrapper: React.FC<{
+  firstActionComponent: React.ReactNode;
+  secondActionComponent: React.ReactNode;
+}> = ({ firstActionComponent, secondActionComponent }) => {
   return (
     <HeroPage>
       <Center paddingTop="140px">
         <HStack alignItems="top" spacing={16}>
           <Flex flexDir="column" align="center" maxW="400px">
-            <Text
-              fontSize={["2xl", "3xl"]}
-              fontWeight="bold"
-              textAlign="center"
-              mb="20px"
-            >
-              Create a room to start{" "}
-              <Text as="span" color="purple.300">
-                hosting a game.
-              </Text>
-            </Text>
-            {roomId === undefined ? (
-              <CreateRoomForm vulcastId={vulcastId} />
-            ) : null}
+            {firstActionComponent}
           </Flex>
           <Flex flexDir="column" align="center" maxW="400px">
-            <Text
-              fontSize={["2xl", "3xl"]}
-              fontWeight="bold"
-              textAlign="center"
-              mb="20px"
-            >
-              Join a room to start{" "}
-              <Text as="span" color="purple.300">
-                playing.
-              </Text>
-            </Text>
-            <JoinRoomForm roomId={roomId} />
+            {secondActionComponent}
           </Flex>
         </HStack>
       </Center>
@@ -110,13 +92,45 @@ const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
   );
 };
 
-const JoinAndRegisterVulcast: React.FC = () => {
+const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
+  vulcastId,
+  roomId,
+}) => {
+  const createRoom = (
+    <>
+      <Text variant="heading2" mb="20px">
+        Create a room to start{" "}
+        <Text as="span" color="purple.300">
+          hosting a game.
+        </Text>
+      </Text>
+      {roomId === undefined ? <CreateRoomForm vulcastId={vulcastId} /> : null}
+    </>
+  );
   return (
-    <Flex>
-      <HStack>
-        <RegisterVulcastForm />
-        <JoinRoomForm />
-      </HStack>
-    </Flex>
+    <TwoActionsWrapper
+      firstActionComponent={createRoom}
+      secondActionComponent={<JoinRoomSmall roomId={roomId} />}
+    />
+  );
+};
+
+const JoinAndRegisterVulcast: React.FC<{ roomId?: string }> = ({ roomId }) => {
+  const connectVulcast = (
+    <>
+      <Text variant="heading2" mb="20px">
+        Connect your Vulcast to start{" "}
+        <Text as="span" color="purple.300">
+          hosting a game.
+        </Text>
+      </Text>
+      <RegisterVulcastForm />
+    </>
+  );
+  return (
+    <TwoActionsWrapper
+      firstActionComponent={connectVulcast}
+      secondActionComponent={<JoinRoomSmall roomId={roomId} />}
+    />
   );
 };

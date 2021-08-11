@@ -18,12 +18,12 @@ export const Home = () => {
     >
       <Navbar />
       <Stack spacing="40px" alignItems="center" paddingTop="100px" mb="40px">
-        <Heading size="4xl" textAlign="center" maxWidth="675px">
+        <Text variant="header" w="675px">
           Play with your friends
           <Text as="span" color="#9F7AEA">
             {" anywhere."}
           </Text>
-        </Heading>
+        </Text>
         <Heading size="md" textAlign="center">
           Vulcan makes it simple to play the
           <Text as="span" color="#FFF275">
