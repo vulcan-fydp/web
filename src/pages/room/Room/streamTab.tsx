@@ -116,6 +116,7 @@ const ExampleControllerInputSender: React.FC<ExampleControllerInputProps> = ({
         onClick={() => {
           if (dataProducerRef.current?.closed) {
             console.log("Data Producer is closed, unable to send inputs");
+            return;
           }
           console.log("Sending input: ", sendData);
           // Call the line below to send controller inputs!
