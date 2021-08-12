@@ -1,6 +1,5 @@
 import {
   Heading,
-  Box,
   Button,
   Image,
   VStack,
@@ -19,8 +18,12 @@ import { PlayerTab } from "pages/room/Room/playerTab";
 import { StreamTab } from "pages/room/Room/streamTab";
 import vulcast from "resources/vulcast.png";
 import copy from "resources/copy.png";
+import { ControllerTab } from "./ControllerTab";
+import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 
 type DashboardTab = "player" | "controller" | "stream";
+
+export const controllerIdVar = makeLocalStorageBackedVar("CONTROLLER_ID");
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
@@ -76,7 +79,6 @@ const RoomDetails = () => {
       };
     }
   }, [tooltipShowing]);
-
 
   return (
     <HStack>
@@ -147,14 +149,5 @@ const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
         </TabPanel>
       </TabPanels>
     </Tabs>
-  );
-};
-
-// TODO: Move these tabs into their own file
-const ControllerTab = () => {
-  return (
-    <Box>
-      <Heading> Controller Tab </Heading>
-    </Box>
   );
 };
