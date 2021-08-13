@@ -1,6 +1,6 @@
-import { Flex, Link, Center, Box, Text } from "@chakra-ui/react";
+import { Flex, Link, Center, Box, Image } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
-
+import logo from "resources/vulcan-transparent.svg";
 interface NavbarProps {
   children?: null;
 }
@@ -23,9 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       >
         <Box>
           <Link as={RouterLink} to="/">
-            <Text fontSize="32px" color="purple" fontWeight="bold">
-              V
-            </Text>
+            <Image src={logo} />
           </Link>
         </Box>
         {children !== undefined ? children : <DefaultNavbarContent />}
