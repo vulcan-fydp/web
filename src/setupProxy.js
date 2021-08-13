@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/backend',
     createProxyMiddleware({
-      target: 'http://localhost:4000',
+      target: 'https://vulcangames.fun',
       changeOrigin: true,
       pathRewrite: path => path.replace('/backend', '')
     })

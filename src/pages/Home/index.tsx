@@ -1,6 +1,6 @@
 import { Navbar } from "components/Navbar";
 import { Box, Stack, Heading, Text, Input, Button } from "@chakra-ui/react";
-import { JoinRoomForm } from "components/JoinRoom";
+import { JoinRoomForm } from "components/JoinRoomForm";
 
 export const Home = () => {
   return (

@@ -1,10 +1,10 @@
-import { Box, Center, Flex, HStack, Text } from "@chakra-ui/react";
+import { Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { HeroPage } from "components/HeroPage";
 import React from "react";
 import { useRouteMatch } from "react-router";
 import { Redirect } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
-import { JoinRoomForm } from "components/JoinRoom";
+import { JoinRoomForm } from "components/JoinRoomForm";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
 import { useUserQuery } from "./user.backend.generated";
 
@@ -26,7 +26,7 @@ export const JoinOrHostRoom: React.FC = () => {
   }
 
   if (data.user.vulcasts.length === 0) {
-    return <JoinAndRegisterVulcast roomId={params.roomId} />;
+    return <JoinAndRegisterVulcast />;
   }
 
   return (
@@ -115,7 +115,7 @@ const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
   );
 };
 
-const JoinAndRegisterVulcast: React.FC<{ roomId?: string }> = ({ roomId }) => {
+const JoinAndRegisterVulcast: React.FC = () => {
   const connectVulcast = (
     <>
       <Text variant="heading2" mb="20px">
@@ -130,7 +130,7 @@ const JoinAndRegisterVulcast: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <TwoActionsWrapper
       firstActionComponent={connectVulcast}
-      secondActionComponent={<JoinRoomSmall roomId={roomId} />}
+      secondActionComponent={<JoinRoomSmall />}
     />
   );
 };
