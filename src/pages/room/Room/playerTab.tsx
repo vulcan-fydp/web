@@ -2,30 +2,45 @@ import {
   HStack,
   VStack,
   Heading,
-  Button,
+  Center,
   Image,
   Spinner,
+  Box,
+  Text,
+  Flex,
 } from "@chakra-ui/react";
 import profile from "resources/profile.png";
-import controllerIcon from "resources/controller.png";
+import { ControllerIcon } from "resources/controller";
 import spectatorIcon from "resources/spectator.png";
-import { usePlayersInRoomQuery } from "./playersInRoom.backend.generated";
+import { useClientPlayersInRoomQuery } from "./playersInRoom.backend.generated";
 
-function getControllerText(controller: number | null | undefined) {
+const controllerColors = ["red", "blue", "green", "yellow"];
+
+interface ControllerProps {
+  display: string;
+  color: string;
+}
+
+function getControllerProps(controller: number | null | undefined) {
   if (controller === null || controller === undefined) {
-    return "Spectator";
+    return { display: "Spectator", color: "white" };
   }
-  return `Controller ${controller}`;
+  return {
+    display: `Controller ${controller}`,
+    color: controller <= 4 ? controllerColors[controller] : "white",
+  };
 }
 
 const playerLoadingError =
   "There was an error loading players, please try again.";
 
 export const PlayerTab: React.FC = () => {
-  const { data, loading, error } = usePlayersInRoomQuery();
+  const { data, loading, error } = useClientPlayersInRoomQuery();
 
   if (loading) {
-    return <Spinner color="purple" />;
+    <Center align="center">
+      <Spinner color="purple.400" mt="120px" />
+    </Center>;
   }
   if (error) {
     return <Heading> {playerLoadingError} </Heading>;
@@ -35,84 +50,71 @@ export const PlayerTab: React.FC = () => {
   if (!data) {
     return <Heading> No data found </Heading>;
   }
-  if (!data.user) {
-    return <Heading> No user found </Heading>;
+  if (!data.roomSession) {
+    return <Heading> No room session found </Heading>;
+  }
+  if (data.roomSession.room.roomSessions.length === 0) {
+    return <Heading> Nobody is in the room </Heading>;
   }
 
+  const currentPlayerId = data.roomSession.id;
+  const roomSessions = [...data.roomSession.room.roomSessions];
   return (
-    <>
-      <Heading size="md">Connected Players</Heading>
-      <VStack alignItems="left" spacing="20px">
-        {(data.user.vulcasts[0].room?.roomSessions ?? []).map(
-          ({ nickname, controllerNumber }) => {
-            return (
-              <Player
-                key={nickname}
-                nickname={nickname}
-                controller={controllerNumber}
-              />
-            );
+    <VStack alignItems="left" spacing="20px">
+      {roomSessions
+        .sort((player1, _) => {
+          // Keep the current player at the top
+          if (player1.id === currentPlayerId) {
+            return -1;
           }
-        )}
-      </VStack>
-    </>
+          return 0;
+        })
+        .map(({ nickname, controllerNumber, id }) => {
+          const isCurrentPlayer = id === currentPlayerId;
+          return (
+            <PlayerRow
+              key={id}
+              display={isCurrentPlayer ? `${nickname} (You)` : nickname}
+              controllerProps={getControllerProps(controllerNumber)}
+              isCurrentPlayer={isCurrentPlayer}
+            />
+          );
+        })}
+    </VStack>
   );
+};
+
+interface PlayerRowProps {
+  display: String;
+  controllerProps: ControllerProps;
+  isCurrentPlayer: boolean;
 }
 
-interface PlayerProps {
-  nickname: String;
-  controller: number | null | undefined;
-}
-
-const Player = ({ nickname, controller }: PlayerProps) => {
+const PlayerRow: React.FC<PlayerRowProps> = ({
+  display,
+  controllerProps,
+  isCurrentPlayer,
+}) => {
   return (
-    <HStack
-      borderWidth="1px"
-      borderColour="white"
-      borderRadius="2px"
-      padding="8px 16px 8px 16px"
-      justifyContent="space-between"
-      alignItems="center"
-      maxWidth="1000px"
+    <Flex
+      padding="15px 25px"
+      align="center"
+      backgroundColor={isCurrentPlayer ? "whiteAlpha.200" : "whiteAlpha.50"}
+      borderRadius="5px"
     >
-      <PlayerInfo nickname={nickname} />
-      <ControllerWidget controller={getControllerText(controller)} />
-      <ModerationWidget />
-    </HStack>
-  );
-};
-
-interface PlayerModalProps {
-  nickname: String;
-}
-
-const PlayerInfo: React.FC<PlayerModalProps> = ({ nickname }) => {
-  return (
-    <HStack direction="row" alignItems="center" width="160px">
-      <Image src={profile} />
-      <Heading size="sm">{nickname}</Heading>
-    </HStack>
-  );
-};
-
-interface ControllerModalProps {
-  controller: String;
-}
-
-const ControllerWidget: React.FC<ControllerModalProps> = ({ controller }) => {
-  return (
-    <HStack direction="row" alignItems="center">
-      <HStack width="160px">
-        <Image
-          src={controller === "Spectator" ? spectatorIcon : controllerIcon}
-        />
-        <Heading size="sm">{controller}</Heading>
+      <HStack direction="row" alignItems="center" width="300px" spacing={4}>
+        <Image src={profile} width="32px" />
+        <Text fontSize="lg">{display}</Text>
       </HStack>
-      <Button variant="solidSmall">Edit</Button>
-    </HStack>
+      <Box flex="1 1 auto" />
+      <HStack minW="154px" spacing={4}>
+        {"Spectator" === controllerProps.display ? (
+          <Image src={spectatorIcon} />
+        ) : (
+          <ControllerIcon color={controllerProps.color} />
+        )}
+        <Text fontSize="lg">{controllerProps.display}</Text>
+      </HStack>
+    </Flex>
   );
-};
-
-const ModerationWidget = () => {
-  return <Button variant="kickLink">Kick</Button>;
 };

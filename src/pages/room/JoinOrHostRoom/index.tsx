@@ -1,10 +1,10 @@
-import { Flex, HStack, Text } from "@chakra-ui/react";
+import { Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { HeroPage } from "components/HeroPage";
 import React from "react";
 import { useRouteMatch } from "react-router";
 import { Redirect } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
-import { JoinRoomForm } from "./JoinRoomForm";
+import { JoinRoomForm } from "components/JoinRoomForm";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
 import { useUserQuery } from "./user.backend.generated";
 
@@ -40,14 +40,7 @@ export const JoinOrHostRoom: React.FC = () => {
 const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <HeroPage>
-      <Text
-        fontSize={["3xl", "6xl"]}
-        fontWeight="bold"
-        w="500px"
-        maxW="calc(100% - 40px)"
-        textAlign="center"
-        mb="20px"
-      >
+      <Text variant="heading1" mb="20px" w="500px">
         Join a room to start{" "}
         <Text as="span" color="purple.300">
           playing.
@@ -65,27 +58,79 @@ const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   );
 };
 
+const JoinRoomSmall: React.FC<{ roomId?: string }> = ({ roomId }) => {
+  return (
+    <>
+      <Text variant="heading2" mb="20px">
+        Join a room to start{" "}
+        <Text as="span" color="purple.300">
+          playing.
+        </Text>
+      </Text>
+      <JoinRoomForm roomId={roomId} />
+    </>
+  );
+};
+
+const TwoActionsWrapper: React.FC<{
+  firstActionComponent: React.ReactNode;
+  secondActionComponent: React.ReactNode;
+}> = ({ firstActionComponent, secondActionComponent }) => {
+  return (
+    <HeroPage>
+      <Center paddingTop="140px">
+        <HStack alignItems="top" spacing={16}>
+          <Flex flexDir="column" align="center" maxW="400px">
+            {firstActionComponent}
+          </Flex>
+          <Flex flexDir="column" align="center" maxW="400px">
+            {secondActionComponent}
+          </Flex>
+        </HStack>
+      </Center>
+    </HeroPage>
+  );
+};
+
 const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
   vulcastId,
   roomId,
 }) => {
+  const createRoom = (
+    <>
+      <Text variant="heading2" mb="20px">
+        Create a room to start{" "}
+        <Text as="span" color="purple.300">
+          hosting a game.
+        </Text>
+      </Text>
+      {roomId === undefined ? <CreateRoomForm vulcastId={vulcastId} /> : null}
+    </>
+  );
   return (
-    <Flex>
-      <HStack>
-        <JoinRoomForm roomId={roomId} />
-        {roomId === undefined ? <CreateRoomForm vulcastId={vulcastId} /> : null}
-      </HStack>
-    </Flex>
+    <TwoActionsWrapper
+      firstActionComponent={createRoom}
+      secondActionComponent={<JoinRoomSmall roomId={roomId} />}
+    />
   );
 };
 
 const JoinAndRegisterVulcast: React.FC = () => {
+  const connectVulcast = (
+    <>
+      <Text variant="heading2" mb="20px">
+        Connect your Vulcast to start{" "}
+        <Text as="span" color="purple.300">
+          hosting a game.
+        </Text>
+      </Text>
+      <RegisterVulcastForm />
+    </>
+  );
   return (
-    <Flex>
-      <HStack>
-        <JoinRoomForm />
-        <RegisterVulcastForm />
-      </HStack>
-    </Flex>
+    <TwoActionsWrapper
+      firstActionComponent={connectVulcast}
+      secondActionComponent={<JoinRoomSmall />}
+    />
   );
 };

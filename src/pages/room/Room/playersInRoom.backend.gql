@@ -1,4 +1,17 @@
-query playersInRoom {
+query clientPlayersInRoom {
+  roomSession {
+    id
+    room {
+      roomSessions {
+        id
+        controllerNumber
+        nickname
+      }
+    }
+  }
+}
+
+query hostPlayersInRoom {
   user {
     vulcasts {
       room {
