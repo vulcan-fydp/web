@@ -14,10 +14,9 @@ import {
 import { useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
-import { PlayerTab } from "pages/room/Room/playerTab";
-import { StreamTab } from "pages/room/Room/streamTab";
-import vulcast from "resources/vulcast.png";
-import copy from "resources/copy.png";
+import { PlayerTab } from "pages/room/Room/PlayerTab";
+import { StreamTab } from "pages/room/Room/StreamTab";
+import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 
@@ -35,7 +34,8 @@ export const Dashboard = () => {
         paddingTop="64px"
         alignItems="left"
         width="100%"
-        maxWidth="1000px"
+        maxWidth="1040px"
+        padding="0 20px"
       >
         <ShareAndCloseRoomHeader />
         <Switch>
@@ -66,7 +66,7 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
-  const room_url = `${window.location.hostname}/room/` + params.roomId;
+  const room_url = `${window.location.host}/room/${params.roomId}`;
 
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
@@ -82,7 +82,6 @@ const RoomDetails = () => {
 
   return (
     <HStack>
-      <Image src={vulcast} />
       <VStack align="left" justifyContent="space-between" h="100px">
         <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
@@ -96,7 +95,7 @@ const RoomDetails = () => {
         >
           <Button
             variant="solid"
-            rightIcon={<Image src={copy}></Image>}
+            rightIcon={<CopyIcon />}
             justifyContent="space-between"
             onClick={() => {
               navigator.clipboard.writeText("https://" + room_url);
@@ -123,29 +122,29 @@ interface TabContainerProps {
 
 const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
   const { params } = useRouteMatch<{ roomId?: string }>();
-  const dashboardTabs: DashboardTab[] = ["player", "controller", "stream"];
+  const dashboardTabs: DashboardTab[] = ["stream", "player", "controller"];
   return (
     <Tabs isLazy variant="line" defaultIndex={dashboardTabs.indexOf(tab)}>
       <TabList>
+        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
+          Game Stream
+        </Tab>
         <Tab as={NavLink} to={`/room/${params.roomId}/players`}>
           Players
         </Tab>
         <Tab as={NavLink} to={`/room/${params.roomId}/controller`}>
           Controller Settings
         </Tab>
-        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
-          Game Stream
-        </Tab>
       </TabList>
       <TabPanels>
+        <TabPanel>
+          <StreamTab />
+        </TabPanel>
         <TabPanel>
           <PlayerTab />
         </TabPanel>
         <TabPanel>
           <ControllerTab />
-        </TabPanel>
-        <TabPanel>
-          <StreamTab />
         </TabPanel>
       </TabPanels>
     </Tabs>

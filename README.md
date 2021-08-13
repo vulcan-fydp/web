@@ -57,3 +57,9 @@ You can learn more in the
 [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+### To connect to local development backend or relay:
+
+In src/setupProxy.js:
+Backend - change the URL from vulcangames.fun to http://localhost:4000
+Relay - change the URL from vulcangames.fun:8433 to http://localhost:8433

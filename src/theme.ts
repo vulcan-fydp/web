@@ -16,20 +16,41 @@ export const vulcanTheme = extendTheme(
       grey: "#434343",
     },
     components: {
+      Text: {
+        variants: {
+          heading1: {
+            fontSize: ["3xl", "6xl"],
+            fontWeight: "bold",
+            textAlign: "center",
+            maxW: "calc(100% - 40px)",
+          },
+          heading2: {
+            fontSize: ["2xl", "3xl"],
+            fontWeight: "bold",
+            textAlign: "center",
+            maxW: "calc(100% - 40px)",
+          },
+        },
+      },
       Tabs: {
+        baseStyle: {
+          tabpanel: {
+            padding: "20px 0",
+          },
+        },
         variants: {
           line: {
             tab: {
               color: "white",
               fontWeight: "semibold",
               _selected: {
-                color: "purple",
-                borderColor: "purple",
-                borderTopColor: "purple",
-                borderBottomColor: "purple",
+                color: "purple.400",
+                borderColor: "purple.400",
+                borderTopColor: "purple.400",
+                borderBottomColor: "purple.400",
               },
               _active: {
-                color: "purple",
+                color: "purple.400",
               },
             },
           },
@@ -65,7 +86,7 @@ export const vulcanTheme = extendTheme(
           padding: "0 12px",
           color: "purple",
           _hover: {
-            color: "darkPurple",
+            color: "purple.700",
             textDecoration: "none",
           },
         },
