@@ -39,6 +39,7 @@ import {
   RtpCapabilitiesMutation,
   RtpCapabilitiesMutationVariables,
 } from "./signal.relay.generated";
+import { VideoStream } from "./VideoStream";
 
 const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
 
@@ -94,10 +95,6 @@ function setTransportOnConnect(
 interface StreamVideoProps {
   streamRef: React.RefObject<HTMLVideoElement>;
 }
-
-const StreamVideo: React.FC<StreamVideoProps> = ({ streamRef }) => {
-  return <video ref={streamRef} width="100%" muted controls autoPlay />;
-};
 
 interface ExampleControllerInputProps {
   dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
@@ -286,35 +283,10 @@ export const StreamTab: React.FC = () => {
   }, [params.roomId, userId]);
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      borderWidth="2px"
-      borderColor="purple.400"
-      position="relative"
-    >
-      <StreamVideo streamRef={streamRef} />
-      <ControllerCapture />
-    </Box>
-  );
-};
-
-const Canvas = chakra("canvas");
-
-const ControllerCapture = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  return (
-    <Canvas
-      ref={canvasRef}
-      position="absolute"
-      top="0"
-      left="0"
-      right="0"
-      bottom="0"
-      width="100%"
-      height="100%"
+    <VideoStream
+      videoRef={streamRef}
+      emitData={dataProducerRef.current?.send ?? (() => {})}
+      controllerNumber={0}
     />
   );
 };
