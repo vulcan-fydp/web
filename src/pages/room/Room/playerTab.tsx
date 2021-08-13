@@ -6,8 +6,8 @@ import {
   Image,
   Spinner,
   Box,
-  Flex,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import profile from "resources/profile.png";
 import { ControllerIcon } from "resources/controller";
@@ -57,10 +57,11 @@ export const PlayerTab: React.FC = () => {
     return <Heading> Nobody is in the room </Heading>;
   }
 
-  const currentPlayerId = data.roomSession?.id;
+  const currentPlayerId = data.roomSession.id;
+  const roomSessions = [...data.roomSession.room.roomSessions];
   return (
     <VStack alignItems="left" spacing="20px">
-      {(data.roomSession.room.roomSessions ?? [])
+      {roomSessions
         .sort((player1, _) => {
           // Keep the current player at the top
           if (player1.id === currentPlayerId) {

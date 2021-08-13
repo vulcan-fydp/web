@@ -1,3 +1,4 @@
+import { useApolloClient } from "@apollo/client";
 import {
   Box,
   Button,
@@ -27,6 +28,7 @@ export const LoginPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>();
   const history = useHistory();
+  const apolloClient = useApolloClient();
 
   const [responseError, setResponseError] = useState<string>();
 
@@ -48,6 +50,9 @@ export const LoginPage = () => {
 
       switch (logInResult.logInAsUser.__typename) {
         case "User":
+          console.log("Before");
+          await apolloClient.resetStore();
+          console.log("After");
           history.push("/room");
           break;
         case "AuthenticationError":
@@ -55,7 +60,7 @@ export const LoginPage = () => {
           break;
       }
     },
-    [logIn, history, setResponseError]
+    [logIn, history, setResponseError, apolloClient]
   );
 
   return (
