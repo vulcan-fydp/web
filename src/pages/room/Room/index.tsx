@@ -14,8 +14,8 @@ import {
 import { useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
-import { PlayerTab } from "pages/room/Room/playerTab";
-import { StreamTab } from "pages/room/Room/streamTab";
+import { PlayerTab } from "pages/room/Room/PlayerTab";
+import { StreamTab } from "pages/room/Room/StreamTab";
 import copy from "resources/copy.png";
 import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";

@@ -10,15 +10,25 @@ import {
   Text,
 } from "@chakra-ui/react";
 import profile from "resources/profile.png";
-import controllerIcon from "resources/controller.png";
+import { ControllerIcon } from "resources/controller";
 import spectatorIcon from "resources/spectator.png";
 import { useClientPlayersInRoomQuery } from "./playersInRoom.backend.generated";
 
-function getControllerText(controller: number | null | undefined) {
+const controllerColors = ["red", "blue", "green", "yellow"];
+
+interface ControllerProps {
+  display: string;
+  color: string;
+}
+
+function getControllerProps(controller: number | null | undefined) {
   if (controller === null || controller === undefined) {
-    return "Spectator";
+    return { display: "Spectator", color: "white" };
   }
-  return `Controller ${controller}`;
+  return {
+    display: `Controller ${controller}`,
+    color: controller <= 4 ? controllerColors[controller] : "white",
+  };
 }
 
 const playerLoadingError =
@@ -55,7 +65,7 @@ export const PlayerTab: React.FC = () => {
       </Heading>
       <VStack alignItems="left" spacing="20px">
         {(data.roomSession.room.roomSessions ?? [])
-          .sort((player1, player2) => {
+          .sort((player1, _) => {
             if (player1.id === currentPlayerId) {
               return -1;
             }
@@ -67,7 +77,7 @@ export const PlayerTab: React.FC = () => {
               <PlayerRow
                 key={nickname}
                 display={isCurrentPlayer ? `${nickname} (You)` : nickname}
-                controller={getControllerText(controllerNumber)}
+                controllerProps={getControllerProps(controllerNumber)}
                 isCurrentPlayer={isCurrentPlayer}
               />
             );
@@ -79,36 +89,35 @@ export const PlayerTab: React.FC = () => {
 
 interface PlayerRowProps {
   display: String;
-  controller: String;
+  controllerProps: ControllerProps;
   isCurrentPlayer: boolean;
 }
 
 const PlayerRow: React.FC<PlayerRowProps> = ({
   display,
-  controller,
+  controllerProps,
   isCurrentPlayer,
 }) => {
   return (
     <Flex
       padding="15px 25px"
       align="center"
-      backgroundColor={isCurrentPlayer ? "purple.800" : "whiteAlpha.50"}
+      backgroundColor={isCurrentPlayer ? "whiteAlpha.200" : "whiteAlpha.50"}
       borderRadius="5px"
     >
-      <HStack direction="row" alignItems="center" width="160px">
-        <Image src={profile} />
-        <Text fontSize="lg" marginRight="20px">
-          {display}
-        </Text>
+      <HStack direction="row" alignItems="center" width="300px" spacing={4}>
+        <Image src={profile} width="32px" />
+        <Text fontSize="lg">{display}</Text>
       </HStack>
       <Box flex="1 1 auto" />
-      <HStack width="160px">
-        <Image
-          src={"Spectator" === controller ? spectatorIcon : controllerIcon}
-        />
-        <Text fontSize="lg">{controller}</Text>
+      <HStack minW="154px" spacing={4}>
+        {"Spectator" === controllerProps.display ? (
+          <Image src={spectatorIcon} />
+        ) : (
+          <ControllerIcon color={controllerProps.color} />
+        )}
+        <Text fontSize="lg">{controllerProps.display}</Text>
       </HStack>
-      {/* <Button variant="solidSmall">Edit</Button> */}
     </Flex>
   );
 };
