@@ -50,9 +50,7 @@ export const LoginPage = () => {
 
       switch (logInResult.logInAsUser.__typename) {
         case "User":
-          console.log("Before");
           await apolloClient.resetStore();
-          console.log("After");
           history.push("/room");
           break;
         case "AuthenticationError":
