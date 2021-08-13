@@ -35,7 +35,8 @@ export const Dashboard = () => {
         paddingTop="64px"
         alignItems="left"
         width="100%"
-        maxWidth="1000px"
+        maxWidth="1040px"
+        padding="0 20px"
       >
         <ShareAndCloseRoomHeader />
         <Switch>

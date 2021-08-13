@@ -1,5 +1,6 @@
-import { Flex, Link, Center, Box, Text } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Flex, Link, Center, Box, Text, Button } from "@chakra-ui/react";
+import { useUserQuery } from "pages/room/JoinOrHostRoom/user.backend.generated";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
 interface NavbarProps {
   children?: null;
@@ -17,9 +18,10 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
     >
       <Flex
         justifyContent="space-between"
+        alignItems="center"
         w="100%"
-        maxWidth="1000px"
-        padding="0 100px"
+        maxWidth="1040px"
+        padding="0 20px"
       >
         <Box>
           <Link as={RouterLink} to="/">
@@ -28,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
             </Text>
           </Link>
         </Box>
+        {/* <Box flex="1 auto" /> */}
         {children !== undefined ? children : <DefaultNavbarContent />}
       </Flex>
     </Center>
@@ -35,10 +38,24 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 };
 
 export const DefaultNavbarContent = () => {
-  const isLoggedIn = true;
-  if (isLoggedIn) {
-    return null;
-  } else {
+  const { data, loading } = useUserQuery();
+  const history = useHistory();
+
+  if (loading || !data) {
     return null;
   }
+
+  if (data?.user == null) {
+    return (
+      <Button
+        onClick={() => {
+          history.push("/login");
+        }}
+      >
+        Login
+      </Button>
+    );
+  }
+
+  return null;
 };

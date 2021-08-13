@@ -59,31 +59,27 @@ export const PlayerTab: React.FC = () => {
 
   const currentPlayerId = data.roomSession?.id;
   return (
-    <>
-      <Heading size="md" mb="20px">
-        Connected Players
-      </Heading>
-      <VStack alignItems="left" spacing="20px">
-        {(data.roomSession.room.roomSessions ?? [])
-          .sort((player1, _) => {
-            if (player1.id === currentPlayerId) {
-              return -1;
-            }
-            return 1;
-          })
-          .map(({ nickname, controllerNumber, id }) => {
-            const isCurrentPlayer = id === currentPlayerId;
-            return (
-              <PlayerRow
-                key={nickname}
-                display={isCurrentPlayer ? `${nickname} (You)` : nickname}
-                controllerProps={getControllerProps(controllerNumber)}
-                isCurrentPlayer={isCurrentPlayer}
-              />
-            );
-          })}
-      </VStack>
-    </>
+    <VStack alignItems="left" spacing="20px">
+      {(data.roomSession.room.roomSessions ?? [])
+        .sort((player1, _) => {
+          // Keep the current player at the top
+          if (player1.id === currentPlayerId) {
+            return -1;
+          }
+          return 0;
+        })
+        .map(({ nickname, controllerNumber, id }) => {
+          const isCurrentPlayer = id === currentPlayerId;
+          return (
+            <PlayerRow
+              key={id}
+              display={isCurrentPlayer ? `${nickname} (You)` : nickname}
+              controllerProps={getControllerProps(controllerNumber)}
+              isCurrentPlayer={isCurrentPlayer}
+            />
+          );
+        })}
+    </VStack>
   );
 };
 
