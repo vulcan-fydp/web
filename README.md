@@ -1,3 +1,9 @@
+### To connect to local development backend or relay:
+
+In src/setupProxy.js:
+Backend - change the URL from vulcangames.fun to http://localhost:4000
+Relay - change the URL from vulcangames.fun:8433 to http://localhost:8433
+
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
 

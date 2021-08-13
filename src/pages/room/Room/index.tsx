@@ -17,6 +17,7 @@ import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/playerTab";
 import { StreamTab } from "pages/room/Room/streamTab";
 import copy from "resources/copy.png";
+import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 
@@ -94,7 +95,7 @@ const RoomDetails = () => {
         >
           <Button
             variant="solid"
-            rightIcon={<Image src={copy}></Image>}
+            rightIcon={<CopyIcon />}
             justifyContent="space-between"
             onClick={() => {
               navigator.clipboard.writeText("https://" + room_url);
