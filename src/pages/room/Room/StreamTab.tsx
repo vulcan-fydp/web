@@ -10,9 +10,10 @@ import { useSession } from "contexts/session";
 import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { useRoomSessionQuery } from "./roomSession.backend.generated";
 import {
   ConnectWebrtcTransportDocument,
   ConnectWebrtcTransportMutation,
@@ -39,6 +40,7 @@ import {
   RtpCapabilitiesMutation,
   RtpCapabilitiesMutationVariables,
 } from "./signal.relay.generated";
+import { VideoStream } from "./VideoStream";
 
 const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
 
@@ -94,10 +96,6 @@ function setTransportOnConnect(
 interface StreamVideoProps {
   streamRef: React.RefObject<HTMLVideoElement>;
 }
-
-const StreamVideo: React.FC<StreamVideoProps> = ({ streamRef }) => {
-  return <video ref={streamRef} width="100%" muted controls autoPlay />;
-};
 
 interface ExampleControllerInputProps {
   dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
@@ -271,9 +269,12 @@ export const StreamTab: React.FC = () => {
         });
 
       // start producing data (this would be controller inputs in binary format)
-      dataProducerRef.current = await sendTransport.produceData({
+      const producer = await sendTransport.produceData({
         ordered: false,
         maxRetransmits: 0,
+      });
+      producer.on("open", () => {
+        dataProducerRef.current = producer;
       });
     }
 
@@ -285,36 +286,26 @@ export const StreamTab: React.FC = () => {
     };
   }, [params.roomId, userId]);
 
-  return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      borderWidth="2px"
-      borderColor="purple.400"
-      position="relative"
-    >
-      <StreamVideo streamRef={streamRef} />
-      <ControllerCapture />
-    </Box>
+  const emitData = useCallback(
+    (data: ArrayBuffer) => {
+      dataProducerRef.current?.send(data);
+    },
+    [dataProducerRef]
   );
-};
 
-const Canvas = chakra("canvas");
+  const { data } = useRoomSessionQuery({
+    pollInterval: 5000,
+  });
 
-const ControllerCapture = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  if (!data || !data.roomSession) {
+    return null;
+  }
 
   return (
-    <Canvas
-      ref={canvasRef}
-      position="absolute"
-      top="0"
-      left="0"
-      right="0"
-      bottom="0"
-      width="100%"
-      height="100%"
+    <VideoStream
+      videoRef={streamRef}
+      emitData={emitData}
+      controllerNumber={data.roomSession.controllerNumber ?? null}
     />
   );
 };
