@@ -147,7 +147,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       borderColor="purple.400"
       position="relative"
     >
-      <video ref={videoRef} width="100%" muted autoPlay />
+      <video ref={videoRef} width="100%" autoPlay />
       <Canvas
         ref={onCanvasRefSet}
         position="absolute"
