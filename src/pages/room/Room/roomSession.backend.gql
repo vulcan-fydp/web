@@ -1,0 +1,6 @@
+query roomSession {
+  roomSession {
+    id
+    controllerNumber
+  }
+}

@@ -2,6 +2,7 @@ query clientPlayersInRoom {
   roomSession {
     id
     room {
+      id
       roomSessions {
         id
         controllerNumber
@@ -15,12 +16,34 @@ query hostPlayersInRoom {
   user {
     vulcasts {
       room {
+        id
         roomSessions {
           id
           nickname
           controllerNumber
         }
       }
+    }
+  }
+}
+
+mutation SetControllerNumbersForRoomSessions(
+  $roomId: ID!
+  $controllerNumbersForRoomSessions: [ControllerNumberForRoomSessionInput!]!
+) {
+  setControllerNumbersForRoomSessions(
+    roomId: $roomId
+    controllerNumbersForRoomSessions: $controllerNumbersForRoomSessions
+  ) {
+    __typename
+    ... on UpdatedRoomSessions {
+      roomSessions {
+        id
+        controllerNumber
+      }
+    }
+    ... on AuthenticationError {
+      message
     }
   }
 }

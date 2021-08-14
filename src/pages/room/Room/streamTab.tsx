@@ -10,9 +10,10 @@ import { useSession } from "contexts/session";
 import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { useRoomSessionQuery } from "./roomSession.backend.generated";
 import {
   ConnectWebrtcTransportDocument,
   ConnectWebrtcTransportMutation,
@@ -268,9 +269,12 @@ export const StreamTab: React.FC = () => {
         });
 
       // start producing data (this would be controller inputs in binary format)
-      dataProducerRef.current = await sendTransport.produceData({
+      const producer = await sendTransport.produceData({
         ordered: false,
         maxRetransmits: 0,
+      });
+      producer.on("open", () => {
+        dataProducerRef.current = producer;
       });
     }
 
@@ -282,11 +286,26 @@ export const StreamTab: React.FC = () => {
     };
   }, [params.roomId, userId]);
 
+  const emitData = useCallback(
+    (data: ArrayBuffer) => {
+      dataProducerRef.current?.send(data);
+    },
+    [dataProducerRef]
+  );
+
+  const { data } = useRoomSessionQuery({
+    pollInterval: 5000,
+  });
+
+  if (!data || !data.roomSession) {
+    return null;
+  }
+
   return (
     <VideoStream
       videoRef={streamRef}
-      emitData={dataProducerRef.current?.send ?? (() => {})}
-      controllerNumber={0}
+      emitData={emitData}
+      controllerNumber={data.roomSession.controllerNumber ?? null}
     />
   );
 };
