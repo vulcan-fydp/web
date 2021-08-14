@@ -1,6 +1,7 @@
-import { Flex, Link, Center, Box, Text, Button } from "@chakra-ui/react";
+import { Flex, Link, Center, Box, Image, Button } from "@chakra-ui/react";
 import { useUserQuery } from "pages/room/JoinOrHostRoom/user.backend.generated";
 import { Link as RouterLink, useHistory } from "react-router-dom";
+import logo from "resources/vulcan-transparent.svg";
 
 interface NavbarProps {
   children?: null;
@@ -25,12 +26,9 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       >
         <Box>
           <Link as={RouterLink} to="/">
-            <Text fontSize="32px" color="purple.400" fontWeight="bold">
-              V
-            </Text>
+            <Image src={logo} />
           </Link>
         </Box>
-        {/* <Box flex="1 auto" /> */}
         {children !== undefined ? children : <DefaultNavbarContent />}
       </Flex>
     </Center>
