@@ -22,7 +22,7 @@ const Canvas = chakra("canvas");
 interface VideoStreamProps {
   videoRef: Ref<HTMLVideoElement>;
   emitData: (data: ArrayBuffer) => void;
-  controllerNumber: number;
+  controllerNumber: number | null;
 }
 
 export const VideoStream: React.FC<VideoStreamProps> = ({
@@ -109,7 +109,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
   const update = useCallback(() => {
     if (
       !controllerInputRef.current ||
-      typeof controllerInputIdRef.current !== "number"
+      typeof controllerInputIdRef.current !== "number" ||
+      controllerNumber === null
     ) {
       return;
     }
