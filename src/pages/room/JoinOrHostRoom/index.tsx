@@ -6,19 +6,23 @@ import { Redirect } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
 import { JoinRoomForm } from "components/JoinRoomForm";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
-import { useUserQuery } from "./user.backend.generated";
+import { useJoinOrHostRoomQuery } from "./joinOrHostRoom.backend.generated";
 
 export const JoinOrHostRoom: React.FC = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
-  const { data, loading } = useUserQuery();
+  const { data, loading } = useJoinOrHostRoomQuery();
 
   if (loading || !data) {
     return null;
   }
 
-  if (data.room) {
-    return <Redirect to={`/room/${data.room.id}/stream`} />;
+  if (data.roomSession) {
+    return (
+      <Redirect
+        to={`/room/${data.roomSession.room.id}/stream?leave=${params.roomId}`}
+      />
+    );
   }
 
   if (!data.user || params.roomId !== undefined) {
