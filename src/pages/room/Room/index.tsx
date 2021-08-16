@@ -19,6 +19,7 @@ import { StreamTab } from "pages/room/Room/StreamTab";
 import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
+import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -29,6 +30,7 @@ export const Dashboard = () => {
 
   return (
     <HeroPage isDashboard={true}>
+      <JoinAnotherRoomModal onLeave={() => null} />
       <VStack
         spacing="20px"
         paddingTop="64px"

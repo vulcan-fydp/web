@@ -14,7 +14,9 @@ query clientPlayersInRoom {
 
 query hostPlayersInRoom {
   user {
+    id
     vulcasts {
+      id
       room {
         id
         roomSessions {

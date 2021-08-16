@@ -18,11 +18,13 @@ export const JoinOrHostRoom: React.FC = () => {
   }
 
   if (data.roomSession) {
-    return (
-      <Redirect
-        to={`/room/${data.roomSession.room.id}/stream?leave=${params.roomId}`}
-      />
-    );
+    let path = `/room/${data.roomSession.room.id}/stream`;
+
+    if (params.roomId !== data.roomSession.room.id) {
+      path += `?join-another-room=${params.roomId}`;
+    }
+
+    return <Redirect to={path} />;
   }
 
   if (!data.user || params.roomId !== undefined) {
