@@ -14,6 +14,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Tag,
 } from "@chakra-ui/react";
 import profile from "resources/profile.png";
 import { ControllerIcon } from "resources/controller";
@@ -44,14 +45,15 @@ export const PlayerTab: React.FC = () => {
   const { data, loading, error } = useClientPlayersInRoomQuery({
     pollInterval: 10000,
   });
-  const [
-    setControllerNumbersForRoomSessions,
-  ] = useSetControllerNumbersForRoomSessionsMutation();
+  const [setControllerNumbersForRoomSessions] =
+    useSetControllerNumbersForRoomSessionsMutation();
 
   if (loading) {
-    <Center align="center">
-      <Spinner color="purple.400" mt="120px" />
-    </Center>;
+    return (
+      <Center align="center">
+        <Spinner color="purple.400" mt="120px" />
+      </Center>
+    );
   }
   if (error) {
     return <Heading> {playerLoadingError} </Heading>;
@@ -93,9 +95,10 @@ export const PlayerTab: React.FC = () => {
         });
       }
     } else {
-      const roomSessionWithControllerNumber = data.roomSession!.room.roomSessions.find(
-        (rs) => rs.controllerNumber === controllerNumber
-      );
+      const roomSessionWithControllerNumber =
+        data.roomSession!.room.roomSessions.find(
+          (rs) => rs.controllerNumber === controllerNumber
+        );
       if (roomSessionWithControllerNumber) {
         if (roomSessionWithControllerNumber.id !== roomSessionId) {
           await setControllerNumbersForRoomSessions({
@@ -143,12 +146,12 @@ export const PlayerTab: React.FC = () => {
           }
           return 0;
         })
-        .map(({ nickname, controllerNumber, id }) => {
+        .map(({ nickname, controllerNumber, id, isHost }) => {
           const isCurrentPlayer = id === currentPlayerId;
           return (
             <PlayerRow
               key={id}
-              isHost={true} // @todo: backend isn't doesn't support this yet
+              isHost={isHost}
               nickname={nickname}
               controllerNumber={controllerNumber ?? null}
               isCurrentPlayer={isCurrentPlayer}
@@ -184,9 +187,21 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
       backgroundColor={isCurrentPlayer ? "whiteAlpha.200" : "whiteAlpha.50"}
       borderRadius="5px"
     >
-      <HStack direction="row" alignItems="center" width="300px" spacing={4}>
+      <HStack direction="row" alignItems="center" spacing={4} mr="20px">
         <Image src={profile} width="32px" />
         <Text fontSize="lg">{nickname}</Text>
+      </HStack>
+      <HStack spacing="10px">
+        {isHost ? (
+          <Tag variant="solid" colorScheme="yellow">
+            Host
+          </Tag>
+        ) : null}
+        {isCurrentPlayer ? (
+          <Tag variant="solid" colorScheme="pink">
+            You
+          </Tag>
+        ) : null}
       </HStack>
       <Box flex="1 1 auto" />
       <HStack minW="154px" spacing={4}>

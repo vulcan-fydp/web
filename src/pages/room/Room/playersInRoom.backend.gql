@@ -7,6 +7,7 @@ query clientPlayersInRoom {
         id
         controllerNumber
         nickname
+        isHost
       }
     }
   }
@@ -23,6 +24,7 @@ query hostPlayersInRoom {
           id
           nickname
           controllerNumber
+          isHost
         }
       }
     }
