@@ -1,0 +1,13 @@
+query joinOrHostRoom {
+  user {
+    vulcasts {
+      id
+    }
+  }
+  roomSession {
+    id
+    room {
+      id
+    }
+  }
+}

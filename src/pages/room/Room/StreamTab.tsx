@@ -6,7 +6,6 @@ import {
 } from "@apollo/client/core";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { Box, Button, chakra, HStack, Input } from "@chakra-ui/react";
-import { useSession } from "contexts/session";
 import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
@@ -101,32 +100,6 @@ interface ExampleControllerInputProps {
   dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
 }
 
-// TODO: Replace this with the new Canvas component to gather and send controller inputs
-// Just need to create data and send with `dataProducerRef.current?.send(sendData);`
-const ExampleControllerInputSender: React.FC<ExampleControllerInputProps> = ({
-  dataProducerRef,
-}) => {
-  const [sendData, setSendData] = useState("");
-  return (
-    <HStack>
-      <Input onChange={(event) => setSendData(event.target.value)} />
-      <Button
-        onClick={() => {
-          if (dataProducerRef.current?.closed) {
-            console.log("Data Producer is closed, unable to send inputs");
-            return;
-          }
-          console.log("Sending input: ", sendData);
-          // Call the line below to send controller inputs!
-          dataProducerRef.current?.send(sendData);
-        }}
-      >
-        Send input!
-      </Button>
-    </HStack>
-  );
-};
-
 export const StreamTab: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 
@@ -134,7 +107,10 @@ export const StreamTab: React.FC = () => {
   const dataProducerRef = useRef<DataProducer>();
 
   const { params } = useRouteMatch<{ roomId?: string }>();
-  const { userId } = useSession();
+
+  useEffect(() => {
+    document.querySelectorAll("video").forEach((v) => (v.volume = 0.1));
+  });
 
   useEffect(() => {
     const { client: signalClient, sub: clientSub } = getSignalConnection();
@@ -284,7 +260,7 @@ export const StreamTab: React.FC = () => {
     return () => {
       clientSub?.close();
     };
-  }, [params.roomId, userId]);
+  }, [params.roomId]);
 
   const emitData = useCallback(
     (data: ArrayBuffer) => {
