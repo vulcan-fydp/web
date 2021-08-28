@@ -6,6 +6,7 @@ import {
 } from "@apollo/client/core";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { Box, Button, chakra, HStack, Input } from "@chakra-ui/react";
+import { environment } from "environment";
 import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
@@ -41,7 +42,9 @@ import {
 } from "./signal.relay.generated";
 import { VideoStream } from "./VideoStream";
 
-const SIGNAL_ADDRESS = `wss://${window.location.hostname}:8443`;
+const SIGNAL_ADDRESS = `ws${environment.useSecureProtocol ? "s" : ""}://${
+  window.location.host
+}${environment.env === "production" ? ":8443" : "/relay/graphql"}`;
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
