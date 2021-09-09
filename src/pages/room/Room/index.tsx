@@ -20,6 +20,7 @@ import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
+import { environment } from "environment";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -68,7 +69,7 @@ const ShareAndCloseRoomHeader = () => {
 const RoomDetails = () => {
   const { params } = useRouteMatch<{ roomId?: string }>();
 
-  const room_url = `${window.location.host}/room/${params.roomId}`;
+  const roomUrl = `${window.location.host}/room/${params.roomId}`;
 
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
@@ -100,11 +101,13 @@ const RoomDetails = () => {
             rightIcon={<CopyIcon />}
             justifyContent="space-between"
             onClick={() => {
-              navigator.clipboard.writeText("https://" + room_url);
+              navigator.clipboard.writeText(
+                `http${environment.useSecureProtocol ? "s" : ""}://${roomUrl}`
+              );
               setTooltipShowing(true);
             }}
           >
-            {room_url}
+            {roomUrl}
           </Button>
         </Tooltip>
       </VStack>

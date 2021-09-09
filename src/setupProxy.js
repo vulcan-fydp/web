@@ -1,4 +1,4 @@
-const createProxyMiddleware = require('http-proxy-middleware');
+const {createProxyMiddleware} = require('http-proxy-middleware');
 
 function createLocalProxy(app) {
   app.use(
@@ -13,7 +13,7 @@ function createLocalProxy(app) {
   app.use(
     '/relay',
     createProxyMiddleware({ 
-      target: 'wss://vulcangames.fun:8443', 
+      target: 'ws://localhost:8443', 
       changeOrigin: true,
       pathRewrite: path => path.replace('/relay/graphql', '')
     })
@@ -26,14 +26,14 @@ function createAzureProxy(app) {
     createProxyMiddleware({
       target: 'https://vulcangames.fun',
       changeOrigin: true,
-      pathRewrite: path => path.replace('/backend', '')
+      pathRewrite: path => path.replace('/backend', ''),
     })
   );
 
   const relayProxy = createProxyMiddleware('/relay', { 
     target: 'wss://vulcangames.fun:8443', 
     changeOrigin: true,
-    pathRewrite: path => {console.log(path);return path.replace('/relay/graphql', '')},
+    pathRewrite: path => path.replace('/relay/graphql', ''),
     ws: true,
     logLevel: "debug"
   })
@@ -49,4 +49,10 @@ function createAzureProxy(app) {
   }
 };
 
-module.exports = createLocalProxy;
+if (process.env.REACT_APP_PROXY_TARGET === "local") {
+  module.exports = createLocalProxy;
+} else if (process.env.REACT_APP_PROXY_TARGET === "azure") {
+  module.exports = createAzureProxy;
+} else {
+  throw new Error("Environment variable REACT_APP_PROXY_TARGET is not configured correctly");
+}
