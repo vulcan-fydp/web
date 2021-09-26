@@ -1,0 +1,10 @@
+query navbar {
+  user {
+    id
+    firstName
+    lastName
+    vulcasts {
+      id
+    }
+  }
+}
