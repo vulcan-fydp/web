@@ -1,7 +1,19 @@
-import { Flex, Link, Center, Box, Image, Button } from "@chakra-ui/react";
-import { useUserQuery } from "pages/room/JoinOrHostRoom/user.backend.generated";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import {
+  Flex,
+  Link,
+  Center,
+  Box,
+  Image,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+} from "@chakra-ui/react";
+import { Link as RouterLink, NavLink, useHistory } from "react-router-dom";
 import logo from "resources/vulcan-transparent.svg";
+import { useNavbarQuery } from "./navbar.backend.generated";
 
 interface NavbarProps {
   children?: null;
@@ -36,24 +48,40 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 };
 
 export const DefaultNavbarContent = () => {
-  const { data, loading } = useUserQuery();
+  const { data, loading } = useNavbarQuery();
   const history = useHistory();
 
   if (loading || !data) {
     return null;
   }
 
-  if (data?.user == null) {
-    return (
-      <Button
-        onClick={() => {
-          history.push("/login");
-        }}
-      >
-        Login
-      </Button>
-    );
-  }
-
-  return null;
+  return (
+    <>
+      {!data.user ? (
+        <Button
+          onClick={() => {
+            history.push("/login");
+          }}
+        >
+          Login
+        </Button>
+      ) : null}
+      {data.user ? (
+        <Menu placement="bottom-end">
+          <MenuButton as={Button}>Profile</MenuButton>
+          <MenuList>
+            <MenuItem>Account</MenuItem>
+            <MenuItem>
+              {data.user.vulcasts.length > 0 ? "Vulcasts" : "Link Vulcast"}
+            </MenuItem>
+            <MenuItem as={NavLink} to="/controllers">
+              Controllers
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem>Log Out</MenuItem>
+          </MenuList>
+        </Menu>
+      ) : null}
+    </>
+  );
 };
