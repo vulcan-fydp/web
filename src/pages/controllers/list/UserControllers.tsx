@@ -1,4 +1,4 @@
-import { AddIcon, CopyIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { CopyIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Controller } from "backend-types";
 import { ControllerTags } from "components/ControllerTags";
-import { CreateControllerButton } from "components/CreateControllerButton";
+import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
 import { NavLink } from "react-router-dom";
 import { useUserControllersQuery } from "./userControllers.backend.generated";
 
