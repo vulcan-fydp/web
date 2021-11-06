@@ -1,0 +1,49 @@
+fragment controllerFields on Controller {
+  id
+  name
+  buttons {
+    __typename
+    ... on ControllerKeyboardButton {
+      keyCode
+    }
+    ... on ControllerGamepadButton {
+      buttonNumber
+    }
+    ... on ControllerMouseButton {
+      buttonNumber
+    }
+    ... on ControllerTouchButton {
+      anchor
+      xOffset
+      yOffset
+    }
+  }
+  axes {
+    __typename
+    ... on ControllerKeyboardAxis {
+      negativeKeyCode
+      positiveKeyCode
+    }
+    ... on ControllerGamepadAxis {
+      axisNumber
+    }
+    ... on ControllerMouseAxis {
+      axis
+    }
+    ... on ControllerDragAxis {
+      axis
+    }
+    ... on ControllerTouchJoystickAxis {
+      anchor
+      xOffset
+      yOffset
+      radius
+    }
+  }
+}
+
+query editControllerStudio($controllerId: ID!) {
+  controller(id: $controllerId, createdByUserOnly: true) {
+    ...controllerFields
+  }
+}

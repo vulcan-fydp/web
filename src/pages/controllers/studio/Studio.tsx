@@ -12,7 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { ControllerAxis, ControllerButton } from "backend-types";
 import { HeroPage } from "components/HeroPage";
+import { getNonInteractiveButtonProps } from "lib/getNonInteractiveButtonProps";
 import React, { useCallback } from "react";
+import { ControllerVisualizer } from "./ControllerVisualizer";
 import { ControllerType, getControllerTypeName } from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
 
@@ -36,6 +38,7 @@ interface ControllerStudioProps {
 export const ControllerStudio: React.FC<ControllerStudioProps> = ({
   isReadOnly,
   buttons,
+  axes,
   gameConsole,
   controllerType,
   name,
@@ -67,8 +70,13 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
               Console
             </Text>
             <Menu>
-              <MenuButton as={Button} disabled={isReadOnly} variant="outline">
-                {getGameConsoleName(gameConsole)} <ChevronDownIcon />
+              <MenuButton
+                as={Button}
+                variant="outline"
+                {...getNonInteractiveButtonProps(isReadOnly)}
+              >
+                {getGameConsoleName(gameConsole)}{" "}
+                {isReadOnly ? null : <ChevronDownIcon />}
               </MenuButton>
               <MenuList>
                 {Object.values(GameConsole).map((gameConsole) => (
@@ -84,8 +92,13 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
               Controller type
             </Text>
             <Menu>
-              <MenuButton as={Button} disabled={isReadOnly} variant="outline">
-                {getControllerTypeName(controllerType)} <ChevronDownIcon />
+              <MenuButton
+                as={Button}
+                variant="outline"
+                {...getNonInteractiveButtonProps(isReadOnly)}
+              >
+                {getControllerTypeName(controllerType)}{" "}
+                {isReadOnly ? null : <ChevronDownIcon />}
               </MenuButton>
               <MenuList>
                 {Object.values(ControllerType).map((controllerType) => (
@@ -98,6 +111,11 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
           </Box>
         </Flex>
       </Box>
+      <ControllerVisualizer
+        buttons={buttons}
+        axes={axes}
+        isReadOnly={!!isReadOnly}
+      />
     </HeroPage>
   );
 };
