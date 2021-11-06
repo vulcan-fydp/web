@@ -3,6 +3,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { CreateControllerModal } from "./CreateControllerModal";
 import { ControllerLists } from "./list";
 import { DefaultControllerStudio } from "./studio/DefaultControllerStudio";
+import { ControllerEditStudio } from "./studio/ControllerEditStudio";
 import { ControllerType } from "./studio/enums/controller-type";
 import { GameConsole } from "./studio/enums/game-console";
 
@@ -31,7 +32,7 @@ export const ControllersRouter = () => {
         <Route
           exact
           path={ControllersRouter.userController()}
-          render={() => null}
+          render={() => <ControllerEditStudio />}
         />
         <Route
           exact
