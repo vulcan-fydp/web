@@ -9,14 +9,20 @@ import {
   MenuItem,
   MenuList,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { ControllerAxis, ControllerButton } from "backend-types";
 import { HeroPage } from "components/HeroPage";
 import { getNonInteractiveButtonProps } from "lib/getNonInteractiveButtonProps";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { ControllerVisualizer } from "./ControllerVisualizer";
-import { ControllerType, getControllerTypeName } from "./enums/controller-type";
+import {
+  ControllerType,
+  CONTROLLER_TYPE_DISPLAY_ORDER,
+  getControllerTypeName,
+} from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
+import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
 interface ControllerStudioProps {
   buttons: (ControllerButton | null)[];
@@ -30,6 +36,9 @@ interface ControllerStudioProps {
   ) => void;
   onAxisChange: (axisNumber: number, axis: ControllerAxis | null) => void;
   onGameConsoleChange: (gameConsole: GameConsole) => void;
+  /**
+   * This is guaranteed not to be a pseudo controller type
+   */
   onControllerTypeChange: (controllerType: ControllerType) => void;
   onNameChange: (name: string) => void;
   isReadOnly?: boolean;
@@ -43,7 +52,17 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
   controllerType,
   name,
   onNameChange,
+  onButtonChange,
+  onAxisChange,
+  onControllerTypeChange,
 }) => {
+  const {
+    isOpen: isButtonModalOpen,
+    onOpen: showButtonModal,
+    onClose: hideButtonModal,
+  } = useDisclosure();
+  const [editingButtonNumber, setEditingButtonNumber] = useState<number>();
+
   const onNameInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onNameChange(e.target.value);
@@ -51,8 +70,39 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     [onNameChange]
   );
 
+  const onButtonClick = useCallback(
+    (buttonNumber: number) => {
+      setEditingButtonNumber(buttonNumber);
+      showButtonModal();
+    },
+    [showButtonModal]
+  );
+
+  const onAxisClick = useCallback(() => {}, []);
+
+  const onButtonChangeFromModal = useCallback(
+    (button: ControllerButton | null) => {
+      if (editingButtonNumber !== undefined) {
+        onButtonChange(editingButtonNumber, button);
+      }
+      hideButtonModal();
+    },
+    [onButtonChange, hideButtonModal, editingButtonNumber]
+  );
+
+  const ButtonModal = KeyboardButtonModal;
+
+  if (controllerType === ControllerType.MIXED) {
+    return <>This controller is unsupported by the controller studio.</>;
+  }
+
   return (
     <HeroPage>
+      <ButtonModal
+        isOpen={isButtonModalOpen}
+        onButtonChange={onButtonChangeFromModal}
+        onClose={hideButtonModal}
+      />
       <Box width="800px" maxWidth="calc(100% - 40px)">
         {isReadOnly ? <Text fontSize="3xl">{name}</Text> : null}
         {!isReadOnly ? (
@@ -101,8 +151,11 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
                 {isReadOnly ? null : <ChevronDownIcon />}
               </MenuButton>
               <MenuList>
-                {Object.values(ControllerType).map((controllerType) => (
-                  <MenuItem key={controllerType}>
+                {CONTROLLER_TYPE_DISPLAY_ORDER.map((controllerType) => (
+                  <MenuItem
+                    key={controllerType}
+                    onClick={() => onControllerTypeChange(controllerType)}
+                  >
                     {getControllerTypeName(controllerType)}
                   </MenuItem>
                 ))}
@@ -115,6 +168,8 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
         buttons={buttons}
         axes={axes}
         isReadOnly={!!isReadOnly}
+        onButtonClick={onButtonClick}
+        onAxisClick={onAxisClick}
       />
     </HeroPage>
   );
