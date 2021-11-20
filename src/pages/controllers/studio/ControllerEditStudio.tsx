@@ -1,8 +1,15 @@
+import { ControllerAxis, ControllerButton } from "backend-types";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { useEditControllerStudioQuery } from "./editControllerStudio.backend.generated";
-import { ControllerType } from "./enums/controller-type";
+import {
+  ControllerType,
+  INITIAL_CONTROLLER_TYPE,
+  isPseudoControllerType,
+} from "./enums/controller-type";
 import { GameConsole } from "./enums/game-console";
 import { ControllerStudio } from "./Studio";
+import { getControllerType } from "./utils/getControllerType";
 
 const noop = () => {};
 
@@ -17,6 +24,60 @@ export const ControllerEditStudio = () => {
     },
   });
 
+  const [buttons, setButtons] = useState<(ControllerButton | null)[]>([]);
+  const [axes, setAxes] = useState<(ControllerAxis | null)[]>([]);
+  const [name, setName] = useState("");
+  const [controllerType, setControllerType] = useState(INITIAL_CONTROLLER_TYPE);
+
+  useEffect(() => {
+    setButtons([...(data?.controller?.buttons ?? [])]);
+    setAxes([...(data?.controller?.axes ?? [])]);
+    setName(data?.controller?.name ?? "");
+
+    if (data?.controller) {
+      const controllerType = getControllerType(data.controller);
+      setControllerType(
+        controllerType === ControllerType.EMPTY
+          ? INITIAL_CONTROLLER_TYPE
+          : controllerType
+      );
+    } else {
+      setControllerType(INITIAL_CONTROLLER_TYPE);
+    }
+  }, [data?.controller, setButtons, setAxes, setName, setControllerType]);
+
+  const onButtonChange = useCallback(
+    (buttonNumber: number, button: ControllerButton | null) => {
+      setButtons((buttons) => [
+        ...buttons.slice(0, buttonNumber),
+        button,
+        ...buttons.slice(buttonNumber + 1),
+      ]);
+    },
+    [setButtons]
+  );
+
+  const onAxisChange = useCallback(
+    (axisNumber: number, axis: ControllerAxis | null) => {
+      setAxes((axes) => [
+        ...axes.slice(0, axisNumber),
+        axis,
+        ...axes.slice(axisNumber + 1),
+      ]);
+    },
+    [setAxes]
+  );
+
+  const onControllerTypeChange = useCallback(
+    (controllerType: ControllerType) => {
+      setButtons(new Array(17).fill(null));
+      setAxes(new Array(4).fill(null));
+      setControllerType(controllerType);
+      console.log(controllerType);
+    },
+    [setButtons, setAxes]
+  );
+
   if (loading) {
     return null;
   }
@@ -29,21 +90,19 @@ export const ControllerEditStudio = () => {
     return null;
   }
 
-  const controller = data.controller;
-
   return (
     <>
       <ControllerStudio
-        buttons={controller.buttons}
-        axes={controller.axes}
+        buttons={buttons}
+        axes={axes}
         gameConsole={GameConsole.SWITCH}
-        controllerType={ControllerType.KEYBOARD_AND_MOUSE}
-        name={controller.name}
-        onButtonChange={noop}
-        onAxisChange={noop}
+        controllerType={controllerType}
+        name={name}
+        onButtonChange={onButtonChange}
+        onAxisChange={onAxisChange}
         onGameConsoleChange={noop}
-        onControllerTypeChange={noop}
-        onNameChange={noop}
+        onControllerTypeChange={onControllerTypeChange}
+        onNameChange={setName}
       />
     </>
   );

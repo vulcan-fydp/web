@@ -9,12 +9,16 @@ interface ControllerVisualizerProps {
   buttons: (ControllerButton | null)[];
   axes: (ControllerAxis | null)[];
   isReadOnly: boolean;
+  onButtonClick: (buttonNumber: number) => void;
+  onAxisClick: (axisNumber: number) => void;
 }
 
 export const ControllerVisualizer: React.FC<ControllerVisualizerProps> = ({
   buttons,
   axes,
   isReadOnly,
+  onButtonClick,
+  onAxisClick,
 }) => {
   const rootRef = useRef<HTMLDivElement>();
 
@@ -50,8 +54,8 @@ export const ControllerVisualizer: React.FC<ControllerVisualizerProps> = ({
             key={i}
             buttons={buttons.map(getButtonText)}
             axes={axes.map(getAxisText)}
-            onButtonClick={() => {}}
-            onAxisClick={() => {}}
+            onButtonClick={onButtonClick}
+            onAxisClick={onAxisClick}
             isReadOnly={isReadOnly}
           />
         ))}
