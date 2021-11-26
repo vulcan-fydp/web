@@ -23,6 +23,7 @@ import {
 } from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
 import { KeyboardAndMouseAxisModal } from "./modals/KeyboardAndMouseAxisModal";
+import { KeyboardAndMouseButtonModal } from "./modals/KeyboardAndMouseButtonModal";
 import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
 interface ControllerStudioProps {
@@ -113,7 +114,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     [onAxisChange, hideAxisModal, editingAxisNumber]
   );
 
-  const ButtonModal = KeyboardButtonModal;
+  const ButtonModal = KeyboardAndMouseButtonModal;
   const AxisModal = KeyboardAndMouseAxisModal;
 
   if (controllerType === ControllerType.MIXED) {
