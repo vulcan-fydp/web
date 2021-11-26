@@ -1,7 +1,6 @@
 import {
   Heading,
   Button,
-  Image,
   VStack,
   HStack,
   Tooltip,
@@ -10,17 +9,21 @@ import {
   Tab,
   TabPanel,
   TabPanels,
+  useToast,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/PlayerTab";
-import { StreamTab } from "pages/room/Room/StreamTab";
+// import { StreamTab } from "pages/room/Room/StreamTab";
 import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
 import { environment } from "environment";
+import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
+import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
+import { useHistory } from "react-router-dom";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -28,6 +31,26 @@ export const controllerIdVar = makeLocalStorageBackedVar("CONTROLLER_ID");
 
 export const Dashboard = () => {
   const { path } = useRouteMatch();
+  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { data, loading, error } = usePlayerIsHostQuery({
+    variables: {},
+  });
+
+  if (loading) return null;
+  if (error) {
+    return (
+      <Heading>
+        `Error! Could not reach usePlayerIsHostQuery: ${error.message}`
+      </Heading>
+    );
+  }
+  if (!data) {
+    return <Heading> No data found </Heading>;
+  }
+  if (!data.roomSession) {
+    return <Heading> No room session found </Heading>;
+  }
+  const userIsHost = data.roomSession.isHost;
 
   return (
     <HeroPage isDashboard={true}>
@@ -40,7 +63,10 @@ export const Dashboard = () => {
         maxWidth="1040px"
         padding="0 20px"
       >
-        <ShareAndCloseRoomHeader />
+        <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
+          <RoomDetails />
+          <EndRoom isHost={userIsHost} roomId={params.roomId!} />
+        </HStack>
         <Switch>
           <Route path={`${path}/players`}>
             <TabContainer tab="player" />
@@ -54,15 +80,6 @@ export const Dashboard = () => {
         </Switch>
       </VStack>
     </HeroPage>
-  );
-};
-
-const ShareAndCloseRoomHeader = () => {
-  return (
-    <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
-      <RoomDetails />
-      <EndRoom />
-    </HStack>
   );
 };
 
@@ -115,10 +132,51 @@ const RoomDetails = () => {
   );
 };
 
-const EndRoom = () => {
-  // TODO: Use the session context
-  const isHost = true;
-  return <Button variant="solid">{isHost ? "End Room" : "Leave Room"}</Button>;
+const EndRoom: React.FC<{
+  isHost: boolean;
+  roomId: string;
+}> = ({ isHost, roomId }) => {
+  const [leaveRoomMutation] = useLeaveRoomMutation({
+    variables: {
+      roomId,
+    },
+  });
+  const history = useHistory();
+  const toast = useToast();
+
+  const onLeaveRoomClick = useCallback(async () => {
+    const result = await leaveRoomMutation();
+
+    if (!result.data) {
+      return;
+    }
+
+    switch (result.data.leaveRoom.__typename) {
+      case "AuthenticationError":
+        toast({
+          title: "Error when trying to leave the room. Please try again.",
+          description: "",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      case "Success":
+        history.push("/");
+        return;
+    }
+  }, [leaveRoomMutation, history, toast]);
+
+  return (
+    <Button
+      variant="solid"
+      onClick={() => {
+        onLeaveRoomClick();
+      }}
+    >
+      {isHost ? "End Room" : "Leave Room"}
+    </Button>
+  );
 };
 
 interface TabContainerProps {
@@ -142,9 +200,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
         </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel>
-          <StreamTab />
-        </TabPanel>
+        <TabPanel>{/* <StreamTab /> */}</TabPanel>
         <TabPanel>
           <PlayerTab />
         </TabPanel>

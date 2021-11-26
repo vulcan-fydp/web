@@ -42,9 +42,7 @@ import {
 } from "./signal.relay.generated";
 import { VideoStream } from "./VideoStream";
 
-const SIGNAL_ADDRESS = `ws${environment.useSecureProtocol ? "s" : ""}://${
-  window.location.host
-}${environment.env === "production" ? ":8443" : "/relay/graphql"}`;
+const SIGNAL_ADDRESS = "ws://localhost:8443";
 
 function jsonClone(x: Object) {
   return JSON.parse(JSON.stringify(x));
