@@ -22,6 +22,7 @@ import {
   getControllerTypeName,
 } from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
+import { KeyboardAndMouseAxisModal } from "./modals/KeyboardAndMouseAxisModal";
 import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
 interface ControllerStudioProps {
@@ -61,7 +62,13 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     onOpen: showButtonModal,
     onClose: hideButtonModal,
   } = useDisclosure();
+  const {
+    isOpen: isAxisModalOpen,
+    onOpen: showAxisModal,
+    onClose: hideAxisModal,
+  } = useDisclosure();
   const [editingButtonNumber, setEditingButtonNumber] = useState<number>();
+  const [editingAxisNumber, setEditingAxisNumber] = useState<number>();
 
   const onNameInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +85,13 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     [showButtonModal]
   );
 
-  const onAxisClick = useCallback(() => {}, []);
+  const onAxisClick = useCallback(
+    (axisNumber: number) => {
+      setEditingAxisNumber(axisNumber);
+      showAxisModal();
+    },
+    [showAxisModal]
+  );
 
   const onButtonChangeFromModal = useCallback(
     (button: ControllerButton | null) => {
@@ -90,7 +103,18 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     [onButtonChange, hideButtonModal, editingButtonNumber]
   );
 
+  const onAxisChangeFromModal = useCallback(
+    (axis: ControllerAxis | null) => {
+      if (editingAxisNumber !== undefined) {
+        onAxisChange(editingAxisNumber, axis);
+      }
+      hideAxisModal();
+    },
+    [onAxisChange, hideAxisModal, editingAxisNumber]
+  );
+
   const ButtonModal = KeyboardButtonModal;
+  const AxisModal = KeyboardAndMouseAxisModal;
 
   if (controllerType === ControllerType.MIXED) {
     return <>This controller is unsupported by the controller studio.</>;
@@ -102,6 +126,11 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
         isOpen={isButtonModalOpen}
         onButtonChange={onButtonChangeFromModal}
         onClose={hideButtonModal}
+      />
+      <AxisModal
+        isOpen={isAxisModalOpen}
+        onAxisChange={onAxisChangeFromModal}
+        onClose={hideAxisModal}
       />
       <Box width="800px" maxWidth="calc(100% - 40px)">
         {isReadOnly ? <Text fontSize="3xl">{name}</Text> : null}

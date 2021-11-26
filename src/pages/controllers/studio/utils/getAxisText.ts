@@ -5,5 +5,10 @@ export function getAxisText(axis: ControllerAxis | null): string {
     return "Unset";
   }
 
+  switch (axis.__typename) {
+    case "ControllerKeyboardAxis":
+      return `${axis.negativeKeyCode} & ${axis.positiveKeyCode}`;
+  }
+
   return "Unknown";
 }

@@ -82,7 +82,12 @@ export const KeyboardButtonModal: ButtonModalComponent = ({
           </Center>
         </ModalBody>
         <ModalFooter>
-          <Button w="100%" variant="solid" size="sm">
+          <Button
+            w="100%"
+            variant="solid"
+            size="sm"
+            onClick={() => onButtonChange(null)}
+          >
             Unset Button
           </Button>
         </ModalFooter>
