@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "components/HeroPage";
 import { PlayerTab } from "pages/room/Room/PlayerTab";
-// import { StreamTab } from "pages/room/Room/StreamTab";
+import { StreamTab } from "pages/room/Room/StreamTab";
 import { CopyIcon } from "@chakra-ui/icons";
 import { ControllerTab } from "./ControllerTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
@@ -155,7 +155,6 @@ const EndRoom: React.FC<{
       case "AuthenticationError":
         toast({
           title: "Error when trying to leave the room. Please try again.",
-          description: "",
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -167,6 +166,10 @@ const EndRoom: React.FC<{
     }
   }, [leaveRoomMutation, history, toast]);
 
+  if (isHost) {
+    // todo: end room as host
+    return null;
+  }
   return (
     <Button
       variant="solid"
@@ -174,7 +177,7 @@ const EndRoom: React.FC<{
         onLeaveRoomClick();
       }}
     >
-      {isHost ? "End Room" : "Leave Room"}
+      Leave Room
     </Button>
   );
 };

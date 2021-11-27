@@ -56,7 +56,6 @@ export const PlayerTab: React.FC = () => {
     );
   }
   if (error) {
-    console.log(error);
     return <Heading> {playerLoadingError} </Heading>;
   }
 
