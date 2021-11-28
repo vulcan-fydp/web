@@ -30,8 +30,7 @@ type DashboardTab = "player" | "controller" | "stream";
 export const controllerIdVar = makeLocalStorageBackedVar("CONTROLLER_ID");
 
 export const Dashboard = () => {
-  const { path } = useRouteMatch();
-  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { path, params } = useRouteMatch<{ roomId?: string }>();
   const { data, loading, error } = usePlayerIsHostQuery({
     variables: {},
   });
@@ -50,7 +49,9 @@ export const Dashboard = () => {
   if (!data.roomSession) {
     return <Heading> No room session found </Heading>;
   }
-  const userIsHost = data.roomSession.isHost;
+  if (!params.roomId) {
+    return <Heading> Room ID not found </Heading>;
+  }
 
   return (
     <HeroPage isDashboard={true}>
@@ -65,7 +66,7 @@ export const Dashboard = () => {
       >
         <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
           <RoomDetails />
-          <EndRoom isHost={userIsHost} roomId={params.roomId!} />
+          <EndRoom isHost={data.roomSession.isHost} roomId={params.roomId} />
         </HStack>
         <Switch>
           <Route path={`${path}/players`}>
@@ -203,7 +204,9 @@ const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
         </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel>{/* <StreamTab /> */}</TabPanel>
+        <TabPanel>
+          <StreamTab />
+        </TabPanel>
         <TabPanel>
           <PlayerTab />
         </TabPanel>
