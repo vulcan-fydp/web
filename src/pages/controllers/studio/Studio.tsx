@@ -27,6 +27,16 @@ import { KeyboardAndMouseButtonModal } from "./modals/KeyboardAndMouseButtonModa
 import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
 interface ControllerStudioProps {
+  /**
+   * Button will be hidden if no text is specified
+   */
+  primaryButtonText?: string;
+  /**
+   * Button will be hidden if no text is specified
+   */
+  secondaryButtonText?: string;
+  onPrimaryButtonClick?: () => Promise<void> | void;
+  onSecondaryButtonClick?: () => Promise<void> | void;
   buttons: (ControllerButton | null)[];
   axes: (ControllerAxis | null)[];
   gameConsole: GameConsole;
@@ -47,6 +57,8 @@ interface ControllerStudioProps {
 }
 
 export const ControllerStudio: React.FC<ControllerStudioProps> = ({
+  primaryButtonText,
+  secondaryButtonText,
   isReadOnly,
   buttons,
   axes,
@@ -57,6 +69,8 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
   onButtonChange,
   onAxisChange,
   onControllerTypeChange,
+  onPrimaryButtonClick,
+  onSecondaryButtonClick,
 }) => {
   const {
     isOpen: isButtonModalOpen,
@@ -70,6 +84,9 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
   } = useDisclosure();
   const [editingButtonNumber, setEditingButtonNumber] = useState<number>();
   const [editingAxisNumber, setEditingAxisNumber] = useState<number>();
+
+  // Used to disable the studio when an async operation is occuring
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onNameInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +131,26 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     [onAxisChange, hideAxisModal, editingAxisNumber]
   );
 
+  const onPrimaryButtonClickWrapper = useCallback(async () => {
+    const maybePromise = onPrimaryButtonClick?.();
+    if (maybePromise) {
+      setIsDisabled(true);
+      // @todo error handling
+      await maybePromise;
+      setIsDisabled(false);
+    }
+  }, [setIsDisabled, onPrimaryButtonClick]);
+
+  const onSecondaryButtonClickWrapper = useCallback(async () => {
+    const maybePromise = onSecondaryButtonClick?.();
+    if (maybePromise) {
+      setIsDisabled(true);
+      // @todo error handling
+      await maybePromise;
+      setIsDisabled(false);
+    }
+  }, [setIsDisabled, onSecondaryButtonClick]);
+
   const ButtonModal = KeyboardAndMouseButtonModal;
   const AxisModal = KeyboardAndMouseAxisModal;
 
@@ -143,6 +180,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
             variant="flushed"
             size="lg"
             fontSize="3xl"
+            isDisabled={isDisabled}
           />
         ) : null}
         <Flex mt="20px" flexWrap="wrap">
@@ -154,6 +192,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
               <MenuButton
                 as={Button}
                 variant="outline"
+                disabled={isDisabled}
                 {...getNonInteractiveButtonProps(isReadOnly)}
               >
                 {getGameConsoleName(gameConsole)}{" "}
@@ -176,6 +215,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
               <MenuButton
                 as={Button}
                 variant="outline"
+                disabled={isDisabled}
                 {...getNonInteractiveButtonProps(isReadOnly)}
               >
                 {getControllerTypeName(controllerType)}{" "}
@@ -199,9 +239,32 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
         buttons={buttons}
         axes={axes}
         isReadOnly={!!isReadOnly}
+        isDisabled={isDisabled}
         onButtonClick={onButtonClick}
         onAxisClick={onAxisClick}
       />
+      {primaryButtonText || secondaryButtonText ? (
+        <Flex flexDirection="row-reverse" width="800px">
+          {primaryButtonText ? (
+            <Button
+              ml="10px"
+              onClick={onPrimaryButtonClickWrapper}
+              isDisabled={isDisabled}
+            >
+              {primaryButtonText}
+            </Button>
+          ) : null}
+          {secondaryButtonText ? (
+            <Button
+              variant="outline"
+              onClick={onSecondaryButtonClickWrapper}
+              isDisabled={isDisabled}
+            >
+              {secondaryButtonText}
+            </Button>
+          ) : null}
+        </Flex>
+      ) : null}
     </HeroPage>
   );
 };

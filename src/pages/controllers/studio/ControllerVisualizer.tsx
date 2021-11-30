@@ -9,6 +9,7 @@ interface ControllerVisualizerProps {
   buttons: (ControllerButton | null)[];
   axes: (ControllerAxis | null)[];
   isReadOnly: boolean;
+  isDisabled: boolean;
   onButtonClick: (buttonNumber: number) => void;
   onAxisClick: (axisNumber: number) => void;
 }
@@ -17,6 +18,7 @@ export const ControllerVisualizer: React.FC<ControllerVisualizerProps> = ({
   buttons,
   axes,
   isReadOnly,
+  isDisabled,
   onButtonClick,
   onAxisClick,
 }) => {
@@ -57,6 +59,7 @@ export const ControllerVisualizer: React.FC<ControllerVisualizerProps> = ({
             onButtonClick={onButtonClick}
             onAxisClick={onAxisClick}
             isReadOnly={isReadOnly}
+            isDisabled={isDisabled}
           />
         ))}
       </Box>

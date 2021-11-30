@@ -44,6 +44,7 @@ const inputButtonStyles = {
 
 const Button0: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -57,6 +58,7 @@ const Button0: LayoutInputComponent = ({
         left="100px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[0]}
@@ -67,6 +69,7 @@ const Button0: LayoutInputComponent = ({
 
 const Button1: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -81,6 +84,7 @@ const Button1: LayoutInputComponent = ({
         left="180px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[1]}
@@ -91,6 +95,7 @@ const Button1: LayoutInputComponent = ({
 
 const Button2: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -104,6 +109,7 @@ const Button2: LayoutInputComponent = ({
         left="180px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[2]}
@@ -114,6 +120,7 @@ const Button2: LayoutInputComponent = ({
 
 const Button3: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -138,6 +145,7 @@ const Button3: LayoutInputComponent = ({
         left="195px"
         top="-96px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[3]}
@@ -161,6 +169,7 @@ const smallActionButtonStyles = {
 
 const Button4: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -172,6 +181,7 @@ const Button4: LayoutInputComponent = ({
         right="75px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[4]}
@@ -182,6 +192,7 @@ const Button4: LayoutInputComponent = ({
 
 const Button5: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -204,6 +215,7 @@ const Button5: LayoutInputComponent = ({
         left="70px"
         top="-56px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[5]}
@@ -214,6 +226,7 @@ const Button5: LayoutInputComponent = ({
 
 const Button6: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -236,6 +249,7 @@ const Button6: LayoutInputComponent = ({
         right="50px"
         top="-38px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[6]}
@@ -246,6 +260,7 @@ const Button6: LayoutInputComponent = ({
 
 const Button7: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -268,6 +283,7 @@ const Button7: LayoutInputComponent = ({
         left="55px"
         top="-86px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[7]}
@@ -278,6 +294,7 @@ const Button7: LayoutInputComponent = ({
 
 const Button8: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -303,6 +320,7 @@ const Button8: LayoutInputComponent = ({
         right="-80px"
         top="280px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[8]}
@@ -313,6 +331,7 @@ const Button8: LayoutInputComponent = ({
 
 const Button9: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -338,6 +357,7 @@ const Button9: LayoutInputComponent = ({
         right="40px"
         top="-156px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[9]}
@@ -348,6 +368,7 @@ const Button9: LayoutInputComponent = ({
 
 const Button10AndAxis01: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick: rawOnButtonClick,
   onAxisClick: rawOnAxisClick,
   buttons,
@@ -397,6 +418,7 @@ const Button10AndAxis01: LayoutInputComponent = ({
         right="170px"
         top="-9px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onButtonClick}
       >
         {buttons[10]}
@@ -430,6 +452,7 @@ const Button10AndAxis01: LayoutInputComponent = ({
         right="135px"
         top="-46px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onXAxisClick}
       >
         {axes[0]}
@@ -451,6 +474,7 @@ const Button10AndAxis01: LayoutInputComponent = ({
         right="170px"
         top="-84px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onYAxisClick}
       >
         {axes[1]}
@@ -461,6 +485,7 @@ const Button10AndAxis01: LayoutInputComponent = ({
 
 const Button11AndAxis23: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick: rawOnButtonClick,
   onAxisClick: rawOnAxisClick,
   buttons,
@@ -499,6 +524,7 @@ const Button11AndAxis23: LayoutInputComponent = ({
         left="225px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onButtonClick}
       >
         {buttons[11]}
@@ -520,6 +546,7 @@ const Button11AndAxis23: LayoutInputComponent = ({
         left="-5px"
         top="159px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onXAxisClick}
       >
         {axes[2]}
@@ -530,6 +557,7 @@ const Button11AndAxis23: LayoutInputComponent = ({
         left="-25px"
         top="120px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onYAxisClick}
       >
         {axes[3]}
@@ -557,6 +585,7 @@ const dpadStyles = {
 
 const Button12: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -577,6 +606,7 @@ const Button12: LayoutInputComponent = ({
         right="205px"
         top="-23px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[12]}
@@ -587,6 +617,7 @@ const Button12: LayoutInputComponent = ({
 
 const Button13: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -607,6 +638,7 @@ const Button13: LayoutInputComponent = ({
         right="205px"
         top="-9px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[13]}
@@ -617,6 +649,7 @@ const Button13: LayoutInputComponent = ({
 
 const Button14: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -631,6 +664,7 @@ const Button14: LayoutInputComponent = ({
         right="205px"
         top="-16px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[14]}
@@ -641,6 +675,7 @@ const Button14: LayoutInputComponent = ({
 
 const Button15: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -666,6 +701,7 @@ const Button15: LayoutInputComponent = ({
         right="270px"
         top="60px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[15]}
@@ -676,6 +712,7 @@ const Button15: LayoutInputComponent = ({
 
 const Button16: LayoutInputComponent = ({
   isReadOnly,
+  isDisabled,
   onButtonClick,
   buttons,
 }) => {
@@ -722,6 +759,7 @@ const Button16: LayoutInputComponent = ({
         right="40px"
         top="-161px"
         isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
         onClick={onClick}
       >
         {buttons[16]}

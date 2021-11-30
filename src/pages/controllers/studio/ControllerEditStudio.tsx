@@ -1,7 +1,10 @@
 import { ControllerAxis, ControllerButton } from "backend-types";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { useEditControllerStudioQuery } from "./editControllerStudio.backend.generated";
+import {
+  useEditControllerMutation,
+  useEditControllerStudioQuery,
+} from "./editControllerStudio.backend.generated";
 import {
   ControllerType,
   INITIAL_CONTROLLER_TYPE,
@@ -10,6 +13,7 @@ import {
 import { GameConsole } from "./enums/game-console";
 import { ControllerStudio } from "./Studio";
 import { getControllerType } from "./utils/getControllerType";
+import { toAxisInput, toButtonInput } from "./utils/toInput";
 
 const noop = () => {};
 
@@ -23,6 +27,8 @@ export const ControllerEditStudio = () => {
       controllerId,
     },
   });
+
+  const [editControllerMutation] = useEditControllerMutation();
 
   const [buttons, setButtons] = useState<(ControllerButton | null)[]>([]);
   const [axes, setAxes] = useState<(ControllerAxis | null)[]>([]);
@@ -78,6 +84,34 @@ export const ControllerEditStudio = () => {
     [setButtons, setAxes]
   );
 
+  const onSave = useCallback(async () => {
+    await editControllerMutation({
+      variables: {
+        controllerId,
+        name,
+        buttons: buttons.map(toButtonInput),
+        axes: axes.map(toAxisInput),
+      },
+    });
+  }, [controllerId, name, buttons, axes, editControllerMutation]);
+
+  const onDiscard = useCallback(() => {
+    setButtons([...(data?.controller?.buttons ?? [])]);
+    setAxes([...(data?.controller?.axes ?? [])]);
+    setName(data?.controller?.name ?? "");
+
+    if (data?.controller) {
+      const controllerType = getControllerType(data.controller);
+      setControllerType(
+        controllerType === ControllerType.EMPTY
+          ? INITIAL_CONTROLLER_TYPE
+          : controllerType
+      );
+    } else {
+      setControllerType(INITIAL_CONTROLLER_TYPE);
+    }
+  }, [setButtons, setAxes, setName, setControllerType, data]);
+
   if (loading) {
     return null;
   }
@@ -93,6 +127,8 @@ export const ControllerEditStudio = () => {
   return (
     <>
       <ControllerStudio
+        primaryButtonText="Save changes"
+        secondaryButtonText="Discard changes"
         buttons={buttons}
         axes={axes}
         gameConsole={GameConsole.SWITCH}
@@ -103,6 +139,8 @@ export const ControllerEditStudio = () => {
         onGameConsoleChange={noop}
         onControllerTypeChange={onControllerTypeChange}
         onNameChange={setName}
+        onPrimaryButtonClick={onSave}
+        onSecondaryButtonClick={onDiscard}
       />
     </>
   );
