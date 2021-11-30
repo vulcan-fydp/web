@@ -27,6 +27,7 @@ export interface LayoutInputProps {
   onButtonClick: (buttonNumber: number) => void;
   onAxisClick: (axisNumber: number) => void;
   isReadOnly: boolean;
+  isDisabled: boolean;
 }
 
 export type LayoutInputComponent = React.FC<LayoutInputProps>;
@@ -45,6 +46,7 @@ export const useLayoutInputCallback = (
 interface LayoutInputButtonProps {
   children: string;
   isReadOnly?: boolean;
+  isDisabled: boolean;
   top?: string;
   right?: string;
   bottom?: string;

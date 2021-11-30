@@ -47,3 +47,19 @@ query editControllerStudio($controllerId: ID!) {
     ...controllerFields
   }
 }
+
+mutation editController(
+  $controllerId: ID!
+  $name: String!
+  $buttons: [ControllerButtonInput]!
+  $axes: [ControllerAxisInput]!
+) {
+  updateController(
+    controllerId: $controllerId
+    name: $name
+    buttons: $buttons
+    axes: $axes
+  ) {
+    ...controllerFields
+  }
+}
