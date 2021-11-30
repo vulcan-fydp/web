@@ -7,6 +7,7 @@ query roomSession {
 
 query playerIsHost {
   roomSession {
+    id
     isHost
   }
 }

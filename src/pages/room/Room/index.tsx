@@ -35,12 +35,12 @@ export const Dashboard = () => {
     variables: {},
   });
 
-  if (loading) return null;
+  if (loading) {
+    return null;
+  }
   if (error) {
     return (
-      <Heading>
-        `Error! Could not reach usePlayerIsHostQuery: ${error.message}`
-      </Heading>
+      <Heading>{`Could not determine if user is the host with error: ${error.message}`}</Heading>
     );
   }
   if (!data) {
@@ -155,7 +155,7 @@ const EndRoom: React.FC<{
     switch (result.data.leaveRoom.__typename) {
       case "AuthenticationError":
         toast({
-          title: "Error when trying to leave the room. Please try again.",
+          title: "Authentication error occured when trying to leave the room.",
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -172,12 +172,7 @@ const EndRoom: React.FC<{
     return null;
   }
   return (
-    <Button
-      variant="solid"
-      onClick={() => {
-        onLeaveRoomClick();
-      }}
-    >
+    <Button variant="solid" onClick={onLeaveRoomClick}>
       Leave Room
     </Button>
   );
