@@ -15,6 +15,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { AxisModalComponent } from "./AxisModal";
 import { KeyboardAxisModal } from "./KeyboardAxisModal";
+import { MouseAxisModal } from "./MouseAxisModal";
 
 enum AxisType {
   KEYBOARD,
@@ -25,6 +26,7 @@ export const KeyboardAndMouseAxisModal: AxisModalComponent = ({
   isOpen,
   onAxisChange,
   onClose,
+  axisNumber,
 }) => {
   const [axisType, setAxisType] = useState<AxisType>();
 
@@ -38,6 +40,13 @@ export const KeyboardAndMouseAxisModal: AxisModalComponent = ({
         isOpen={isOpen && axisType === AxisType.KEYBOARD}
         onAxisChange={onAxisChange}
         onClose={onClose}
+        axisNumber={axisNumber}
+      />
+      <MouseAxisModal
+        isOpen={isOpen && axisType === AxisType.MOUSE}
+        onAxisChange={onAxisChange}
+        onClose={onClose}
+        axisNumber={axisNumber}
       />
       <Modal isOpen={isOpen && axisType === undefined} onClose={onClose}>
         <ModalOverlay />

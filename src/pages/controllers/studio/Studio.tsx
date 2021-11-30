@@ -132,6 +132,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
         isOpen={isAxisModalOpen}
         onAxisChange={onAxisChangeFromModal}
         onClose={hideAxisModal}
+        axisNumber={editingAxisNumber ?? -1} // Will always be defined when modal is visible
       />
       <Box width="800px" maxWidth="calc(100% - 40px)">
         {isReadOnly ? <Text fontSize="3xl">{name}</Text> : null}

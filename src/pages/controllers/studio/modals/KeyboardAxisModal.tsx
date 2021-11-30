@@ -16,6 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { thickDashedBorder } from "styles/thickDashedBorder";
+import {
+  getRotationForNegativeAxis,
+  getRotationForPositiveAxis,
+} from "../utils/getRotationForAxis";
 import { AxisModalComponent } from "./AxisModal";
 
 const PLACEHOLDER = <>&nbsp;</>;
@@ -24,6 +28,7 @@ export const KeyboardAxisModal: AxisModalComponent = ({
   isOpen,
   onAxisChange,
   onClose,
+  axisNumber,
 }) => {
   const [negativeKeyCode, setNegativeKeyCode] = useState<string>();
   const [positiveKeyCode, setPositiveKeyCode] = useState<string>();
@@ -82,7 +87,9 @@ export const KeyboardAxisModal: AxisModalComponent = ({
   }, [isOpen, setNegativeKeyCode, setPositiveKeyCode, setVisibleText]);
 
   const rotation =
-    negativeKeyCode === undefined || negativeKeyCode === visibleText ? -90 : 90;
+    negativeKeyCode === undefined || negativeKeyCode === visibleText
+      ? getRotationForNegativeAxis(axisNumber)
+      : getRotationForPositiveAxis(axisNumber);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
