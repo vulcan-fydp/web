@@ -199,9 +199,7 @@ const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
         </Tab>
       </TabList>
       <TabPanels>
-        <TabPanel>
-          <StreamTab />
-        </TabPanel>
+        <TabPanel>{/* <StreamTab /> */}</TabPanel>
         <TabPanel>
           <PlayerTab />
         </TabPanel>

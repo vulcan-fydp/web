@@ -23,6 +23,7 @@ import {
   useClientPlayersInRoomQuery,
   useSetControllerNumbersForRoomSessionsMutation,
 } from "./playersInRoom.backend.generated";
+import { useRemoveClientRoomSessionMutation } from "./removeClientRoomSession.backend.generated";
 
 const controllerColors = ["#E53E3E", "#3182CE", "#38A169", "#D69E2E"];
 
@@ -47,6 +48,7 @@ export const PlayerTab: React.FC = () => {
   });
   const [setControllerNumbersForRoomSessions] =
     useSetControllerNumbersForRoomSessionsMutation();
+  const [removeClientRoomSession] = useRemoveClientRoomSessionMutation();
 
   if (loading) {
     return (
@@ -136,6 +138,16 @@ export const PlayerTab: React.FC = () => {
   const currentPlayerId = data.roomSession.id;
   const roomSessions = [...data.roomSession.room.roomSessions];
 
+  const removePlayer = async (roomSessionId: string, roomId: string) => {
+    console.log("Remove player");
+    await removeClientRoomSession({
+      variables: {
+        clientRoomSessionId: roomSessionId,
+        roomId,
+      },
+    });
+  };
+
   return (
     <VStack alignItems="left" spacing="20px">
       {roomSessions
@@ -158,6 +170,9 @@ export const PlayerTab: React.FC = () => {
               setControllerNumber={(controllerNumber) =>
                 setControllerNumber(controllerNumber, id)
               }
+              onRemovePlayerClick={async () => {
+                await removePlayer(id, data.roomSession!.room.id);
+              }}
             />
           );
         })}
@@ -171,6 +186,7 @@ interface PlayerRowProps {
   controllerNumber: number | null;
   isCurrentPlayer: boolean;
   setControllerNumber: (controllerNumber: number | null) => void;
+  onRemovePlayerClick: () => void;
 }
 
 const PlayerRow: React.FC<PlayerRowProps> = ({
@@ -179,6 +195,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
   controllerNumber,
   isCurrentPlayer,
   setControllerNumber,
+  onRemovePlayerClick,
 }) => {
   return (
     <Flex
@@ -241,6 +258,14 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
         </Menu>
         {/* </div> */}
       </HStack>
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={isHost}
+        onClick={onRemovePlayerClick}
+      >
+        Kick
+      </Button>
     </Flex>
   );
 };
