@@ -4,3 +4,10 @@ query roomSession {
     controllerNumber
   }
 }
+
+query playerIsHost {
+  roomSession {
+    id
+    isHost
+  }
+}

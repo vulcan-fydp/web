@@ -1,0 +1,11 @@
+mutation leaveRoom($roomId: ID!) {
+  leaveRoom(roomId: $roomId) {
+    __typename
+    ... on Success {
+      _
+    }
+    ... on AuthenticationError {
+      message
+    }
+  }
+}
