@@ -15,6 +15,7 @@ import {
   MenuItem,
   MenuDivider,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
 import profile from "resources/profile.png";
 import { ControllerIcon } from "resources/controller";
@@ -24,6 +25,7 @@ import {
   useSetControllerNumbersForRoomSessionsMutation,
 } from "./playersInRoom.backend.generated";
 import { useRemoveClientRoomSessionMutation } from "./removeClientRoomSession.backend.generated";
+import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 
 const controllerColors = ["#E53E3E", "#3182CE", "#38A169", "#D69E2E"];
 
@@ -46,9 +48,17 @@ export const PlayerTab: React.FC = () => {
   const { data, loading, error } = useClientPlayersInRoomQuery({
     pollInterval: 10000,
   });
+  const {
+    data: isHostData,
+    loading: isHostLoading,
+    error: isHostError,
+  } = usePlayerIsHostQuery({
+    variables: {},
+  });
   const [setControllerNumbersForRoomSessions] =
     useSetControllerNumbersForRoomSessionsMutation();
   const [removeClientRoomSession] = useRemoveClientRoomSessionMutation();
+  const toast = useToast();
 
   if (loading) {
     return (
@@ -70,6 +80,21 @@ export const PlayerTab: React.FC = () => {
   }
   if (data.roomSession.room.roomSessions.length === 0) {
     return <Heading> Nobody is in the room </Heading>;
+  }
+
+  if (isHostLoading) {
+    return null;
+  }
+  if (isHostError) {
+    return (
+      <Heading>{`Could not determine if user is the host with error: ${isHostError.message}`}</Heading>
+    );
+  }
+  if (!isHostData) {
+    return <Heading> No data found </Heading>;
+  }
+  if (!isHostData.roomSession) {
+    return <Heading> No room session found </Heading>;
   }
 
   const setControllerNumber = async (
@@ -139,13 +164,30 @@ export const PlayerTab: React.FC = () => {
   const roomSessions = [...data.roomSession.room.roomSessions];
 
   const removePlayer = async (roomSessionId: string, roomId: string) => {
-    console.log("Remove player");
-    await removeClientRoomSession({
+    const result = await removeClientRoomSession({
       variables: {
         clientRoomSessionId: roomSessionId,
         roomId,
       },
     });
+
+    if (!result.data) {
+      return;
+    }
+
+    switch (result.data.removeClientRoomSession.__typename) {
+      case "AuthenticationError":
+        toast({
+          title:
+            "Authentication error occured when trying to remove user from the room.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      case "Success":
+        return;
+    }
   };
 
   return (
@@ -173,6 +215,7 @@ export const PlayerTab: React.FC = () => {
               onRemovePlayerClick={async () => {
                 await removePlayer(id, data.roomSession!.room.id);
               }}
+              userIsHost={isHostData.roomSession?.isHost || false}
             />
           );
         })}
@@ -187,6 +230,7 @@ interface PlayerRowProps {
   isCurrentPlayer: boolean;
   setControllerNumber: (controllerNumber: number | null) => void;
   onRemovePlayerClick: () => void;
+  userIsHost: boolean;
 }
 
 const PlayerRow: React.FC<PlayerRowProps> = ({
@@ -196,6 +240,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
   isCurrentPlayer,
   setControllerNumber,
   onRemovePlayerClick,
+  userIsHost,
 }) => {
   return (
     <Flex
@@ -258,14 +303,16 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
         </Menu>
         {/* </div> */}
       </HStack>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={isHost}
-        onClick={onRemovePlayerClick}
-      >
-        Kick
-      </Button>
+      {userIsHost && (
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={isHost}
+          onClick={onRemovePlayerClick}
+        >
+          Kick
+        </Button>
+      )}
     </Flex>
   );
 };
