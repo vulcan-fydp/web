@@ -7,12 +7,15 @@ import {
   Spinner,
   Text,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import { Controller } from "backend-types";
 import { ControllerTags } from "components/ControllerTags";
 import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
+import { useCallback, useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import { useUserControllersQuery } from "./userControllers.backend.generated";
+import { getControllerShareUri } from "./utils/getControllerShareUri";
 
 export const UserControllers = () => {
   const { data, loading, error } = useUserControllersQuery();
@@ -80,6 +83,19 @@ interface UserControllerRowProps {
 export const UserControllerRow: React.FC<UserControllerRowProps> = ({
   controller,
 }) => {
+  const showToast = useToast();
+
+  const onShareClick = useCallback(async () => {
+    await navigator.clipboard.writeText(getControllerShareUri(controller));
+
+    showToast({
+      title: "Controller copied to clipboard",
+      status: "info",
+      duration: 4000,
+      position: "top",
+    });
+  }, [controller, showToast]);
+
   return (
     <Flex
       padding="15px 25px"
@@ -108,6 +124,7 @@ export const UserControllerRow: React.FC<UserControllerRowProps> = ({
           size="sm"
           leftIcon={<CopyIcon />}
           colorScheme="blue"
+          onClick={onShareClick}
         >
           Share
         </Button>
