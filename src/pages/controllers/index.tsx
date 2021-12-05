@@ -6,6 +6,7 @@ import { DefaultControllerStudio } from "./studio/DefaultControllerStudio";
 import { ControllerEditStudio } from "./studio/ControllerEditStudio";
 import { ControllerType } from "./studio/enums/controller-type";
 import { GameConsole } from "./studio/enums/game-console";
+import { CreateControllerStudio } from "./studio/CreateControllerStudio";
 
 export const ControllersRouter = () => {
   const { path } = useRouteMatch();
@@ -27,7 +28,7 @@ export const ControllersRouter = () => {
         <Route
           exact
           path={ControllersRouter.createUserController()}
-          render={() => null}
+          render={() => <CreateControllerStudio />}
         />
         <Route
           exact
