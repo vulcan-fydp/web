@@ -21,33 +21,29 @@ import {
 import { GameConsole } from "./enums/game-console";
 import { ControllerStudio } from "./Studio";
 import { getControllerType } from "./utils/getControllerType";
+import {
+  axesQueryParam,
+  buttonsQueryParam,
+  nameQueryParam,
+} from "../queryParams";
 import { toAxisInput, toButtonInput } from "./utils/toInput";
 
 const noop = () => {};
 
-function TypedJsonParam<T>(): QueryParamConfig<T[]> {
-  return {
-    encode: (buttons) => JSON.stringify(buttons),
-    decode: (buttonsJson) => {
-      if (typeof buttonsJson !== "string") {
-        return [];
-      }
-
-      return JSON.parse(buttonsJson);
-    },
-  };
-}
-
+// @todo: Sharing of non-keyboard and mouse controllers will not work because of controllerType
 export const CreateControllerStudio = () => {
   const [buttons, setButtons] = useQueryParam(
-    "buttons",
-    TypedJsonParam<ControllerButton | null>()
+    buttonsQueryParam.name,
+    buttonsQueryParam.config
   );
   const [axes, setAxes] = useQueryParam(
-    "axes",
-    TypedJsonParam<ControllerAxis | null>()
+    axesQueryParam.name,
+    axesQueryParam.config
   );
-  const [name, setName] = useQueryParam("name", StringParam);
+  const [name, setName] = useQueryParam(
+    nameQueryParam.name,
+    nameQueryParam.config
+  );
   const [controllerType, setControllerType] = useState(INITIAL_CONTROLLER_TYPE);
 
   const [createControllerMutation] = useCreateControllerMutation();
@@ -99,7 +95,6 @@ export const CreateControllerStudio = () => {
       setButtons(new Array(17).fill(null), "replaceIn");
       setAxes(new Array(4).fill(null), "replaceIn");
       setControllerType(controllerType);
-      console.log(controllerType);
     },
     [setButtons, setAxes]
   );
