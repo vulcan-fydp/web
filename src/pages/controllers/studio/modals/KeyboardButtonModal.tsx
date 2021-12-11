@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { ButtonModalComponent } from "./ButtonModal";
+import { ButtonModalComponent, UnsetButton } from "./ButtonModal";
 
 export const KeyboardButtonModal: ButtonModalComponent = ({
   isOpen,
@@ -82,14 +82,7 @@ export const KeyboardButtonModal: ButtonModalComponent = ({
           </Center>
         </ModalBody>
         <ModalFooter>
-          <Button
-            w="100%"
-            variant="solid"
-            size="sm"
-            onClick={() => onButtonChange(null)}
-          >
-            Unset Button
-          </Button>
+          <UnsetButton onButtonChange={onButtonChange} />
         </ModalFooter>
       </ModalContent>
     </Modal>

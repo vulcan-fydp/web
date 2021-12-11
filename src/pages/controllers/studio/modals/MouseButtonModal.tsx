@@ -13,7 +13,7 @@ import {
 import { disableContextMenu } from "lib/disableContextMenu";
 import { useCallback, useEffect, useState } from "react";
 import { getMouseButtonText } from "../utils/getMouseButtonText";
-import { ButtonModalComponent } from "./ButtonModal";
+import { ButtonModalComponent, UnsetButton } from "./ButtonModal";
 
 // @todo: Buttons 3 and 4 are kind of tricky because they cause navigation and cannot be explicitly
 // prevented. Check out https://pretagteam.com/question/preventing-mouse-fourth-and-fifth-buttons-from-navigating-backforward-in-browsers-history
@@ -86,14 +86,7 @@ export const MouseButtonModal: ButtonModalComponent = ({
           </Center>
         </ModalBody>
         <ModalFooter>
-          <Button
-            w="100%"
-            variant="solid"
-            size="sm"
-            onClick={() => onButtonChange(null)}
-          >
-            Unset Button
-          </Button>
+          <UnsetButton onButtonChange={onButtonChange} />
         </ModalFooter>
       </ModalContent>
     </Modal>

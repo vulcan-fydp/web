@@ -54,7 +54,7 @@ export const ControllerVisualizer: React.FC<ControllerVisualizerProps> = ({
         {layout.inputs.map((LayoutInput, i) => (
           <LayoutInput
             key={i}
-            buttons={buttons.map(getButtonText)}
+            buttons={buttons.map((button) => getButtonText(button))}
             axes={axes.map(getAxisText)}
             onButtonClick={onButtonClick}
             onAxisClick={onAxisClick}
