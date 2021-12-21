@@ -42,7 +42,8 @@
     "codegen:backend": "graphql-codegen --config codegen.backend.yml",
     "codegen:relay": "graphql-codegen --config codegen.relay.yml",
     "postinstall": "npm run codegen",
-    "lint": "eslint src --fix"
+    "lint": "eslint src --fix",
+    "lint:ci": "eslint src"
   },
   "browserslist": {
     "production": [
