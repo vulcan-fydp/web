@@ -27,4 +27,4 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VULCAN_FYDP_CI_SSH_PRIVATE_KEY }}
       - run: npm ci
-      - run: npm run build
+      - run: npm run build:ci
