@@ -7,7 +7,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getGamepadButtonText } from "../utils/getGamepadButtonText";
 import { ButtonModalComponent, UnsetButton } from "./ButtonModal";

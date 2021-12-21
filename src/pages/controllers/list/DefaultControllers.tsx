@@ -1,13 +1,6 @@
 import { CopyIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/layout";
 import { Controller } from "backend-types";
 import { ControllerTags } from "components/ControllerTags";
 import { NavLink } from "react-router-dom";

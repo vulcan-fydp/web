@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
+} from "@chakra-ui/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQueryParam, useQueryParams, StringParam } from "use-query-params";
 import { CreateControllerModalStep, CREATE_CONTROLLER_QUERY_PARAM } from ".";

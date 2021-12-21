@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
+} from "@chakra-ui/react";
 import { useCallback } from "react";
 import { NavLink } from "react-router-dom";
 import { useQueryParam, StringParam } from "use-query-params";
