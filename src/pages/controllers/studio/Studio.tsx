@@ -22,9 +22,21 @@ import {
   getControllerTypeName,
 } from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
+import { GamepadButtonModal } from "./modals/GamepadButtonModal";
 import { KeyboardAndMouseAxisModal } from "./modals/KeyboardAndMouseAxisModal";
 import { KeyboardAndMouseButtonModal } from "./modals/KeyboardAndMouseButtonModal";
 import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
+
+function getButtonModal(controllerType: ControllerType) {
+  switch (controllerType) {
+    case ControllerType.KEYBOARD_AND_MOUSE:
+      return KeyboardAndMouseButtonModal;
+    case ControllerType.GAMEPAD:
+      return GamepadButtonModal;
+  }
+
+  throw new Error("Unexpected controller type");
+}
 
 interface ControllerStudioProps {
   /**
@@ -151,7 +163,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     }
   }, [setIsDisabled, onSecondaryButtonClick]);
 
-  const ButtonModal = KeyboardAndMouseButtonModal;
+  const ButtonModal = getButtonModal(controllerType);
   const AxisModal = KeyboardAndMouseAxisModal;
 
   if (controllerType === ControllerType.MIXED) {
@@ -249,7 +261,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
             <Button
               ml="10px"
               onClick={onPrimaryButtonClickWrapper}
-              isDisabled={isDisabled}
+              isLoading={isDisabled} // Currently relies on the assumption that the primary button is the cause
             >
               {primaryButtonText}
             </Button>

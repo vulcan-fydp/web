@@ -13,7 +13,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { ButtonModalComponent } from "./ButtonModal";
+import { ButtonModalComponent, UnsetButton } from "./ButtonModal";
 import { KeyboardButtonModal } from "./KeyboardButtonModal";
 import { MouseButtonModal } from "./MouseButtonModal";
 
@@ -80,14 +80,7 @@ export const KeyboardAndMouseButtonModal: ButtonModalComponent = ({
             </Flex>
           </ModalBody>
           <ModalFooter>
-            <Button
-              w="100%"
-              variant="solid"
-              size="sm"
-              onClick={() => onButtonChange(null)}
-            >
-              Unset Button
-            </Button>
+            <UnsetButton onButtonChange={onButtonChange} />
           </ModalFooter>
         </ModalContent>
       </Modal>
