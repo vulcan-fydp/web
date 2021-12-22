@@ -28,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
       left="0"
       right="0"
       bottom="calc(100% - 50px)"
+      zIndex="999"
     >
       <Flex
         justifyContent="space-between"
