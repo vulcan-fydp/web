@@ -49,3 +49,7 @@ query userControllers {
     }
   }
 }
+
+mutation deleteController($controllerId: ID!) {
+  deleteController(controllerId: $controllerId)
+}

@@ -6,15 +6,18 @@ import {
   HStack,
   Spinner,
   Text,
-  VStack,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { Controller } from "backend-types";
 import { ControllerTags } from "components/ControllerTags";
 import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { NavLink } from "react-router-dom";
-import { useUserControllersQuery } from "./userControllers.backend.generated";
+import {
+  useDeleteControllerMutation,
+  useUserControllersQuery,
+} from "./userControllers.backend.generated";
 import { getControllerShareUri } from "./utils/getControllerShareUri";
 
 export const UserControllers = () => {
@@ -84,6 +87,7 @@ export const UserControllerRow: React.FC<UserControllerRowProps> = ({
   controller,
 }) => {
   const showToast = useToast();
+  const [deleteControllerMutation] = useDeleteControllerMutation();
 
   const onShareClick = useCallback(async () => {
     await navigator.clipboard.writeText(getControllerShareUri(controller));
@@ -95,6 +99,30 @@ export const UserControllerRow: React.FC<UserControllerRowProps> = ({
       position: "top",
     });
   }, [controller, showToast]);
+
+  const onDeleteClick = useCallback(async () => {
+    await deleteControllerMutation({
+      variables: {
+        controllerId: controller.id,
+      },
+      update: (cache) => {
+        cache.evict({
+          id: cache.identify({
+            __typename: "Controller",
+            id: controller.id,
+          }),
+        });
+        cache.gc();
+      },
+    });
+
+    showToast({
+      title: "Controller deleted",
+      status: "success",
+      duration: 4000,
+      position: "top",
+    });
+  }, [deleteControllerMutation, controller, showToast]);
 
   return (
     <Flex
@@ -133,6 +161,7 @@ export const UserControllerRow: React.FC<UserControllerRowProps> = ({
           size="sm"
           leftIcon={<DeleteIcon />}
           colorScheme="red"
+          onClick={onDeleteClick}
         >
           Delete
         </Button>
