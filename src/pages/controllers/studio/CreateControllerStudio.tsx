@@ -1,31 +1,20 @@
 import { ControllerAxis, ControllerButton } from "backend-types";
 import { useCallback, useEffect, useState } from "react";
-import { Link, useRouteMatch, useHistory } from "react-router-dom";
-import {
-  useQueryParam,
-  JsonParam,
-  QueryParamConfig,
-  StringParam,
-} from "use-query-params";
+import { useHistory } from "react-router-dom";
+import { useQueryParam } from "use-query-params";
 import { ControllersRouter } from "..";
-import { useCreateControllerMutation } from "./createControllerStudio.backend.generated";
-import {
-  useEditControllerMutation,
-  useEditControllerStudioQuery,
-} from "./editControllerStudio.backend.generated";
-import {
-  ControllerType,
-  INITIAL_CONTROLLER_TYPE,
-  isPseudoControllerType,
-} from "./enums/controller-type";
-import { GameConsole } from "./enums/game-console";
-import { ControllerStudio } from "./Studio";
-import { getControllerType } from "./utils/getControllerType";
 import {
   axesQueryParam,
   buttonsQueryParam,
   nameQueryParam,
 } from "../queryParams";
+import { useCreateControllerMutation } from "./createControllerStudio.backend.generated";
+import {
+  ControllerType,
+  INITIAL_CONTROLLER_TYPE,
+} from "./enums/controller-type";
+import { GameConsole } from "./enums/game-console";
+import { ControllerStudio } from "./Studio";
 import { toAxisInput, toButtonInput } from "./utils/toInput";
 
 const noop = () => {};
@@ -135,18 +124,6 @@ export const CreateControllerStudio = () => {
 
     setControllerType(INITIAL_CONTROLLER_TYPE);
   }, [setButtons, setAxes, setName, setControllerType]);
-
-  // if (loading) {
-  //   return null;
-  // }
-
-  // if (error) {
-  //   return null;
-  // }
-
-  // if (!data || !data.controller) {
-  //   return null;
-  // }
 
   return (
     <>

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Tab,
   TabList,
@@ -9,8 +8,8 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
 import { HeroPage } from "components/HeroPage";
+import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
 import { NavLink, useRouteMatch } from "react-router-dom";
 import { DefaultControllers } from "./DefaultControllers";
 import { UserControllers } from "./UserControllers";
