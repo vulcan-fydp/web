@@ -9,7 +9,7 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import { CreateControllerButton } from "components/CreateControllerButton";
+import { CreateControllerButton } from "pages/controllers/CreateControllerButton";
 import { HeroPage } from "components/HeroPage";
 import { NavLink, useRouteMatch } from "react-router-dom";
 import { DefaultControllers } from "./DefaultControllers";

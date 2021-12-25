@@ -1,15 +1,9 @@
 import { CopyIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/layout";
 import { Controller } from "backend-types";
 import { ControllerTags } from "components/ControllerTags";
+import { NavLink } from "react-router-dom";
 import { useDefaultControllersQuery } from "./defaultControllers.backend.generated";
 
 export const DefaultControllers = () => {
@@ -70,10 +64,22 @@ export const DefaultControllerRow: React.FC<DefaultControllerRowProps> = ({
       <ControllerTags controller={controller} isDefaultController />
       <Box flex="1 1 auto" />
       <HStack spacing="5px">
-        <Button variant="solid" size="sm" leftIcon={<ViewIcon />}>
+        <Button
+          as={NavLink}
+          to={`/controllers/built-in/${controller.id}`}
+          variant="solid"
+          size="sm"
+          leftIcon={<ViewIcon />}
+          colorScheme="orange"
+        >
           View
         </Button>
-        <Button variant="solid" size="sm" leftIcon={<CopyIcon />}>
+        <Button
+          variant="solid"
+          size="sm"
+          leftIcon={<CopyIcon />}
+          colorScheme="cyan"
+        >
           Clone
         </Button>
       </HStack>

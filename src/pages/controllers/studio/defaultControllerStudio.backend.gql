@@ -42,14 +42,8 @@ fragment controllerFields on Controller {
   }
 }
 
-query userControllers {
-  user {
-    controllers {
-      ...controllerFields
-    }
+query defaultControllerStudio($controllerId: ID!) {
+  controller(id: $controllerId, defaultControllerOnly: true) {
+    ...controllerFields
   }
-}
-
-mutation deleteController($controllerId: ID!) {
-  deleteController(controllerId: $controllerId)
 }

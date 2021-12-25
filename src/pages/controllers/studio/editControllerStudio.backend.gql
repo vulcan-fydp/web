@@ -42,14 +42,24 @@ fragment controllerFields on Controller {
   }
 }
 
-query userControllers {
-  user {
-    controllers {
-      ...controllerFields
-    }
+query editControllerStudio($controllerId: ID!) {
+  controller(id: $controllerId, createdByUserOnly: true) {
+    ...controllerFields
   }
 }
 
-mutation deleteController($controllerId: ID!) {
-  deleteController(controllerId: $controllerId)
+mutation editController(
+  $controllerId: ID!
+  $name: String!
+  $buttons: [ControllerButtonInput]!
+  $axes: [ControllerAxisInput]!
+) {
+  updateController(
+    controllerId: $controllerId
+    name: $name
+    buttons: $buttons
+    axes: $axes
+  ) {
+    ...controllerFields
+  }
 }

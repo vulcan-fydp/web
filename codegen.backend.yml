@@ -16,6 +16,7 @@ generates:
       defaultBaseOptions:
         context:
           target: backend
+      preResolveTypes: false
   ./graphql-backend.schema.json:
     plugins:
       - "introspection"
