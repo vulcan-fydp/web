@@ -9,16 +9,17 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { getGamepadButtonText } from "../utils/getGamepadButtonText";
-import { ButtonModalComponent, UnsetButton } from "./ButtonModal";
+import { getGamepadAxisText } from "../utils/getGamepadAxisText";
+import { AxisModalComponent, UnsetAxis } from "./AxisModal";
 
-const GAMEPAD_BUTTON_POLL_FREQUENCY_MS = 100;
+const GAMEPAD_AXIS_POLL_FREQUENCY_MS = 100;
+const GAMEPAD_AXIS_EPSILON = 0.1;
 
-function getFirstGamepadButtonPressed(): number | undefined {
+function getFirstGamepadAxisMoved(): number | undefined {
   for (const gamepad of navigator.getGamepads()) {
     if (gamepad) {
-      for (let i = 0; i < gamepad.buttons.length; i++) {
-        if (gamepad.buttons[i].pressed) {
+      for (let i = 0; i < gamepad.axes.length; i++) {
+        if (Math.abs(gamepad.axes[i]) > GAMEPAD_AXIS_EPSILON) {
           return i;
         }
       }
@@ -26,50 +27,50 @@ function getFirstGamepadButtonPressed(): number | undefined {
   }
 }
 
-export const GamepadButtonModal: ButtonModalComponent = ({
+export const GamepadAxisModal: AxisModalComponent = ({
   isOpen,
-  onButtonChange,
+  onAxisChange,
   onClose,
 }) => {
-  const [buttonNumber, setButtonNumber] = useState<number>();
+  const [axisNumber, setAxisNumber] = useState<number>();
 
   useEffect(() => {
-    setButtonNumber(undefined);
-  }, [isOpen, setButtonNumber]);
+    setAxisNumber(undefined);
+  }, [isOpen, setAxisNumber]);
 
   useEffect(() => {
     let cleanup = undefined;
 
-    if (isOpen && buttonNumber === undefined) {
+    if (isOpen && axisNumber === undefined) {
       const intervalHandle = setInterval(() => {
-        const button = getFirstGamepadButtonPressed();
-        if (button !== undefined) {
-          setButtonNumber(button);
+        const axis = getFirstGamepadAxisMoved();
+        if (axis !== undefined) {
+          setAxisNumber(axis);
         }
-      }, GAMEPAD_BUTTON_POLL_FREQUENCY_MS);
+      }, GAMEPAD_AXIS_POLL_FREQUENCY_MS);
 
       cleanup = () => clearInterval(intervalHandle);
     }
 
     return cleanup;
-  }, [isOpen, buttonNumber, setButtonNumber]);
+  }, [isOpen, axisNumber, setAxisNumber]);
 
   useEffect(() => {
-    if (buttonNumber !== undefined) {
+    if (axisNumber !== undefined) {
       setTimeout(() => {
-        onButtonChange({
-          __typename: "ControllerGamepadButton",
-          buttonNumber: buttonNumber,
+        onAxisChange({
+          __typename: "ControllerGamepadAxis",
+          axisNumber,
         });
       }, 600);
     }
-  }, [buttonNumber, onButtonChange]);
+  }, [axisNumber, onAxisChange]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Press a Gamepad button</ModalHeader>
+        <ModalHeader>Move a Gamepad stick</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Center
@@ -88,8 +89,8 @@ export const GamepadButtonModal: ButtonModalComponent = ({
               borderBottomColor="purple.200"
               textAlign="center"
             >
-              {buttonNumber !== undefined ? (
-                getGamepadButtonText(buttonNumber)
+              {axisNumber !== undefined ? (
+                getGamepadAxisText(axisNumber)
               ) : (
                 <>&nbsp;</>
               )}
@@ -97,7 +98,7 @@ export const GamepadButtonModal: ButtonModalComponent = ({
           </Center>
         </ModalBody>
         <ModalFooter>
-          <UnsetButton onButtonChange={onButtonChange} />
+          <UnsetAxis onAxisChange={onAxisChange} />
         </ModalFooter>
       </ModalContent>
     </Modal>
