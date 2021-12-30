@@ -17,5 +17,11 @@
     "D-pad left",
     "D-pad right",
     "Guide"
+  ],
+  "axes": [
+    "Left stick left/right",
+    "Left stick up/down",
+    "Right stick left/right",
+    "Right stick up/down"
   ]
 }
