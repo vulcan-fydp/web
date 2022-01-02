@@ -33,6 +33,7 @@ export const Dashboard = () => {
   const { path, params } = useRouteMatch<{ roomId?: string }>();
   const { data, loading, error } = usePlayerIsHostQuery({
     variables: {},
+    fetchPolicy: "network-only",
   });
 
   if (loading) {

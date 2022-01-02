@@ -169,6 +169,15 @@ export const PlayerTab: React.FC = () => {
         clientRoomSessionId: roomSessionId,
         roomId,
       },
+      update: (cache) => {
+        cache.evict({
+          id: cache.identify({
+            __typename: "RoomSession",
+            id: roomSessionId,
+          }),
+        });
+        cache.gc();
+      },
     });
 
     if (!result.data) {
