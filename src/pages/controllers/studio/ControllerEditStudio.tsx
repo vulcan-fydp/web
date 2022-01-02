@@ -1,6 +1,9 @@
 import { ControllerAxis, ControllerButton } from "backend-types";
+import { ErrorPage } from "components/ErrorPage";
+import { LoadingPage } from "components/LoadingPage";
 import { useCallback, useEffect, useState } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
+import { ControllersRouter } from "..";
 import {
   useEditControllerMutation,
   useEditControllerStudioQuery,
@@ -8,7 +11,6 @@ import {
 import {
   ControllerType,
   INITIAL_CONTROLLER_TYPE,
-  isPseudoControllerType,
 } from "./enums/controller-type";
 import { GameConsole } from "./enums/game-console";
 import { ControllerStudio } from "./Studio";
@@ -113,15 +115,23 @@ export const ControllerEditStudio = () => {
   }, [setButtons, setAxes, setName, setControllerType, data]);
 
   if (loading) {
-    return null;
+    return <LoadingPage />;
   }
 
   if (error) {
-    return null;
+    return (
+      <ErrorPage message="An error occured loading controller" isTransient />
+    );
   }
 
   if (!data || !data.controller) {
-    return null;
+    return (
+      <ErrorPage
+        message="Could not find controller"
+        goBackTo={ControllersRouter.baseRoute()}
+        goBackToMessage="controller list"
+      />
+    );
   }
 
   return (

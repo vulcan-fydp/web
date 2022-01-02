@@ -1,5 +1,6 @@
 import { Axis, ControllerAxis } from "backend-types";
 import { exhaustiveSwitch } from "lib/exhaustiveSwitch";
+import { getGamepadAxisText } from "./getGamepadAxisText";
 
 export function getAxisText(axis: ControllerAxis | null): string {
   if (axis === null) {
@@ -18,6 +19,10 @@ export function getAxisText(axis: ControllerAxis | null): string {
         default:
           exhaustiveSwitch(axis.axis);
       }
+      break;
+    case "ControllerGamepadAxis":
+      // @todo: Add hints
+      return getGamepadAxisText(axis.axisNumber);
   }
 
   return "Unknown";

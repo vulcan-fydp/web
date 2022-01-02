@@ -22,17 +22,29 @@ import {
   getControllerTypeName,
 } from "./enums/controller-type";
 import { GameConsole, getGameConsoleName } from "./enums/game-console";
+import { AxisModalComponent } from "./modals/AxisModal";
+import { ButtonModalComponent } from "./modals/ButtonModal";
+import { GamepadAxisModal } from "./modals/GamepadAxisModal";
 import { GamepadButtonModal } from "./modals/GamepadButtonModal";
 import { KeyboardAndMouseAxisModal } from "./modals/KeyboardAndMouseAxisModal";
 import { KeyboardAndMouseButtonModal } from "./modals/KeyboardAndMouseButtonModal";
 import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
-function getButtonModal(controllerType: ControllerType) {
+function getModals(controllerType: ControllerType): {
+  ButtonModal: ButtonModalComponent;
+  AxisModal: AxisModalComponent;
+} {
   switch (controllerType) {
     case ControllerType.KEYBOARD_AND_MOUSE:
-      return KeyboardAndMouseButtonModal;
+      return {
+        ButtonModal: KeyboardAndMouseButtonModal,
+        AxisModal: KeyboardAndMouseAxisModal,
+      };
     case ControllerType.GAMEPAD:
-      return GamepadButtonModal;
+      return {
+        ButtonModal: GamepadButtonModal,
+        AxisModal: GamepadAxisModal,
+      };
   }
 
   throw new Error("Unexpected controller type");
@@ -163,8 +175,7 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
     }
   }, [setIsDisabled, onSecondaryButtonClick]);
 
-  const ButtonModal = getButtonModal(controllerType);
-  const AxisModal = KeyboardAndMouseAxisModal;
+  const { ButtonModal, AxisModal } = getModals(controllerType);
 
   if (controllerType === ControllerType.MIXED) {
     return <>This controller is unsupported by the controller studio.</>;
