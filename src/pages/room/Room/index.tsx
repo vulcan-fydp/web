@@ -49,7 +49,7 @@ export const Dashboard = () => {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return <Heading> No room session found </Heading>;
+    return <Heading> Room <b>{params.roomId}</b> has ended or does not exist. </Heading>;
   }
   if (!params.roomId) {
     return <Heading> Room ID not found </Heading>;
