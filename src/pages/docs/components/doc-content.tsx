@@ -38,7 +38,7 @@ function getFocusedId(els: HTMLHeadingElement[]): string | undefined {
   }
 
   for (let i = els.length - 1; i > 0; i--) {
-    if (els[i].offsetTop < window.scrollY + NAVBAR_HEIGHT) {
+    if (els[i].offsetTop < window.scrollY + NAVBAR_HEIGHT + 5) {
       return els[i].id;
     }
   }

@@ -6,6 +6,8 @@ import {
 import { DocPage } from "pages/docs/components/DocPage";
 import { Link } from "react-router-dom";
 import { DocsRoutes } from ".";
+import { DocCodeBlock } from "./components/DocCodeBlock";
+import { DocImage } from "./components/DocImage";
 import { DocLink } from "./components/DocLink";
 import { DocParagraph } from "./components/DocParagraph";
 import { DocSubtitle } from "./components/DocSubtitle";
@@ -13,22 +15,12 @@ import { DocTitle } from "./components/DocTitle";
 
 export const Docs = () => {
   return (
-    <DocPage>
-      <DocTitle>Docs</DocTitle>
-      <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
-        <BreadcrumbItem>
-          <BreadcrumbLink as={Link} to="/">
-            Home
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbItem as={Link} to={DocsRoutes.base()}>
-          <BreadcrumbLink>Docs</BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
+    <DocPage title="Docs">
       <DocParagraph>
         The Vulcan Gaming Platform is a software &amp; hardware platform for
         Nintendo Switch remote multiplayer.
       </DocParagraph>
+      <DocImage src="/logo512.png" alt="Logo" />
       <DocSubtitle to={DocsRoutes.vulcast()}>Vulcast</DocSubtitle>
       <DocParagraph>
         <DocLink to="/docs/vulcast/connect-to-internet">
@@ -74,6 +66,13 @@ export const Docs = () => {
         <DocLink to="/docs/filing-a-bug">create a help ticket</DocLink> and
         we'll provide support and update the docs accordingly.
       </DocParagraph>
+      <DocCodeBlock>{`
+        $ git pull origin master 
+        $ npm i
+        $ touch file.ts
+        $ git add .
+        $ git commit -m "A very long commit message to see what behaviour will happen on the page"
+      `}</DocCodeBlock>
       <br />
       <br />
       <br />
