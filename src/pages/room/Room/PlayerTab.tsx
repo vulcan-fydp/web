@@ -87,13 +87,10 @@ export const PlayerTab: React.FC = () => {
   }
   if (isHostError) {
     return (
-      <Heading>{`Could not determine if user is the host with error: ${isHostError.message}`}</Heading>
+      <Heading> Could not find the host </Heading>
     );
   }
-  if (!isHostData) {
-    return <Heading> No data found </Heading>;
-  }
-  if (!isHostData.roomSession) {
+  if (!isHostData || !isHostData.roomSession) {
     return <Heading> No room session found </Heading>;
   }
 

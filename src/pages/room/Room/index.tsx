@@ -9,6 +9,7 @@ import {
   Tab,
   TabPanel,
   TabPanels,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
@@ -45,16 +46,17 @@ export const Dashboard = () => {
       <Heading>{`Could not determine if user is the host with error: ${error.message}`}</Heading>
     );
   }
+
+  if (!params.roomId) {
+    return <Heading> Room ID not found </Heading>;
+  }
   if (!data) {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return <Heading> Room <b>{params.roomId}</b> has ended or does not exist. </Heading>;
+    return <Heading> Room <Text as="span" color="#9F7AEA">{params.roomId}</Text> has ended or does not exist. </Heading>;
   }
-  if (!params.roomId) {
-    return <Heading> Room ID not found </Heading>;
-  }
-
+  
   return (
     <HeroPage isDashboard={true}>
       <JoinAnotherRoomModal onLeave={() => null} />
