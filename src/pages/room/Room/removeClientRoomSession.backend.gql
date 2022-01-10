@@ -1,0 +1,14 @@
+mutation removeClientRoomSession($clientRoomSessionId: ID!, $roomId: ID!) {
+  removeClientRoomSession(
+    clientRoomSessionId: $clientRoomSessionId
+    roomId: $roomId
+  ) {
+    __typename
+    ... on Success {
+      _
+    }
+    ... on AuthenticationError {
+      message
+    }
+  }
+}

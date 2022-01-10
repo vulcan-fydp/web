@@ -9,6 +9,7 @@ import {
   Tab,
   TabPanel,
   TabPanels,
+  Text,
   useToast,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +25,7 @@ import { environment } from "environment";
 import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
 import { useHistory } from "react-router-dom";
+import { useEndRoomMutation } from "./endRoom.backend.generated";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -33,6 +35,7 @@ export const Dashboard = () => {
   const { path, params } = useRouteMatch<{ roomId?: string }>();
   const { data, loading, error } = usePlayerIsHostQuery({
     variables: {},
+    fetchPolicy: "network-only",
   });
 
   if (loading) {
@@ -43,16 +46,17 @@ export const Dashboard = () => {
       <Heading>{`Could not determine if user is the host with error: ${error.message}`}</Heading>
     );
   }
+
+  if (!params.roomId) {
+    return <Heading> Room ID not found </Heading>;
+  }
   if (!data) {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return <Heading> No room session found </Heading>;
+    return <Heading> Room <Text as="span" color="#9F7AEA">{params.roomId}</Text> has ended or does not exist. </Heading>;
   }
-  if (!params.roomId) {
-    return <Heading> Room ID not found </Heading>;
-  }
-
+  
   return (
     <HeroPage isDashboard={true}>
       <JoinAnotherRoomModal onLeave={() => null} />
@@ -137,6 +141,11 @@ const EndRoom: React.FC<{
   isHost: boolean;
   roomId: string;
 }> = ({ isHost, roomId }) => {
+  const [endRoomMutation] = useEndRoomMutation({
+    variables: {
+      roomId,
+    },
+  });
   const [leaveRoomMutation] = useLeaveRoomMutation({
     variables: {
       roomId,
@@ -144,6 +153,28 @@ const EndRoom: React.FC<{
   });
   const history = useHistory();
   const toast = useToast();
+
+  const onEndRoomClick = useCallback(async () => {
+    const result = await endRoomMutation();
+
+    if (!result.data) {
+      return;
+    }
+
+    switch (result.data.endRoom.__typename) {
+      case "AuthenticationError":
+        toast({
+          title: "Authentication error occured when trying to end the room.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      case "Success":
+        history.push("/");
+        return;
+    }
+  }, [endRoomMutation, history, toast]);
 
   const onLeaveRoomClick = useCallback(async () => {
     const result = await leaveRoomMutation();
@@ -168,8 +199,11 @@ const EndRoom: React.FC<{
   }, [leaveRoomMutation, history, toast]);
 
   if (isHost) {
-    // todo: end room as host
-    return null;
+    return (
+      <Button variant="solid" onClick={onEndRoomClick}>
+        End Room
+      </Button>
+    );
   }
   return (
     <Button variant="solid" onClick={onLeaveRoomClick}>
