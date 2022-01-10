@@ -4,6 +4,7 @@ import { LoginRouter } from "pages/login";
 import { RoomRouter } from "./room";
 import { ControllersRouter } from "./controllers";
 import { DocsRouter, DocsRoutes } from "./docs";
+import { AccountPage } from "./account";
 
 export const Pages = () => (
   <Switch>
@@ -13,6 +14,7 @@ export const Pages = () => (
     <Route path="/room" render={() => <RoomRouter />} />
     <Route path="/login" render={() => <LoginRouter />} />
     <Route path="/controllers" render={() => <ControllersRouter />} />
+    <Route exact path="/account" render={() => <AccountPage />} />
 
     <Route path={DocsRoutes.base()} render={() => <DocsRouter />} />
 

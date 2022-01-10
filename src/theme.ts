@@ -103,6 +103,16 @@ export const vulcanTheme = extendTheme(
           color: "purple.300",
         },
       },
+      Skeleton: {
+        baseStyle: {
+          borderRadius: "md",
+          opacity: "0.5",
+        },
+        defaultProps: {
+          startColor: "purple.400",
+          endColor: "purple.600",
+        },
+      },
     },
   },
   withDefaultColorScheme({

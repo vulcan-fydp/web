@@ -71,7 +71,9 @@ export const DefaultNavbarContent = () => {
         <Menu placement="bottom-end">
           <MenuButton as={Button}>Profile</MenuButton>
           <MenuList>
-            <MenuItem>Account</MenuItem>
+            <MenuItem as={NavLink} to="/account">
+              Account
+            </MenuItem>
             <MenuItem>
               {data.user.vulcasts.length > 0 ? "Vulcasts" : "Link Vulcast"}
             </MenuItem>
