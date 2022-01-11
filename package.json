@@ -19,7 +19,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@vulcan-fydp/schema": "github:vulcan-fydp/schema#semver:^0.0.37",
     "controller-input": "^0.3.0",
-    "framer-motion": "^4.1.11",
+    "framer-motion": "^5.5.7",
     "graphql": "^15.5.1",
     "mediasoup-client": "^3.6.36",
     "query-string": "^7.0.1",
