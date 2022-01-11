@@ -3,7 +3,7 @@ import { Home } from "./Home";
 import { LoginRouter } from "pages/login";
 import { RoomRouter } from "./room";
 import { ControllersRouter } from "./controllers";
-import { DocsRouter, DocsRoutes } from "./docs";
+import { DocsRouter } from "./docs/generated/DocsRouter";
 import { AccountPage } from "./account";
 
 export const Pages = () => (
@@ -16,7 +16,7 @@ export const Pages = () => (
     <Route path="/controllers" render={() => <ControllersRouter />} />
     <Route exact path="/account" render={() => <AccountPage />} />
 
-    <Route path={DocsRoutes.base()} render={() => <DocsRouter />} />
+    <Route path={"/docs"} render={() => <DocsRouter />} />
 
     <Route render={() => null} />
   </Switch>
