@@ -7,41 +7,60 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  BreadcrumbSeparator,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 import { DocsRoutes } from "..";
+import { useEffect, useLayoutEffect, useMemo } from "react";
+import { useRouteMatch } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import { DocContentContextProvider } from "./doc-content";
 import { DocTableOfContents } from "./DocTableOfContents";
 import { DocTitle } from "./DocTitle";
+import { DocsSidebar } from "../generated/DocsSidebar.generated";
 
 interface DocPageProps {
   title: string;
+  breadcrumbPieces: [string, string][];
 }
 
-export const DocPage: React.FC<DocPageProps> = ({ children, title }) => {
+export const DocPage: React.FC<DocPageProps> = ({
+  children,
+  title,
+  breadcrumbPieces,
+}) => {
   const lgBreakpoint = useToken("breakpoints", "lg");
   const [isDesktop] = useMediaQuery(`(min-width: ${lgBreakpoint})`);
+
+  const breadcrumbs = useMemo(() => {
+    let currentPath = "";
+    return breadcrumbPieces.map(([shortTitle, pathPiece], i, arr) => {
+      currentPath += pathPiece;
+      return (
+        <BreadcrumbItem key={shortTitle}>
+          <BreadcrumbLink as={Link} to={currentPath}>
+            {shortTitle}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      );
+    });
+  }, [breadcrumbPieces]);
 
   return (
     <DocContentContextProvider>
       {isDesktop ? (
         <Center>
-          <Flex maxW="1000px" alignItems="flex-start">
-            <Box textAlign="left" w="80%" pr="50px">
+          <Flex alignItems="flex-start" width="100%">
+            <Box w="250px" pl="20px" pr="20px" mt="30px">
+              <DocsSidebar />
+            </Box>
+            <Box textAlign="left" flex="0 1 800px" pr="50px">
               <DocTitle>{title}</DocTitle>
               <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={Link} to="/">
-                    Home
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem as={Link} to={DocsRoutes.base()}>
-                  <BreadcrumbLink>Docs</BreadcrumbLink>
-                </BreadcrumbItem>
+                {breadcrumbs}
               </Breadcrumb>
               {children}
             </Box>
-            <Box w="20%" mt="30px" position="sticky" top="30px">
+            <Box flex="0 0 200px" mt="30px" position="sticky" top="30px">
               <DocTableOfContents />
             </Box>
           </Flex>
@@ -51,14 +70,7 @@ export const DocPage: React.FC<DocPageProps> = ({ children, title }) => {
         <Flex flexDir="column" margin="0 20px">
           <DocTitle>{title}</DocTitle>
           <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/">
-                Home
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem as={Link} to={DocsRoutes.base()}>
-              <BreadcrumbLink>Docs</BreadcrumbLink>
-            </BreadcrumbItem>
+            {breadcrumbs}
           </Breadcrumb>
           <Box>
             <DocTableOfContents />
