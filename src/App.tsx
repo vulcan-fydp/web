@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 
-import "@fontsource/montserrat";
+import "@fontsource/montserrat/800.css";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route } from "react-router-dom";

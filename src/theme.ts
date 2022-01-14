@@ -72,7 +72,14 @@ export const vulcanTheme = extendTheme(
           boxShadow: "md",
         },
         variants: {
-          solid: {},
+          solid: {
+            bg: "#9F54FF",
+            h: "40px",
+            color: "#FFFFFF",
+            _hover: {
+              bg: "#7D3ECC",
+            },
+          },
           link: {
             _hover: {
               color: "purple",

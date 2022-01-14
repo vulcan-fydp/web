@@ -22,7 +22,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ children }) => {
   return (
     <Center
-      bg="black"
+      bg="#131313"
       position="fixed"
       top="0"
       left="0"
@@ -34,7 +34,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
         justifyContent="space-between"
         alignItems="center"
         w="100%"
-        maxWidth="1040px"
+        maxWidth="1300px"
         padding="0 20px"
       >
         <Box>

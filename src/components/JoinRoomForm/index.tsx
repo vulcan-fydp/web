@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { apolloClient } from "apollo";
 import React, { useCallback, useState } from "react";
@@ -25,10 +26,7 @@ interface JoinRoomFormData {
 export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
   const [promptRoomId, setPromptRoomId] = useState(typeof roomId !== "string");
 
-  const [
-    submissionErrorMessage,
-    setSubmissionErrorMessage,
-  ] = useState<string>();
+  const showToast = useToast();
 
   const {
     register,
@@ -70,9 +68,14 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
       }
 
       if (!result || !result.data) {
-        setSubmissionErrorMessage(
-          "An unknown error has occured. Please check your room code and nickname and try again"
-        );
+        showToast({
+          title:
+            "An unknown error has occured. Please check your room code and nickname and try again.",
+          status: "error",
+          duration: 4000,
+          position: "bottom",
+          isClosable: true,
+        });
         return;
       }
 
@@ -81,13 +84,19 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
       }
 
       if (result.data.joinRoom.__typename === "ClientInRoomError") {
-        setSubmissionErrorMessage("You cannot join multiple rooms at once.");
+        showToast({
+          title: "You cannot join multiple rooms at once.",
+          status: "error",
+          duration: 4000,
+          position: "bottom",
+          isClosable: true,
+        });
         return;
       }
 
       history.push(`/room/${result.data.joinRoom.room.id}/stream`);
     },
-    [history]
+    [history, showToast]
   );
 
   return (
@@ -126,9 +135,6 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
       <Button type="submit" isDisabled={isSubmitting} mt="40px" mb="20px">
         Join Room
       </Button>
-      {submissionErrorMessage !== undefined ? (
-        <Text>{submissionErrorMessage}</Text>
-      ) : null}
     </Flex>
   );
 };
