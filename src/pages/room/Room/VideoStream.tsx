@@ -1,5 +1,21 @@
-import { Ref, useCallback, useEffect, useRef } from "react";
-import { Box, chakra } from "@chakra-ui/react";
+import {
+  MouseEventHandler,
+  Ref,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  Box,
+  chakra,
+  HStack,
+  IconButton,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/react";
 import { Controller, ControllerInput } from "controller-input";
 import {
   ControllersDocument,
@@ -16,6 +32,11 @@ import {
 import { controllerIdVar } from ".";
 import { useAnimationFrame } from "lib/useAnimationFrame";
 import { controllerStateToArrayBuffer } from "lib/controller";
+import { motion } from "framer-motion";
+
+import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
+import { BiVolumeMute, BiVolumeFull } from "react-icons/bi";
+import screenfull from "screenfull";
 
 const Canvas = chakra("canvas");
 
@@ -32,9 +53,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 }) => {
   const controllerInputRef = useRef<ControllerInput>();
   const client = useApolloClient();
-  const controllerPromiseRef = useRef<
-    Promise<ApolloQueryResult<ControllersQuery>>
-  >();
+  const controllerPromiseRef =
+    useRef<Promise<ApolloQueryResult<ControllersQuery>>>();
   const controllerId = useReactiveVar(controllerIdVar);
   const controllerInputIdRef = useRef<number>();
   const sequenceNumberRef = useRef<number>(0);
@@ -74,7 +94,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
     if (controller) {
       controllerInputIdRef.current = controllerInputRef.current.addController(
-        (controller as unknown) as Controller
+        controller as unknown as Controller
       );
       console.log(controllerInputIdRef.current);
     } else {
@@ -115,9 +135,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       return;
     }
 
-    const state = controllerInputRef.current.getState()[
-      controllerInputIdRef.current
-    ];
+    const state =
+      controllerInputRef.current.getState()[controllerInputIdRef.current];
 
     emitData(
       controllerStateToArrayBuffer(
@@ -138,16 +157,59 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
   useAnimationFrame(update);
 
+  const MotionBox = motion(Box);
+  const containerRef = useRef(null);
+  const controlsRef = useRef(null);
+  const videoPlayerRef = useRef<HTMLVideoElement>(null);
+
+  const [volume, setVolume] = useState(0.5);
+  const [previousVolume, setPreviousVolume] = useState(0.5);
+
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleClickFullscreen = useCallback<MouseEventHandler>(async () => {
+    if (containerRef.current) {
+      await screenfull.toggle(containerRef.current!);
+      setIsFullscreen(screenfull.isFullscreen);
+    }
+  }, [containerRef]);
+
+  const toggleVolume = useCallback(() => {
+    if (videoPlayerRef.current) {
+      if (volume === 0) {
+        setVolume(previousVolume);
+      } else {
+        setPreviousVolume(volume);
+        setVolume(0);
+      }
+    }
+  }, [volume, previousVolume]);
+
+  useEffect(() => {
+    if (videoPlayerRef.current) {
+      videoPlayerRef.current.volume = volume;
+    }
+  }, [videoPlayerRef, volume]);
+
+  const [controlsOpacity, setControlsOpacity] = useState(1);
+
   return (
     <Box
+      ref={containerRef}
       display="flex"
       justifyContent="center"
       alignItems="center"
-      borderWidth="2px"
+      borderWidth={isFullscreen ? "0px" : "2px"}
       borderColor="purple.400"
       position="relative"
     >
-      <video ref={videoRef} width="100%" autoPlay />
+      <video
+        ref={videoPlayerRef}
+        width="100%"
+        autoPlay
+        loop
+        src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+      />
       <Canvas
         ref={onCanvasRefSet}
         position="absolute"
@@ -158,6 +220,70 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
         width="100%"
         height="100%"
       />
+      <MotionBox
+        ref={controlsRef}
+        position="absolute"
+        bottom="0"
+        width="100%"
+        animate={{ opacity: controlsOpacity, transition: { ease: "easeIn" } }}
+      >
+        <HStack
+          display="flex"
+          justifyContent="flex-end"
+          spacing="16px"
+          paddingRight="16px"
+          height="48px"
+          bg="#131313"
+          onMouseEnter={() => {
+            setControlsOpacity(1);
+          }}
+          onMouseLeave={() => {
+            setControlsOpacity(0);
+          }}
+        >
+          <Slider
+            aria-label="Volume Slider"
+            min={0}
+            max={1}
+            step={0.05}
+            maxW="120px"
+            value={volume}
+            onChange={(v) => setVolume(v)}
+            marginRight="8px"
+          >
+            <SliderTrack bg="white">
+              <SliderFilledTrack bg="#9F7AEA" />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+          <IconButton
+            aria-label="Toggle Volume"
+            variant="transparent"
+            icon={
+              volume === 0 ? (
+                <BiVolumeMute color="white" size="28px" />
+              ) : (
+                <BiVolumeFull color="white" size="28px" />
+              )
+            }
+            onClick={() => {
+              toggleVolume();
+            }}
+          />
+          <IconButton
+            aria-label="Toggle Fullscreen"
+            variant="transparent"
+            icon={
+              isFullscreen ? (
+                <AiOutlineFullscreenExit color="white" size="24px" />
+              ) : (
+                <AiOutlineFullscreen color="white" size="24px" />
+              )
+            }
+            onClick={handleClickFullscreen}
+          />
+        </HStack>
+      </MotionBox>
     </Box>
   );
 };
