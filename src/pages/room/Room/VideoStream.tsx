@@ -40,8 +40,10 @@ import screenfull from "screenfull";
 
 const Canvas = chakra("canvas");
 
+const MotionBox = motion(Box);
+
 interface VideoStreamProps {
-  videoRef: Ref<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement>;
   emitData: (data: ArrayBuffer) => void;
   controllerNumber: number | null;
 }
@@ -157,25 +159,25 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
   useAnimationFrame(update);
 
-  const MotionBox = motion(Box);
   const containerRef = useRef(null);
   const controlsRef = useRef(null);
-  const videoPlayerRef = useRef<HTMLVideoElement>(null);
-
-  const [volume, setVolume] = useState(0.5);
-  const [previousVolume, setPreviousVolume] = useState(0.5);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+  document.onfullscreenchange = () => {
+    setIsFullscreen(Boolean(document.fullscreenElement));
+  };
 
   const handleClickFullscreen = useCallback<MouseEventHandler>(async () => {
     if (containerRef.current) {
       await screenfull.toggle(containerRef.current!);
-      setIsFullscreen(screenfull.isFullscreen);
     }
   }, [containerRef]);
 
+  const [volume, setVolume] = useState(0.5);
+  const [previousVolume, setPreviousVolume] = useState(0.5);
+
   const toggleVolume = useCallback(() => {
-    if (videoPlayerRef.current) {
+    if (videoRef.current) {
       if (volume === 0) {
         setVolume(previousVolume);
       } else {
@@ -186,10 +188,10 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
   }, [volume, previousVolume]);
 
   useEffect(() => {
-    if (videoPlayerRef.current) {
-      videoPlayerRef.current.volume = volume;
+    if (videoRef.current) {
+      videoRef.current.volume = volume;
     }
-  }, [videoPlayerRef, volume]);
+  }, [videoRef, volume]);
 
   const [controlsOpacity, setControlsOpacity] = useState(1);
 
@@ -203,13 +205,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       borderColor="purple.400"
       position="relative"
     >
-      <video
-        ref={videoPlayerRef}
-        width="100%"
-        autoPlay
-        loop
-        src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
-      />
+      <video ref={videoRef} width="100%" autoPlay />
       <Canvas
         ref={onCanvasRefSet}
         position="absolute"
@@ -223,9 +219,14 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       <MotionBox
         ref={controlsRef}
         position="absolute"
-        bottom="0"
+        bottom={isFullscreen ? "0" : "-50px"}
         width="100%"
-        animate={{ opacity: controlsOpacity, transition: { ease: "easeIn" } }}
+        animate={{
+          opacity: isFullscreen ? controlsOpacity : 1,
+          transition: { ease: "easeIn" },
+        }}
+        outline={isFullscreen ? "" : "2px solid"}
+        outlineColor="purple.400"
       >
         <HStack
           display="flex"
@@ -245,7 +246,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
             aria-label="Volume Slider"
             min={0}
             max={1}
-            step={0.05}
+            step={0.01}
             maxW="120px"
             value={volume}
             onChange={(v) => setVolume(v)}
