@@ -15,7 +15,7 @@ export const DocTitle: React.FC<DocTitleProps> = ({ children: title }) => {
       fontWeight="bold"
       fontSize="5xl"
       mt="30px"
-      color="purple.300"
+      color="brightPurple.400"
       ref={setDocTitleRef}
       id={idify(title)}
     >

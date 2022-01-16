@@ -41,7 +41,7 @@ const Arrow: React.FC<{
   isMouseOver,
   isClicked,
 }) => {
-  const color = isMouseOver || isClicked ? "purple.200" : "purple.400";
+  const color = isMouseOver || isClicked ? "purple.200" : "brightPurple.400";
 
   return (
     <Box transform={`rotate(${rotation}deg)`}>

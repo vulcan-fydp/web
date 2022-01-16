@@ -32,9 +32,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 }) => {
   const controllerInputRef = useRef<ControllerInput>();
   const client = useApolloClient();
-  const controllerPromiseRef = useRef<
-    Promise<ApolloQueryResult<ControllersQuery>>
-  >();
+  const controllerPromiseRef =
+    useRef<Promise<ApolloQueryResult<ControllersQuery>>>();
   const controllerId = useReactiveVar(controllerIdVar);
   const controllerInputIdRef = useRef<number>();
   const sequenceNumberRef = useRef<number>(0);
@@ -74,7 +73,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
     if (controller) {
       controllerInputIdRef.current = controllerInputRef.current.addController(
-        (controller as unknown) as Controller
+        controller as unknown as Controller
       );
       console.log(controllerInputIdRef.current);
     } else {
@@ -115,9 +114,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       return;
     }
 
-    const state = controllerInputRef.current.getState()[
-      controllerInputIdRef.current
-    ];
+    const state =
+      controllerInputRef.current.getState()[controllerInputIdRef.current];
 
     emitData(
       controllerStateToArrayBuffer(
@@ -144,7 +142,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       justifyContent="center"
       alignItems="center"
       borderWidth="2px"
-      borderColor="purple.400"
+      borderColor="brightPurple.400"
       position="relative"
     >
       <video ref={videoRef} width="100%" autoPlay />

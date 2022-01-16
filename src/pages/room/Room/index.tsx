@@ -54,9 +54,18 @@ export const Dashboard = () => {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return <Heading> Room <Text as="span" color="#9F7AEA">{params.roomId}</Text> has ended or does not exist. </Heading>;
+    return (
+      <Heading>
+        {" "}
+        Room{" "}
+        <Text as="span" color="#9F7AEA">
+          {params.roomId}
+        </Text>{" "}
+        has ended or does not exist.{" "}
+      </Heading>
+    );
   }
-  
+
   return (
     <HeroPage isDashboard={true}>
       <JoinAnotherRoomModal onLeave={() => null} />
@@ -111,6 +120,7 @@ const RoomDetails = () => {
         <Heading size="sm" w="320px">
           Send this link to people who you want to play with.
         </Heading>
+        colorScheme="blue"{" "}
         <Tooltip
           label="Copied!"
           placement="right"
@@ -198,16 +208,13 @@ const EndRoom: React.FC<{
     }
   }, [leaveRoomMutation, history, toast]);
 
-  if (isHost) {
-    return (
-      <Button variant="solid" onClick={onEndRoomClick}>
-        End Room
-      </Button>
-    );
-  }
   return (
-    <Button variant="solid" onClick={onLeaveRoomClick}>
-      Leave Room
+    <Button
+      variant="solid"
+      colorScheme="red"
+      onClick={isHost ? onEndRoomClick : onLeaveRoomClick}
+    >
+      {isHost ? "End Room" : "Leave Room"}
     </Button>
   );
 };

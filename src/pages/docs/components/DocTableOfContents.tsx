@@ -5,7 +5,7 @@ import { useDocContent } from "./doc-content";
 
 const focusedStyles = {
   fontWeight: "bold",
-  color: "purple.300",
+  color: "brightPurple.400",
 } as const;
 
 const unfocusedStyles = {
@@ -30,7 +30,7 @@ export const DocTableOfContents = () => {
     return (
       <Flex
         borderRadius="md"
-        borderColor="purple.300"
+        borderColor="brightPurple.400"
         borderWidth="2px"
         padding="10px"
         flexDir="column"

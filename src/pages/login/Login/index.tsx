@@ -65,7 +65,7 @@ export const LoginPage = () => {
     <HeroPage>
       <Text fontSize="6xl" mb="60px" fontWeight="bold">
         Log{" "}
-        <Text as="span" color="purple.300">
+        <Text as="span" color="brightPurple.400">
           In.
         </Text>
       </Text>

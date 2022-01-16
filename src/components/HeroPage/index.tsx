@@ -8,13 +8,7 @@ interface HeroProps {
 
 export const HeroPage: React.FC<HeroProps> = ({ children, isDashboard }) => {
   return (
-    <Box
-      background={
-        isDashboard
-          ? "black"
-          : "linear-gradient(132.85deg, #30292F 0%, #413F54 100%);"
-      }
-    >
+    <Box background="black">
       <Navbar />
       <Flex pt="80px" minHeight="100vh" flexDir="column" align="center">
         {children}

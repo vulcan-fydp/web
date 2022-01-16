@@ -143,7 +143,7 @@ export const UserControllerRow: React.FC<UserControllerRowProps> = ({
           variant="solid"
           size="sm"
           leftIcon={<EditIcon />}
-          colorScheme="yellow"
+          colorScheme="green"
         >
           Edit
         </Button>

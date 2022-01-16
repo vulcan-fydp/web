@@ -12,8 +12,53 @@ export const vulcanTheme = extendTheme(
       body: "montserrat",
     },
     colors: {
-      black: "#282828",
+      black: "#131313",
       grey: "#434343",
+      yellow: {
+        100: "#fefce7",
+        200: "#fdf9d0",
+        300: "#fcf6b8",
+        400: "#fbf3a1",
+        500: "#faf089",
+        600: "#c8c06e",
+        700: "#969052",
+        800: "#646037",
+        900: "#32301b",
+      },
+      darkPurple: {
+        100: "#7a6883",
+        200: "#644f6e",
+        300: "#4e3559",
+        400: "#381c45",
+        500: "#220330",
+        600: "#1f032b",
+        700: "#1b0226",
+        800: "#14021d",
+        900: "#110218",
+      },
+      medPurple: {
+        100: "#bfa3d9",
+        200: "#a075c5",
+        300: "#8047b2",
+        400: "#60199f",
+        500: "#4d147f",
+        600: "#3a0f5f",
+        700: "#260a40",
+        800: "#130520",
+        900: "#000000",
+      },
+      brightPurple: {
+        // https://maketintsandshades.com/#C355F5
+        100: "#e7bbfb",
+        200: "#db99f9",
+        300: "#cf77f7",
+        400: "#c355f5",
+        500: "#9c44c4",
+        600: "#753393",
+        700: "#4e2262",
+        800: "#271131",
+        900: "#000000",
+      },
     },
     components: {
       Text: {
@@ -42,15 +87,15 @@ export const vulcanTheme = extendTheme(
           line: {
             tab: {
               color: "white",
-              fontWeight: "semibold",
+              // fontWeight: "semibold",
               _selected: {
-                color: "purple.400",
-                borderColor: "purple.400",
-                borderTopColor: "purple.400",
-                borderBottomColor: "purple.400",
+                color: "yellow.400",
+                borderColor: "yellow.400",
+                borderTopColor: "yellow.400",
+                borderBottomColor: "yellow.400",
               },
               _active: {
-                color: "purple.400",
+                color: "yellow.400",
               },
             },
           },
@@ -70,14 +115,30 @@ export const vulcanTheme = extendTheme(
       Button: {
         baseStyle: {
           boxShadow: "md",
+          color: "white",
+          fontWeight: "400",
         },
         variants: {
-          solid: {},
+          solid: ({ colorScheme }: any) => {
+            return {
+              color: "white",
+              background: `${colorScheme}.500`,
+            };
+          },
           link: {
             _hover: {
               color: "purple",
               textDecoration: "none",
             },
+          },
+          outline: {
+            borderWidth: "2px",
+            borderColor: "brightPurple.400",
+          },
+          transparent: {
+            background: "rgba(255,0,0,0)",
+            _hover: "bg: rgba(255, 0, 0, 0.0)",
+            _focus: "boxShadow: none; bg: rgba(255, 0, 0, 0.0)",
           },
         },
         kickLink: {
@@ -95,12 +156,12 @@ export const vulcanTheme = extendTheme(
         baseStyle: {},
         defaultProps: {
           variant: "filled",
-          focusBorderColor: "purple.500",
+          focusBorderColor: "brightPurple.400",
         },
       },
       Link: {
         baseStyle: {
-          color: "purple.300",
+          color: "brightPurple.400",
         },
       },
       Skeleton: {
@@ -109,13 +170,13 @@ export const vulcanTheme = extendTheme(
           opacity: "0.5",
         },
         defaultProps: {
-          startColor: "purple.400",
-          endColor: "purple.600",
+          startColor: "brightPurple.300",
+          endColor: "brightPurple.400",
         },
       },
     },
   },
   withDefaultColorScheme({
-    colorScheme: "purple",
+    colorScheme: "brightPurple",
   })
 );

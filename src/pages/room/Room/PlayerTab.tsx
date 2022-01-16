@@ -63,7 +63,7 @@ export const PlayerTab: React.FC = () => {
   if (loading) {
     return (
       <Center align="center">
-        <Spinner color="purple.400" mt="120px" />
+        <Spinner color="brightPurple.400" mt="120px" />
       </Center>
     );
   }
@@ -86,9 +86,7 @@ export const PlayerTab: React.FC = () => {
     return null;
   }
   if (isHostError) {
-    return (
-      <Heading> Could not find the host </Heading>
-    );
+    return <Heading> Could not find the host </Heading>;
   }
   if (!isHostData || !isHostData.roomSession) {
     return <Heading> No room session found </Heading>;
@@ -288,7 +286,11 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
           >
             {getControllerNumberDisplayText(controllerNumber)}
           </MenuButton>
-          <MenuList minWidth="150px" bgColor="black" borderColor="purple.300">
+          <MenuList
+            minWidth="150px"
+            bgColor="black"
+            borderColor="brightPurple.400"
+          >
             <MenuItem onClick={() => setControllerNumber(0)}>
               {getControllerNumberDisplayText(0)}
             </MenuItem>

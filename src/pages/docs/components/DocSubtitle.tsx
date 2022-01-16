@@ -21,7 +21,7 @@ export const DocSubtitle: React.FC<DocSubtitleProps> = ({
       fontSize="3xl"
       mt="20px"
       ml="10px"
-      color="purple.300"
+      color="brightPurple.400"
       ref={setDocSubtitleRef}
       id={idify(subtitle)}
     >

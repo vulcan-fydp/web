@@ -103,7 +103,7 @@ export const KeyboardAxisModal: AxisModalComponent = ({
               <Center
                 width="80px"
                 height="80px"
-                backgroundColor="purple.400"
+                backgroundColor="brightPurple.400"
                 borderColor="purple.200"
                 borderWidth="3px"
                 borderRadius="50%"
@@ -111,7 +111,7 @@ export const KeyboardAxisModal: AxisModalComponent = ({
                 <Center
                   width="64px"
                   height="64px"
-                  backgroundColor="purple.400"
+                  backgroundColor="brightPurple.400"
                   borderColor="purple.200"
                   borderWidth="3px"
                   borderRadius="50%"

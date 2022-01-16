@@ -8,9 +8,9 @@ import {
 } from "./layout";
 
 const actionButtonStyles = {
-  bg: "purple.400",
-  border: "1px solid",
-  borderColor: "purple.200",
+  bg: "brightPurple.500",
+  border: "2px solid",
+  borderColor: "brightPurple.200",
   borderRadius: "50%",
   position: "absolute",
   left: "-24px",
@@ -21,17 +21,17 @@ const actionButtonStyles = {
 } as const;
 
 const horizontalLineStyles = {
-  backgroundColor: "purple.200",
-  top: "-0.4px",
-  bottom: "-0.4px",
+  backgroundColor: "brightPurple.200",
+  top: "-0.9px",
+  bottom: "-0.9px",
   position: "absolute",
   zIndex: "1",
 } as const;
 
 const verticalLineStyles = {
-  backgroundColor: "purple.200",
-  left: "-0.4px",
-  right: "-0.4px",
+  backgroundColor: "brightPurple.200",
+  left: "-0.9px",
+  right: "-0.9px",
   position: "absolute",
   zIndex: "1",
 } as const;
@@ -130,10 +130,10 @@ const Button3: LayoutInputComponent = ({
     <Anchor x={111} y={83}>
       <Center {...actionButtonStyles}>Y</Center>
       <Box
-        borderLeft="1px"
-        borderTop="1px"
+        borderLeft="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopLeftRadius="5px"
         right="-195px"
         top="-80px"
@@ -155,9 +155,9 @@ const Button3: LayoutInputComponent = ({
 };
 
 const smallActionButtonStyles = {
-  bg: "purple.400",
-  border: "1px solid",
-  borderColor: "purple.200",
+  bg: "brightPurple.500",
+  border: "2px solid",
+  borderColor: "brightPurple.200",
   borderRadius: "50%",
   position: "absolute",
   left: "-16px",
@@ -200,10 +200,10 @@ const Button5: LayoutInputComponent = ({
   return (
     <Anchor x={160} y={195}>
       <Box
-        borderLeft="1px"
-        borderTop="1px"
+        borderLeft="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopLeftRadius="5px"
         right="-70px"
         top="-40px"
@@ -234,10 +234,10 @@ const Button6: LayoutInputComponent = ({
   return (
     <Anchor x={-160} y={206}>
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="0px"
         top="-24px"
@@ -268,10 +268,10 @@ const Button7: LayoutInputComponent = ({
   return (
     <Anchor x={140} y={208}>
       <Box
-        borderLeft="1px"
-        borderTop="1px"
+        borderLeft="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopLeftRadius="5px"
         right="-55px"
         top="-70px"
@@ -305,10 +305,10 @@ const Button8: LayoutInputComponent = ({
         <MinusIcon />
       </Center>
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="-60px"
         top="0"
@@ -342,10 +342,10 @@ const Button9: LayoutInputComponent = ({
         <AddIcon />
       </Center>
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="0px"
         top="-140px"
@@ -385,28 +385,28 @@ const Button10AndAxis01: LayoutInputComponent = ({
         right="-40px"
         top="-40px"
         bottom="-40px"
-        backgroundColor="purple.400"
+        backgroundColor="brightPurple.500"
         position="absolute"
         borderRadius="50%"
         border="3px solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         padding="6px"
       >
         <Box
           width="100%"
           height="100%"
-          backgroundColor="purple.400"
+          backgroundColor="brightPurple.500"
           borderRadius="50%"
           border="3px solid"
-          borderColor="purple.200"
+          borderColor="brightPurple.200"
         ></Box>
       </Box>
       {/* Button */}
       <Box
-        borderRight="1px"
-        borderBottom="1px"
+        borderRight="2px"
+        borderBottom="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderBottomRightRadius="5px"
         right="0"
         top="0"
@@ -425,10 +425,10 @@ const Button10AndAxis01: LayoutInputComponent = ({
       </LayoutInputButton>
       {/* Left/Right axis */}
       <Box
-        borderLeft="1px"
-        borderBottom="1px"
+        borderLeft="2px"
+        borderBottom="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderBottomLeftRadius="5px"
         right="33px"
         top="-15px"
@@ -437,10 +437,10 @@ const Button10AndAxis01: LayoutInputComponent = ({
         position="absolute"
       />
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="80px"
         top="-30px"
@@ -459,10 +459,10 @@ const Button10AndAxis01: LayoutInputComponent = ({
       </LayoutInputButton>
       {/* Up/Down axis */}
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="0px"
         top="-68px"
@@ -502,20 +502,20 @@ const Button11AndAxis23: LayoutInputComponent = ({
         right="-40px"
         top="-40px"
         bottom="-40px"
-        backgroundColor="purple.400"
+        backgroundColor="brightPurple.500"
         position="absolute"
         borderRadius="50%"
         border="3px solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         padding="6px"
       >
         <Box
           width="100%"
           height="100%"
-          backgroundColor="purple.400"
+          backgroundColor="brightPurple.500"
           borderRadius="50%"
           border="3px solid"
-          borderColor="purple.200"
+          borderColor="brightPurple.200"
         ></Box>
       </Box>
       {/* Button */}
@@ -531,10 +531,10 @@ const Button11AndAxis23: LayoutInputComponent = ({
       </LayoutInputButton>
       {/* Left/Right axis */}
       <Box
-        borderLeft="1px"
-        borderBottom="1px"
+        borderLeft="2px"
+        borderBottom="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderBottomLeftRadius="5px"
         right="5px"
         top="0px"
@@ -567,14 +567,14 @@ const Button11AndAxis23: LayoutInputComponent = ({
 };
 
 const dpadStyles = {
-  backgroundColor: "purple.400",
-  borderTop: "1px",
-  borderLeft: "1px",
-  borderRight: "1px",
+  backgroundColor: "brightPurple.500",
+  borderTop: "2px",
+  borderLeft: "2px",
+  borderRight: "2px",
   borderTopLeftRadius: "5px",
   borderTopRightRadius: "5px",
   borderStyle: "solid",
-  borderColor: "purple.200",
+  borderColor: "brightPurple.200",
   left: "-16px",
   right: "-16px",
   top: "-16px",
@@ -600,7 +600,7 @@ const Button12: LayoutInputComponent = ({
         left="-205px"
         right="0px"
         top="-7px"
-        bottom="6px"
+        bottom="5px"
       />
       <LayoutInputButton
         right="205px"
@@ -631,7 +631,7 @@ const Button13: LayoutInputComponent = ({
         {...horizontalLineStyles}
         left="-205px"
         right="0px"
-        top="6.5px" // This should be 6 but chrome is rendering 2px instead of 1 ???
+        top="5px" // This should be 6 but chrome is rendering 2px instead of 1 ???
         bottom="-7px"
       />
       <LayoutInputButton
@@ -659,7 +659,13 @@ const Button14: LayoutInputComponent = ({
       <Center {...dpadStyles} transform="rotate(270deg)">
         <TriangleUpIcon />
       </Center>
-      <Box {...horizontalLineStyles} left="-205px" right="0px" top="0" />
+      <Box
+        {...horizontalLineStyles}
+        left="-205px"
+        right="0px"
+        top="0"
+        bottom="-2px"
+      />
       <LayoutInputButton
         right="205px"
         top="-16px"
@@ -686,10 +692,10 @@ const Button15: LayoutInputComponent = ({
         <TriangleUpIcon />
       </Center>
       <Box
-        borderRight="1px"
-        borderBottom="1px"
+        borderRight="2px"
+        borderBottom="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderBottomRightRadius="5px"
         right="0"
         top="0"
@@ -726,15 +732,15 @@ const Button16: LayoutInputComponent = ({
         top="-20px"
         bottom="-20px"
         border="2px solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderRadius="50%"
         padding="3px"
-        backgroundColor="purple.400"
+        backgroundColor="brightPurple.500"
         zIndex="2"
       >
         <Center
           border="2px solid"
-          borderColor="purple.200"
+          borderColor="brightPurple.200"
           borderRadius="50%"
           width="100%"
           height="100%"
@@ -743,10 +749,10 @@ const Button16: LayoutInputComponent = ({
         </Center>
       </Box>
       <Box
-        borderRight="1px"
-        borderTop="1px"
+        borderRight="2px"
+        borderTop="2px"
         borderStyle="solid"
-        borderColor="purple.200"
+        borderColor="brightPurple.200"
         borderTopRightRadius="5px"
         right="0px"
         top="-145px"
@@ -757,7 +763,7 @@ const Button16: LayoutInputComponent = ({
       />
       <LayoutInputButton
         right="40px"
-        top="-161px"
+        top="-162px"
         isReadOnly={isReadOnly}
         isDisabled={isDisabled}
         onClick={onClick}

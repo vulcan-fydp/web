@@ -31,7 +31,7 @@ export const DocPage: React.FC<DocPageProps> = ({ children, title }) => {
           <Flex maxW="1000px" alignItems="flex-start">
             <Box textAlign="left" w="80%" pr="50px">
               <DocTitle>{title}</DocTitle>
-              <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
+              <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow">
                 <BreadcrumbItem>
                   <BreadcrumbLink as={Link} to="/">
                     Home
@@ -52,7 +52,7 @@ export const DocPage: React.FC<DocPageProps> = ({ children, title }) => {
       {!isDesktop ? (
         <Flex flexDir="column" margin="0 20px">
           <DocTitle>{title}</DocTitle>
-          <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
+          <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow">
             <BreadcrumbItem>
               <BreadcrumbLink as={Link} to="/">
                 Home

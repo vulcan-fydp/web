@@ -22,7 +22,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ children }) => {
   return (
     <Center
-      bg="black"
+      bg="medPurple.500"
       position="fixed"
       top="0"
       left="0"
@@ -60,6 +60,7 @@ export const DefaultNavbarContent = () => {
     <>
       {!data.user ? (
         <Button
+          variant="transparent"
           onClick={() => {
             history.push("/login");
           }}
@@ -69,8 +70,10 @@ export const DefaultNavbarContent = () => {
       ) : null}
       {data.user ? (
         <Menu placement="bottom-end">
-          <MenuButton as={Button}>Profile</MenuButton>
-          <MenuList>
+          <MenuButton variant="transparent" as={Button}>
+            Profile
+          </MenuButton>
+          <MenuList background="medPurple.400">
             <MenuItem as={NavLink} to="/account">
               Account
             </MenuItem>

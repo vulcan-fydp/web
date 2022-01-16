@@ -48,13 +48,13 @@ const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
     <HeroPage>
       <Text variant="heading1" mb="20px" w="500px">
         Join a room to start{" "}
-        <Text as="span" color="purple.300">
+        <Text as="span" color="brightPurple.400">
           playing.
         </Text>
       </Text>
       <Text textAlign="center" mb="40px" w="500px" maxW="calc(100% - 20px)">
         Vulcan makes it easy to play on your friend's{" "}
-        <Text as="span" color="yellow.300">
+        <Text as="span" color="yellow">
           Nintendo Switch
         </Text>{" "}
         straight from your web browser. No console or even controller required!
@@ -69,7 +69,7 @@ const JoinRoomSmall: React.FC<{ roomId?: string }> = ({ roomId }) => {
     <>
       <Text variant="heading2" mb="20px">
         Join a room to start{" "}
-        <Text as="span" color="purple.300">
+        <Text as="span" color="brightPurple.400">
           playing.
         </Text>
       </Text>
@@ -106,7 +106,7 @@ const JoinAndHostRoom: React.FC<{ vulcastId: string; roomId?: string }> = ({
     <>
       <Text variant="heading2" mb="20px">
         Create a room to start{" "}
-        <Text as="span" color="purple.300">
+        <Text as="span" color="brightPurple.400">
           hosting a game.
         </Text>
       </Text>
@@ -126,7 +126,7 @@ const JoinAndRegisterVulcast: React.FC = () => {
     <>
       <Text variant="heading2" mb="20px">
         Connect your Vulcast to start{" "}
-        <Text as="span" color="purple.300">
+        <Text as="span" color="brightPurple.400">
           hosting a game.
         </Text>
       </Text>
