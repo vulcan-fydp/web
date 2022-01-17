@@ -35,7 +35,7 @@ import { motion } from "framer-motion";
 
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { BiVolumeMute, BiVolumeFull } from "react-icons/bi";
-import screenfull from "screenfull";
+import { useFullscreen } from "lib/useFullscreen";
 
 const Canvas = chakra("canvas");
 
@@ -171,16 +171,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
   }, [setControlsOpacity]);
 
   /* Handle Fullscreen */
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  document.onfullscreenchange = () => {
-    setIsFullscreen(Boolean(document.fullscreenElement));
-  };
-
-  const handleClickFullscreen = useCallback<MouseEventHandler>(async () => {
-    if (containerRef.current) {
-      await screenfull.toggle(containerRef.current!);
-    }
-  }, [containerRef]);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   /* Handle Volume */
   const [volume, setVolume] = useState(0.5);
@@ -282,7 +273,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
                 <AiOutlineFullscreen color="white" size="28px" />
               )
             }
-            onClick={handleClickFullscreen}
+            onClick={toggleFullscreen}
           />
         </HStack>
       </MotionBox>
