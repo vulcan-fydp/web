@@ -1,14 +1,24 @@
 import { ColorModeScript } from "@chakra-ui/react";
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
+
+let App: React.ComponentType = () => (
+  <>Target set to invalid value of {process.env.REACT_APP_TARGET}</>
+);
+if (process.env.REACT_APP_TARGET === "app") {
+  App = React.lazy(() => import(/* webpackMode: "eager" */ "./app"));
+} else if (process.env.REACT_APP_TARGET === "static") {
+  App = React.lazy(() => import(/* webpackMode: "eager" */ "./static"));
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript />
-    <App />
+    <React.Suspense fallback={null}>
+      <App />
+    </React.Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );

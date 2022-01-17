@@ -19,7 +19,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@vulcan-fydp/schema": "github:vulcan-fydp/schema#semver:^0.0.37",
     "controller-input": "^0.3.0",
-    "framer-motion": "^4.1.11",
+    "framer-motion": "^5.6.0",
     "graphql": "^15.5.1",
     "mediasoup-client": "^3.6.36",
     "query-string": "^7.0.1",
@@ -38,7 +38,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:ci": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "codegen": "npm run codegen:backend && npm run codegen:relay",
@@ -61,7 +60,7 @@
     ]
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/cli": "^2.3.1",
     "@graphql-codegen/introspection": "^2.1.1",
     "@graphql-codegen/near-operation-file-preset": "^2.2.2",
     "@graphql-codegen/typescript": "^2.4.2",

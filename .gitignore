@@ -28,5 +28,5 @@ graphql-*.schema.json
 
 # Generated code from relay and backend .gql files
 *.generated.ts
-src/backend-types.ts
-src/relay-types.ts
+src/app/backend-types.ts
+src/app/relay-types.ts
