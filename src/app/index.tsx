@@ -4,9 +4,9 @@ import "@fontsource/montserrat";
 
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Route } from "react-router-dom";
-import { apolloClient } from "./apollo";
-import { Pages } from "./pages";
-import { vulcanTheme } from "../theme";
+import { apolloClient } from "app/apollo";
+import { Pages } from "app/pages";
+import { vulcanTheme } from "theme";
 import { QueryParamProvider } from "use-query-params";
 
 const VulcanGamingPlatformApp = () => (
