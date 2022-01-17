@@ -1,6 +1,5 @@
 import {
   MouseEventHandler,
-  Ref,
   useCallback,
   useEffect,
   useRef,
@@ -168,12 +167,12 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
     setControlsOpacity(1);
   }, [setControlsOpacity]);
   const hideControls = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
-    setControlsOpacity(1);
+    setControlsOpacity(0);
   }, [setControlsOpacity]);
 
   /* Handle Fullscreen */
   const [isFullscreen, setIsFullscreen] = useState(false);
-  document.onfullscreenchange = (e) => {
+  document.onfullscreenchange = () => {
     setIsFullscreen(Boolean(document.fullscreenElement));
   };
 
@@ -196,7 +195,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
         setVolume(previousVolume);
       }
     }
-  }, [volume, previousVolume]);
+  }, [videoRef, volume, previousVolume]);
 
   useEffect(() => {
     if (videoRef.current) {
