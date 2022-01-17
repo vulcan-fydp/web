@@ -1,11 +1,11 @@
 overwrite: true
 schema: "./node_modules/@vulcan-fydp/schema/signal_schema.gql"
-documents: "src/**/*.relay.gql"
+documents: "src/app/**/*.relay.gql"
 generates:
-  src/relay-types.ts:
+  src/app/relay-types.ts:
     plugins:
       - "typescript"
-  src/:
+  src/app/:
     preset: near-operation-file
     presetConfig:
       baseTypesPath: relay-types.ts
