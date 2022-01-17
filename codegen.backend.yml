@@ -1,11 +1,11 @@
 overwrite: true
 schema: "./node_modules/@vulcan-fydp/schema/backend_schema.gql"
-documents: "src/**/*.backend.gql"
+documents: "src/app/**/*.backend.gql"
 generates:
-  src/backend-types.ts:
+  src/app/backend-types.ts:
     plugins:
       - "typescript"
-  src/:
+  src/app/:
     preset: near-operation-file
     presetConfig:
       baseTypesPath: backend-types.ts
