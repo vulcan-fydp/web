@@ -162,8 +162,12 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
   const containerRef = useRef(null);
   const controlsRef = useRef(null);
 
+  /* Controls */
+  const [controlsOpacity, setControlsOpacity] = useState(1);
+
+  /* Handle Fullscreen */
   const [isFullscreen, setIsFullscreen] = useState(false);
-  document.onfullscreenchange = () => {
+  document.onfullscreenchange = (e) => {
     setIsFullscreen(Boolean(document.fullscreenElement));
   };
 
@@ -173,16 +177,17 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
     }
   }, [containerRef]);
 
+  /* Handle Volume */
   const [volume, setVolume] = useState(0.5);
   const [previousVolume, setPreviousVolume] = useState(0.5);
 
-  const toggleVolume = useCallback(() => {
+  const toggleVolumeMute = useCallback(() => {
     if (videoRef.current) {
-      if (volume === 0) {
-        setVolume(previousVolume);
-      } else {
+      if (volume !== 0) {
         setPreviousVolume(volume);
         setVolume(0);
+      } else {
+        setVolume(previousVolume);
       }
     }
   }, [volume, previousVolume]);
@@ -192,8 +197,6 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       videoRef.current.volume = volume;
     }
   }, [videoRef, volume]);
-
-  const [controlsOpacity, setControlsOpacity] = useState(1);
 
   return (
     <Box
@@ -250,7 +253,6 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
             maxW="120px"
             value={volume}
             onChange={(v) => setVolume(v)}
-            marginRight="8px"
           >
             <SliderTrack bg="white">
               <SliderFilledTrack bg="#9F7AEA" />
@@ -268,7 +270,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
               )
             }
             onClick={() => {
-              toggleVolume();
+              toggleVolumeMute();
             }}
           />
           <IconButton
@@ -276,9 +278,9 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
             variant="transparent"
             icon={
               isFullscreen ? (
-                <AiOutlineFullscreenExit color="white" size="24px" />
+                <AiOutlineFullscreenExit color="white" size="28px" />
               ) : (
-                <AiOutlineFullscreen color="white" size="24px" />
+                <AiOutlineFullscreen color="white" size="28px" />
               )
             }
             onClick={handleClickFullscreen}
