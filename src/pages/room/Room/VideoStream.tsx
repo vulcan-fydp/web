@@ -164,6 +164,12 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
   /* Controls */
   const [controlsOpacity, setControlsOpacity] = useState(1);
+  const showControls = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
+    setControlsOpacity(1);
+  }, [setControlsOpacity]);
+  const hideControls = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
+    setControlsOpacity(1);
+  }, [setControlsOpacity]);
 
   /* Handle Fullscreen */
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -238,12 +244,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
           paddingRight="16px"
           height="48px"
           bg="#131313"
-          onMouseEnter={() => {
-            setControlsOpacity(1);
-          }}
-          onMouseLeave={() => {
-            setControlsOpacity(0);
-          }}
+          onMouseEnter={showControls}
+          onMouseLeave={hideControls}
         >
           <Slider
             aria-label="Volume Slider"
@@ -252,7 +254,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
             step={0.01}
             maxW="120px"
             value={volume}
-            onChange={(v) => setVolume(v)}
+            onChange={setVolume}
           >
             <SliderTrack bg="white">
               <SliderFilledTrack bg="#9F7AEA" />
@@ -269,9 +271,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
                 <BiVolumeFull color="white" size="28px" />
               )
             }
-            onClick={() => {
-              toggleVolumeMute();
-            }}
+            onClick={toggleVolumeMute}
           />
           <IconButton
             aria-label="Toggle Fullscreen"
