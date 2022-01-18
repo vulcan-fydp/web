@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import screenfull from "screenfull";
 
 type FullscreenAPI = {
@@ -10,9 +10,11 @@ export const useFullscreen = (
   containerRef: React.MutableRefObject<null>
 ): FullscreenAPI => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  document.onfullscreenchange = () => {
-    setIsFullscreen(Boolean(document.fullscreenElement));
-  };
+  useEffect(() => {
+    const cb = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    window.addEventListener("fullscreenchange", cb);
+    return () => window.removeEventListener("fullscreenchange", cb);
+  }, [setIsFullscreen]);
 
   const toggleFullscreen = useCallback(async () => {
     if (containerRef.current) {
