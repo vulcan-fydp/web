@@ -91,6 +91,15 @@ export const vulcanTheme = extendTheme(
           },
         },
       },
+      IconButton: {
+        variants: {
+          transparent: {
+            bg: "rgba(255,0,0,0)",
+            _hover: "bg: rgba(255, 0, 0, 0.0)",
+            _focus: "boxShadow: none; bg: rgba(255, 0, 0, 0.0)",
+          },
+        },
+      },
       Input: {
         baseStyle: {},
         defaultProps: {

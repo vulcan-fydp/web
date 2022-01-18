@@ -1,5 +1,20 @@
-import { Ref, useCallback, useEffect, useRef } from "react";
-import { Box, chakra } from "@chakra-ui/react";
+import {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  Box,
+  chakra,
+  HStack,
+  IconButton,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
+} from "@chakra-ui/react";
 import { Controller, ControllerInput } from "controller-input";
 import {
   ControllersDocument,
@@ -16,11 +31,18 @@ import {
 import { controllerIdVar } from ".";
 import { useAnimationFrame } from "lib/useAnimationFrame";
 import { controllerStateToArrayBuffer } from "lib/controller";
+import { motion } from "framer-motion";
+
+import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
+import { BiVolumeMute, BiVolumeFull } from "react-icons/bi";
+import { useFullscreen } from "lib/useFullscreen";
 
 const Canvas = chakra("canvas");
 
+const MotionBox = motion(Box);
+
 interface VideoStreamProps {
-  videoRef: Ref<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement>;
   emitData: (data: ArrayBuffer) => void;
   controllerNumber: number | null;
 }
@@ -32,9 +54,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 }) => {
   const controllerInputRef = useRef<ControllerInput>();
   const client = useApolloClient();
-  const controllerPromiseRef = useRef<
-    Promise<ApolloQueryResult<ControllersQuery>>
-  >();
+  const controllerPromiseRef =
+    useRef<Promise<ApolloQueryResult<ControllersQuery>>>();
   const controllerId = useReactiveVar(controllerIdVar);
   const controllerInputIdRef = useRef<number>();
   const sequenceNumberRef = useRef<number>(0);
@@ -74,7 +95,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
     if (controller) {
       controllerInputIdRef.current = controllerInputRef.current.addController(
-        (controller as unknown) as Controller
+        controller as unknown as Controller
       );
       console.log(controllerInputIdRef.current);
     } else {
@@ -115,9 +136,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       return;
     }
 
-    const state = controllerInputRef.current.getState()[
-      controllerInputIdRef.current
-    ];
+    const state =
+      controllerInputRef.current.getState()[controllerInputIdRef.current];
 
     emitData(
       controllerStateToArrayBuffer(
@@ -138,12 +158,49 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
   useAnimationFrame(update);
 
+  const containerRef = useRef(null);
+  const controlsRef = useRef(null);
+
+  /* Controls */
+  const [controlsOpacity, setControlsOpacity] = useState(1);
+  const showControls = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
+    setControlsOpacity(1);
+  }, [setControlsOpacity]);
+  const hideControls = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
+    setControlsOpacity(0);
+  }, [setControlsOpacity]);
+
+  /* Handle Fullscreen */
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
+
+  /* Handle Volume */
+  const [volume, setVolume] = useState(0.5);
+  const [previousVolume, setPreviousVolume] = useState(0.5);
+
+  const toggleVolumeMute = useCallback(() => {
+    if (videoRef.current) {
+      if (volume !== 0) {
+        setPreviousVolume(volume);
+        setVolume(0);
+      } else {
+        setVolume(previousVolume);
+      }
+    }
+  }, [videoRef, volume, previousVolume]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.volume = volume;
+    }
+  }, [videoRef, volume]);
+
   return (
     <Box
+      ref={containerRef}
       display="flex"
       justifyContent="center"
       alignItems="center"
-      borderWidth="2px"
+      borderWidth={isFullscreen ? "0px" : "2px"}
       borderColor="purple.400"
       position="relative"
     >
@@ -158,6 +215,68 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
         width="100%"
         height="100%"
       />
+      <MotionBox
+        ref={controlsRef}
+        position="absolute"
+        bottom={isFullscreen ? "0" : "-50px"}
+        width="100%"
+        animate={{
+          opacity: isFullscreen ? controlsOpacity : 1,
+          transition: { ease: "easeIn" },
+        }}
+        outline={isFullscreen ? "" : "2px solid"}
+        outlineColor="purple.400"
+      >
+        <HStack
+          display="flex"
+          justifyContent="flex-end"
+          spacing="16px"
+          paddingRight="16px"
+          height="48px"
+          bg="#131313"
+          onMouseEnter={showControls}
+          onMouseLeave={hideControls}
+        >
+          <Slider
+            aria-label="Volume Slider"
+            min={0}
+            max={1}
+            step={0.01}
+            maxW="120px"
+            value={volume}
+            onChange={setVolume}
+          >
+            <SliderTrack bg="white">
+              <SliderFilledTrack bg="#9F7AEA" />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+          <IconButton
+            aria-label="Toggle Volume"
+            variant="transparent"
+            icon={
+              volume === 0 ? (
+                <BiVolumeMute color="white" size="28px" />
+              ) : (
+                <BiVolumeFull color="white" size="28px" />
+              )
+            }
+            onClick={toggleVolumeMute}
+          />
+          <IconButton
+            aria-label="Toggle Fullscreen"
+            variant="transparent"
+            icon={
+              isFullscreen ? (
+                <AiOutlineFullscreenExit color="white" size="28px" />
+              ) : (
+                <AiOutlineFullscreen color="white" size="28px" />
+              )
+            }
+            onClick={toggleFullscreen}
+          />
+        </HStack>
+      </MotionBox>
     </Box>
   );
 };
