@@ -11,7 +11,7 @@ import {
   MenuItem,
   MenuDivider,
 } from "@chakra-ui/react";
-import { Link as RouterLink, NavLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
 import logo from "app/resources/vulcan-transparent.svg";
 import { useNavbarQuery } from "./navbar.backend.generated";
 
@@ -50,7 +50,7 @@ export const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
 export const DefaultNavbarContent = () => {
   const { data, loading } = useNavbarQuery();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   if (loading || !data) {
     return null;
@@ -61,7 +61,7 @@ export const DefaultNavbarContent = () => {
       {!data.user ? (
         <Button
           onClick={() => {
-            history.push("/login");
+            navigate("/login");
           }}
         >
           Login

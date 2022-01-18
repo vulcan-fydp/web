@@ -1,13 +1,13 @@
 import { Button, Flex } from "@chakra-ui/react";
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCreateRoomMutation } from "./createRoom.backend.generated";
 
 export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
   vulcastId,
 }) => {
   const [createRoomMutation, { loading }] = useCreateRoomMutation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onCreateRoomClick = useCallback(async () => {
     const result = await createRoomMutation({
@@ -30,10 +30,10 @@ export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
       case "VulcastNotFoundError":
         return;
       case "Room":
-        history.push(`/room/${result.data.createRoom.id}/players`);
+        navigate(`/room/${result.data.createRoom.id}/players`);
         return;
     }
-  }, [createRoomMutation, vulcastId, history]);
+  }, [createRoomMutation, vulcastId, navigate]);
 
   return (
     <Flex>

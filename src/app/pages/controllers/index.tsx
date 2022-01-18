@@ -1,5 +1,4 @@
-import { addQueryStringIfNonEmpty } from "lib/uri";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { CreateControllerModal } from "./CreateControllerModal";
 import { ControllerLists } from "./list";
 import { DefaultControllerStudio } from "./studio/DefaultControllerStudio";
@@ -9,38 +8,20 @@ import { GameConsole } from "./studio/enums/game-console";
 import { CreateControllerStudio } from "./studio/CreateControllerStudio";
 
 export const ControllersRouter = () => {
-  const { path } = useRouteMatch();
-
   return (
     <>
       <CreateControllerModal />
-      <Switch>
+      <Routes>
+        <Route index element={<ControllerLists />} />
+        <Route path="built-in" element={<ControllerLists />} />
         <Route
-          exact
-          path={ControllersRouter.userControllerList()}
-          render={() => <ControllerLists />}
+          path="built-in/:controllerId"
+          element={<DefaultControllerStudio />}
         />
-        <Route
-          exact
-          path={ControllersRouter.builtInControllerList()}
-          render={() => <ControllerLists />}
-        />
-        <Route
-          exact
-          path={ControllersRouter.createUserController()}
-          render={() => <CreateControllerStudio />}
-        />
-        <Route
-          exact
-          path={ControllersRouter.userController()}
-          render={() => <ControllerEditStudio />}
-        />
-        <Route
-          exact
-          path={ControllersRouter.builtInController()}
-          render={() => <DefaultControllerStudio />}
-        />
-      </Switch>
+        <Route path="create" element={<CreateControllerStudio />} />
+        <Route path=":controllerId" element={<ControllerEditStudio />} />
+        <Route path="*" element={<>not found</>} />
+      </Routes>
     </>
   );
 };
@@ -83,7 +64,5 @@ ControllersRouter.createUserController = ({
     params.set("game_console", gameConsole);
   }
 
-  return `${ControllersRouter.baseRoute()}/create${addQueryStringIfNonEmpty(
-    params
-  )}`;
+  return `${ControllersRouter.baseRoute()}/create`;
 };

@@ -13,11 +13,7 @@ export function getControllerShareUri({
 }: Controller): string {
   return `${window.location.protocol}//${
     window.location.host
-  }${ControllersRouter.createUserController()}?${
-    nameQueryParam.name
-  }=${nameQueryParam.config.encode(name)}&${
+  }${ControllersRouter.createUserController()}?${nameQueryParam.name}=${name}&${
     buttonsQueryParam.name
-  }=${buttonsQueryParam.config.encode(buttons)}&${
-    axesQueryParam.name
-  }=${axesQueryParam.config.encode(axes)}`;
+  }=${JSON.stringify(buttons)}&${axesQueryParam.name}=${JSON.stringify(axes)}`;
 }

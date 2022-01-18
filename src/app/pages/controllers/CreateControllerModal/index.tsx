@@ -1,26 +1,89 @@
-import { useEffect } from "react";
-import { useParams } from "react-router";
-import { useQueryParam, useQueryParams, StringParam } from "use-query-params";
+import { useIsSiteModalTriggered } from "lib/site-modal";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { ControllersRouter } from "..";
+import { ControllerType } from "../studio/enums/controller-type";
+import { GameConsole } from "../studio/enums/game-console";
 import { ControllerTypeModal } from "./ControllerTypeModal";
 import { GameConsoleModal } from "./GameConsoleModal";
-
-export const CREATE_CONTROLLER_QUERY_PARAM = "create_controller_modal_step";
 
 export enum CreateControllerModalStep {
   GAME_CONSOLE = "GAME_CONSOLE",
   CONTROLLER_TYPE = "CONTROLLER_TYPE",
 }
 
-export const CreateControllerModal = () => {
-  const [createControllerModalStep, setCreateControllerModalStep] =
-    useQueryParam(CREATE_CONTROLLER_QUERY_PARAM, StringParam);
+interface ClosedState {
+  step: undefined;
+}
 
-  // Originally this was a switch conditionally rendering the components but it turns out
-  // you don't get the close animation this way
+const CLOSED_STATE: ClosedState = {
+  step: undefined,
+};
+
+interface GameConsoleState {
+  step: CreateControllerModalStep.GAME_CONSOLE;
+}
+
+const OPEN_STATE: GameConsoleState = {
+  step: CreateControllerModalStep.GAME_CONSOLE,
+};
+
+interface ControllerTypeState {
+  step: CreateControllerModalStep.CONTROLLER_TYPE;
+  gameConsole: GameConsole;
+}
+
+export const CreateControllerModal = () => {
+  const navigate = useNavigate();
+
+  const [modalState, setModalState] = useState<
+    ClosedState | GameConsoleState | ControllerTypeState
+  >(CLOSED_STATE);
+
+  const closeModal = useCallback(() => {
+    setModalState({ step: undefined });
+  }, []);
+
+  const setGameConsole = useCallback((gameConsole: GameConsole) => {
+    setModalState({
+      step: CreateControllerModalStep.CONTROLLER_TYPE,
+      gameConsole,
+    });
+  }, []);
+
+  const setControllerType = useCallback(
+    (controllerType: ControllerType) => {
+      const { gameConsole } = modalState as ControllerTypeState;
+      setModalState(CLOSED_STATE);
+      navigate(
+        ControllersRouter.createUserController({ gameConsole, controllerType })
+      );
+    },
+    [modalState, navigate, setModalState]
+  );
+
+  const [isTriggered, ackTriggered] =
+    useIsSiteModalTriggered("CreateController");
+
+  useEffect(() => {
+    if (isTriggered) {
+      setModalState(OPEN_STATE);
+      ackTriggered();
+    }
+  }, [setModalState, isTriggered, ackTriggered]);
+
   return (
     <>
-      <GameConsoleModal />
-      <ControllerTypeModal />
+      <GameConsoleModal
+        isOpen={modalState.step === CreateControllerModalStep.GAME_CONSOLE}
+        onClose={closeModal}
+        setGameConsole={setGameConsole}
+      />
+      <ControllerTypeModal
+        isOpen={modalState.step === CreateControllerModalStep.CONTROLLER_TYPE}
+        onClose={closeModal}
+        setControllerType={setControllerType}
+      />
     </>
   );
 };

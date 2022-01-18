@@ -13,7 +13,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { NavLink, Switch, Route, useRouteMatch } from "react-router-dom";
 import { HeroPage } from "app/components/HeroPage";
 import { PlayerTab } from "app/pages/room/Room/PlayerTab";
 import { StreamTab } from "app/pages/room/Room/StreamTab";
@@ -24,15 +23,22 @@ import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
 import { environment } from "environment";
 import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
-import { useHistory } from "react-router-dom";
 import { useEndRoomMutation } from "./endRoom.backend.generated";
+import {
+  NavLink,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 type DashboardTab = "player" | "controller" | "stream";
 
 export const controllerIdVar = makeLocalStorageBackedVar("CONTROLLER_ID");
 
 export const Dashboard = () => {
-  const { path, params } = useRouteMatch<{ roomId?: string }>();
+  const { roomId } = useParams<{ roomId?: string }>();
+
   const { data, loading, error } = usePlayerIsHostQuery({
     variables: {},
     fetchPolicy: "network-only",
@@ -47,7 +53,7 @@ export const Dashboard = () => {
     );
   }
 
-  if (!params.roomId) {
+  if (!roomId) {
     return <Heading> Room ID not found </Heading>;
   }
   if (!data) {
@@ -59,7 +65,7 @@ export const Dashboard = () => {
         {" "}
         Room{" "}
         <Text as="span" color="#9F7AEA">
-          {params.roomId}
+          {roomId}
         </Text>{" "}
         has ended or does not exist.{" "}
       </Heading>
@@ -79,28 +85,25 @@ export const Dashboard = () => {
       >
         <HStack direction="row" justifyContent="space-between" flexWrap="wrap">
           <RoomDetails />
-          <EndRoom isHost={data.roomSession.isHost} roomId={params.roomId} />
+          <EndRoom isHost={data.roomSession.isHost} roomId={roomId} />
         </HStack>
-        <Switch>
-          <Route path={`${path}/players`}>
-            <TabContainer tab="player" />
-          </Route>
-          <Route path={`${path}/controller`}>
-            <TabContainer tab="controller" />
-          </Route>
-          <Route path={`${path}/stream`}>
-            <TabContainer tab="stream" />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="players" element={<TabContainer tab="player" />} />
+          <Route
+            path="controller"
+            element={<TabContainer tab="controller" />}
+          />
+          <Route path="stream" element={<TabContainer tab="stream" />} />
+        </Routes>
       </VStack>
     </HeroPage>
   );
 };
 
 const RoomDetails = () => {
-  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { roomId } = useParams<{ roomId?: string }>();
 
-  const roomUrl = `${window.location.host}/room/${params.roomId}`;
+  const roomUrl = `${window.location.host}/room/${roomId}`;
 
   const [tooltipShowing, setTooltipShowing] = useState(false);
   useEffect(() => {
@@ -160,7 +163,7 @@ const EndRoom: React.FC<{
       roomId,
     },
   });
-  const history = useHistory();
+  const navigate = useNavigate();
   const toast = useToast();
 
   const onEndRoomClick = useCallback(async () => {
@@ -180,10 +183,10 @@ const EndRoom: React.FC<{
         });
         return;
       case "Success":
-        history.push("/");
+        navigate("/");
         return;
     }
-  }, [endRoomMutation, history, toast]);
+  }, [endRoomMutation, navigate, toast]);
 
   const onLeaveRoomClick = useCallback(async () => {
     const result = await leaveRoomMutation();
@@ -202,10 +205,10 @@ const EndRoom: React.FC<{
         });
         return;
       case "Success":
-        history.push("/");
+        navigate("/");
         return;
     }
-  }, [leaveRoomMutation, history, toast]);
+  }, [leaveRoomMutation, navigate, toast]);
 
   if (isHost) {
     return (
@@ -226,18 +229,18 @@ interface TabContainerProps {
 }
 
 const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
-  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { roomId } = useParams<{ roomId?: string }>();
   const dashboardTabs: DashboardTab[] = ["stream", "player", "controller"];
   return (
     <Tabs isLazy variant="line" defaultIndex={dashboardTabs.indexOf(tab)}>
       <TabList>
-        <Tab as={NavLink} to={`/room/${params.roomId}/stream`}>
+        <Tab as={NavLink} to={`/room/${roomId}/stream`}>
           Game Stream
         </Tab>
-        <Tab as={NavLink} to={`/room/${params.roomId}/players`}>
+        <Tab as={NavLink} to={`/room/${roomId}/players`}>
           Players
         </Tab>
-        <Tab as={NavLink} to={`/room/${params.roomId}/controller`}>
+        <Tab as={NavLink} to={`/room/${roomId}/controller`}>
           Controller Settings
         </Tab>
       </TabList>

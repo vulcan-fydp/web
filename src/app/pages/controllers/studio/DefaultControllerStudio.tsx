@@ -1,9 +1,4 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-} from "@chakra-ui/breadcrumb";
-import { Link, useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDefaultControllerStudioQuery } from "./defaultControllerStudio.backend.generated";
 import { ControllerType } from "./enums/controller-type";
 import { GameConsole } from "./enums/game-console";
@@ -12,13 +7,11 @@ import { ControllerStudio } from "./Studio";
 const noop = () => {};
 
 export const DefaultControllerStudio = () => {
-  const {
-    params: { controllerId },
-  } = useRouteMatch<{ controllerId: string }>();
+  const { controllerId } = useParams<{ controllerId: string }>();
 
   const { data, loading, error } = useDefaultControllerStudioQuery({
     variables: {
-      controllerId,
+      controllerId: controllerId!,
     },
   });
 

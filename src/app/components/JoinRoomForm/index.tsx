@@ -10,7 +10,7 @@ import { apolloClient } from "app/apollo";
 import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   JoinRoomDocument,
   JoinRoomMutation,
@@ -44,7 +44,7 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
     setFocus("nickname");
   }, [setFocus]);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onFormSubmit = useCallback<SubmitHandler<JoinRoomFormData>>(
     async ({ roomId, nickname }) => {
@@ -83,9 +83,9 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
         return;
       }
 
-      history.push(`/room/${result.data.joinRoom.room.id}/stream`);
+      navigate(`/room/${result.data.joinRoom.room.id}/stream`);
     },
-    [history]
+    [navigate]
   );
 
   return (

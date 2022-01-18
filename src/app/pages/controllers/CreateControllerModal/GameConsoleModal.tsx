@@ -9,9 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQueryParam, useQueryParams, StringParam } from "use-query-params";
-import { CreateControllerModalStep, CREATE_CONTROLLER_QUERY_PARAM } from ".";
+import { useMemo } from "react";
 import {
   GameConsole,
   GAME_CONSOLE_DISPLAY_ORDER,
@@ -20,44 +18,31 @@ import {
 
 export const GAME_CONSOLE_QUERY_PARAM = "game_console";
 
-export const GameConsoleModal: React.FC = () => {
-  const [createControllerModalStep, setCreateControllerModalStep] =
-    useQueryParam(CREATE_CONTROLLER_QUERY_PARAM, StringParam);
-  const [, setGameConsole] = useQueryParam(
-    GAME_CONSOLE_QUERY_PARAM,
-    StringParam
-  );
+interface GameConsoleModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  setGameConsole: (gc: GameConsole) => void;
+}
 
-  const onClose = useCallback(() => {
-    setCreateControllerModalStep(undefined, "push");
-  }, [setCreateControllerModalStep]);
-
-  const onGameConsoleClick = useCallback(
-    (gameConsole: GameConsole) => {
-      setCreateControllerModalStep(
-        CreateControllerModalStep.CONTROLLER_TYPE,
-        "pushIn"
-      );
-      setGameConsole(gameConsole, "pushIn");
-    },
-    [setCreateControllerModalStep, setGameConsole]
-  );
-
+export const GameConsoleModal: React.FC<GameConsoleModalProps> = ({
+  isOpen,
+  onClose,
+  setGameConsole,
+}) => {
   const gameConsoleList = useMemo(() => {
     return GAME_CONSOLE_DISPLAY_ORDER.map((gameConsole) => (
-      <Button w="100%" onClick={() => onGameConsoleClick(gameConsole)}>
+      <Button
+        w="100%"
+        onClick={() => setGameConsole(gameConsole)}
+        key={gameConsole}
+      >
         {getGameConsoleName(gameConsole)}
       </Button>
     ));
-  }, [onGameConsoleClick]);
+  }, [setGameConsole]);
 
   return (
-    <Modal
-      isOpen={
-        createControllerModalStep === CreateControllerModalStep.GAME_CONSOLE
-      }
-      onClose={onClose}
-    >
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Game Console</ModalHeader>

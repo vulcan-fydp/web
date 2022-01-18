@@ -2,12 +2,10 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { useRouteMatch, useLocation } from "react-router-dom";
 import { idify } from "./idify";
 
 interface DocContentContextType {
