@@ -1,12 +1,11 @@
-import { Route, Switch } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import { Docs } from "./Docs";
 
 export const DocsRouter = () => {
   return (
-    <Switch>
-      <Route exact path={DocsRoutes.base()} render={Docs} />
-      <Route path={DocsRoutes.vulcast()} render={() => null} />
-    </Switch>
+    <Routes>
+      <Route index element={<Docs />} />
+    </Routes>
   );
 };
 

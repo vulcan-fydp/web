@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { HeroPage } from "app/components/HeroPage";
 import { CreateControllerButton } from "app/pages/controllers/CreateControllerButton";
-import { NavLink, useRouteMatch } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { DefaultControllers } from "./DefaultControllers";
 import { UserControllers } from "./UserControllers";
 
@@ -26,7 +26,7 @@ function getTabIndexFromPath(path: string) {
 }
 
 export const ControllerLists = () => {
-  const { path } = useRouteMatch();
+  const { pathname } = useLocation();
 
   return (
     <HeroPage>
@@ -35,7 +35,7 @@ export const ControllerLists = () => {
           <Text fontSize="2xl">Controllers</Text>
           <CreateControllerButton />
         </Flex>
-        <Tabs isLazy isFitted index={getTabIndexFromPath(path)} w="800px">
+        <Tabs isLazy isFitted index={getTabIndexFromPath(pathname)} w="800px">
           <TabList>
             <Tab as={NavLink} to="/controllers">
               My Controllers

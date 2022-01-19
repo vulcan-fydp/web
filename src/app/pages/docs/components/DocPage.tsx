@@ -8,8 +8,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from "@chakra-ui/react";
-import { useEffect, useLayoutEffect } from "react";
-import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 import { DocsRoutes } from "..";
 import { DocContentContextProvider } from "./doc-content";

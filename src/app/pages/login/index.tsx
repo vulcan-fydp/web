@@ -1,16 +1,13 @@
-import { Route, Switch } from "react-router";
-import { useRouteMatch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { LoginPage } from "./Login";
 
 export const LoginRouter = () => {
-  const { path } = useRouteMatch();
-
   return (
-    <Switch>
-      <Route exact path={path} render={() => <LoginPage />} />
-      <Route exact path={`${path}/forgot-password`} render={() => null} />
-      <Route exact path={`${path}/google`} render={() => null} />
-      <Route exact path={`${path}/facebook`} render={() => null} />
-    </Switch>
+    <Routes>
+      <Route index element={<LoginPage />} />
+      <Route path="forgot-password" element={null} />
+      <Route path="google" element={null} />
+      <Route path="facebook" element={null} />
+    </Routes>
   );
 };

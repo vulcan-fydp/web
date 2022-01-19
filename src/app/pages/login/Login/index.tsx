@@ -12,7 +12,7 @@ import {
 import { HeroPage } from "app/components/HeroPage";
 import React, { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useLogInMutation } from "./logIn.backend.generated";
 
 interface LoginForm {
@@ -27,7 +27,7 @@ export const LoginPage = () => {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const apolloClient = useApolloClient();
 
   const [responseError, setResponseError] = useState<string>();
@@ -51,14 +51,14 @@ export const LoginPage = () => {
       switch (logInResult.logInAsUser.__typename) {
         case "User":
           await apolloClient.resetStore();
-          history.push("/room");
+          navigate("/room");
           break;
         case "AuthenticationError":
           setResponseError(logInResult.logInAsUser.message);
           break;
       }
     },
-    [logIn, history, setResponseError, apolloClient]
+    [logIn, navigate, setResponseError, apolloClient]
   );
 
   return (

@@ -7,8 +7,8 @@ import {
   AlertDialogOverlay,
   Button,
 } from "@chakra-ui/react";
+import { useStringSearchParam } from "lib/useSearchParam";
 import { useRef } from "react";
-import { StringParam, useQueryParam } from "use-query-params";
 
 interface JoinAnotherRoomModalProps {
   onLeave: (otherRoomCode?: string) => void;
@@ -20,9 +20,9 @@ export const JoinAnotherRoomModal: React.FC<JoinAnotherRoomModalProps> = ({
   const stayButtonRef = useRef<HTMLButtonElement>(null);
   const leaveButtonRef = useRef<HTMLButtonElement>(null);
 
-  const [otherRoom, setOtherRoom] = useQueryParam(
+  const [otherRoom, setOtherRoom] = useStringSearchParam(
     "join-another-room",
-    StringParam
+    false
   );
 
   return (

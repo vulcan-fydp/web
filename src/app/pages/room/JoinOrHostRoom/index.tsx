@@ -1,15 +1,14 @@
 import { Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { HeroPage } from "app/components/HeroPage";
 import React from "react";
-import { useRouteMatch } from "react-router";
-import { Redirect } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
 import { JoinRoomForm } from "app/components/JoinRoomForm";
 import { RegisterVulcastForm } from "./RegisterVulcastForm";
 import { useJoinOrHostRoomQuery } from "./joinOrHostRoom.backend.generated";
 
 export const JoinOrHostRoom: React.FC = () => {
-  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { roomId } = useParams<{ roomId?: string }>();
 
   const { data, loading } = useJoinOrHostRoomQuery();
 
@@ -20,15 +19,15 @@ export const JoinOrHostRoom: React.FC = () => {
   if (data.roomSession) {
     let path = `/room/${data.roomSession.room.id}/stream`;
 
-    if (params.roomId !== data.roomSession.room.id) {
-      path += `?join-another-room=${params.roomId}`;
+    if (roomId !== data.roomSession.room.id) {
+      path += `?join-another-room=${roomId}`;
     }
 
-    return <Redirect to={path} />;
+    return <Navigate replace to={path} />;
   }
 
-  if (!data.user || params.roomId !== undefined) {
-    return <JoinRoom roomId={params.roomId} />;
+  if (!data.user || roomId !== undefined) {
+    return <JoinRoom roomId={roomId} />;
   }
 
   if (data.user.vulcasts.length === 0) {
@@ -36,10 +35,7 @@ export const JoinOrHostRoom: React.FC = () => {
   }
 
   return (
-    <JoinAndHostRoom
-      vulcastId={data.user.vulcasts[0].id}
-      roomId={params.roomId}
-    />
+    <JoinAndHostRoom vulcastId={data.user.vulcasts[0].id} roomId={roomId} />
   );
 };
 

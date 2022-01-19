@@ -1,7 +1,7 @@
 import { ControllerAxis, ControllerButton } from "app/backend-types";
+import { useJsonSearchParam, useStringSearchParam } from "lib/useSearchParam";
 import { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { useQueryParam } from "use-query-params";
+import { useNavigate } from "react-router-dom";
 import { ControllersRouter } from "..";
 import {
   axesQueryParam,
@@ -21,68 +21,61 @@ const noop = () => {};
 
 // @todo: Sharing of non-keyboard and mouse controllers will not work because of controllerType
 export const CreateControllerStudio = () => {
-  const [buttons, setButtons] = useQueryParam(
-    buttonsQueryParam.name,
-    buttonsQueryParam.config
+  const [buttons, setButtons] = useJsonSearchParam<(ControllerButton | null)[]>(
+    buttonsQueryParam.name
   );
-  const [axes, setAxes] = useQueryParam(
-    axesQueryParam.name,
-    axesQueryParam.config
+  const [axes, setAxes] = useJsonSearchParam<(ControllerAxis | null)[]>(
+    axesQueryParam.name
   );
-  const [name, setName] = useQueryParam(
-    nameQueryParam.name,
-    nameQueryParam.config
-  );
+  const [name, setName] = useStringSearchParam(nameQueryParam.name);
   const [controllerType, setControllerType] = useState(INITIAL_CONTROLLER_TYPE);
 
   const [createControllerMutation] = useCreateControllerMutation();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (buttons.length === 0) {
-      setButtons(new Array(17).fill(null), "replaceIn");
+    if (buttons === undefined || buttons.length === 0) {
+      setButtons(new Array(17).fill(null));
     }
   }, [buttons, setButtons]);
 
   useEffect(() => {
-    if (axes.length === 0) {
-      setAxes(new Array(4).fill(null), "replaceIn");
+    if (axes === undefined || axes.length === 0) {
+      setAxes(new Array(4).fill(null));
     }
   }, [axes, setAxes]);
 
   const onButtonChange = useCallback(
     (buttonNumber: number, button: ControllerButton | null) => {
-      setButtons(
-        (buttons) => [
+      if (buttons) {
+        setButtons([
           ...buttons.slice(0, buttonNumber),
           button,
           ...buttons.slice(buttonNumber + 1),
-        ],
-        "replaceIn"
-      );
+        ]);
+      }
     },
-    [setButtons]
+    [setButtons, buttons]
   );
 
   const onAxisChange = useCallback(
     (axisNumber: number, axis: ControllerAxis | null) => {
-      setAxes(
-        (axes) => [
+      if (axes) {
+        setAxes([
           ...axes.slice(0, axisNumber),
           axis,
           ...axes.slice(axisNumber + 1),
-        ],
-        "replaceIn"
-      );
+        ]);
+      }
     },
-    [setAxes]
+    [setAxes, axes]
   );
 
   const onControllerTypeChange = useCallback(
     (controllerType: ControllerType) => {
-      setButtons(new Array(17).fill(null), "replaceIn");
-      setAxes(new Array(4).fill(null), "replaceIn");
+      setButtons(new Array(17).fill(null));
+      setAxes(new Array(4).fill(null));
       setControllerType(controllerType);
     },
     [setButtons, setAxes]
@@ -90,7 +83,7 @@ export const CreateControllerStudio = () => {
 
   const onNameChange = useCallback(
     (name) => {
-      setName(name, "replaceIn");
+      setName(name);
     },
     [setName]
   );
@@ -99,14 +92,14 @@ export const CreateControllerStudio = () => {
     const response = await createControllerMutation({
       variables: {
         name: name ?? "",
-        buttons: buttons.map(toButtonInput),
-        axes: axes.map(toAxisInput),
+        buttons: (buttons ?? []).map(toButtonInput),
+        axes: (axes ?? []).map(toAxisInput),
       },
     });
 
     switch (response.data?.createController?.__typename) {
       case "Controller":
-        history.push(
+        navigate(
           ControllersRouter.userController(response.data.createController.id)
         );
         break;
@@ -115,12 +108,12 @@ export const CreateControllerStudio = () => {
       default:
         throw new Error("Unhandled case");
     }
-  }, [name, buttons, axes, createControllerMutation, history]);
+  }, [name, buttons, axes, createControllerMutation, navigate]);
 
   const onDiscard = useCallback(() => {
-    setButtons([], "replaceIn");
-    setAxes([], "replaceIn");
-    setName("", "replaceIn");
+    setButtons([]);
+    setAxes([]);
+    setName("");
 
     setControllerType(INITIAL_CONTROLLER_TYPE);
   }, [setButtons, setAxes, setName, setControllerType]);
@@ -130,8 +123,8 @@ export const CreateControllerStudio = () => {
       <ControllerStudio
         primaryButtonText="Create controller"
         secondaryButtonText="Clear"
-        buttons={buttons}
-        axes={axes}
+        buttons={buttons ?? []}
+        axes={axes ?? []}
         gameConsole={GameConsole.SWITCH}
         controllerType={controllerType}
         name={name ?? ""}

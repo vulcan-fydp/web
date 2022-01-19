@@ -2,7 +2,7 @@ import { ControllerAxis, ControllerButton } from "app/backend-types";
 import { ErrorPage } from "app/components/ErrorPage";
 import { LoadingPage } from "app/components/LoadingPage";
 import { useCallback, useEffect, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ControllersRouter } from "..";
 import {
   useEditControllerMutation,
@@ -20,13 +20,11 @@ import { toAxisInput, toButtonInput } from "./utils/toInput";
 const noop = () => {};
 
 export const ControllerEditStudio = () => {
-  const {
-    params: { controllerId },
-  } = useRouteMatch<{ controllerId: string }>();
+  const { controllerId } = useParams<{ controllerId: string }>();
 
   const { data, loading, error } = useEditControllerStudioQuery({
     variables: {
-      controllerId,
+      controllerId: controllerId!,
     },
   });
 
@@ -89,7 +87,7 @@ export const ControllerEditStudio = () => {
   const onSave = useCallback(async () => {
     await editControllerMutation({
       variables: {
-        controllerId,
+        controllerId: controllerId!,
         name,
         buttons: buttons.map(toButtonInput),
         axes: axes.map(toAxisInput),

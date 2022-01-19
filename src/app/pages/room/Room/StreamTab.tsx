@@ -11,7 +11,7 @@ import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { useRoomSessionQuery } from "./roomSession.backend.generated";
 import {
@@ -109,7 +109,7 @@ export const StreamTab: React.FC = () => {
   const receiveMediaStreamRef = useRef<MediaStream>();
   const dataProducerRef = useRef<DataProducer>();
 
-  const { params } = useRouteMatch<{ roomId?: string }>();
+  const { roomId } = useParams<{ roomId?: string }>();
 
   useEffect(() => {
     document.querySelectorAll("video").forEach((v) => (v.volume = 0.1));
@@ -263,7 +263,7 @@ export const StreamTab: React.FC = () => {
     return () => {
       clientSub?.close();
     };
-  }, [params.roomId]);
+  }, [roomId]);
 
   const emitData = useCallback(
     (data: ArrayBuffer) => {
