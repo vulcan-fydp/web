@@ -1,7 +1,6 @@
 import kebabCase from "lodash.kebabcase";
 
 const ALPHANUMERIC_CHAR = /^\w$/;
-const UPPERCASE_CHAR = /^[A-Z]$/;
 
 export class DocData {
   constructor(
@@ -28,7 +27,7 @@ export class DocData {
 
     const parts = this.definitionPath.split("/");
     this._route =
-      parts.slice(3, -1).join("/") +
+      parts.slice(5, -1).join("/") +
       "/" +
       kebabCase(parts[parts.length - 1].replace(".doc.tsx", ""));
     if (!this._route.startsWith("/")) {
@@ -68,7 +67,7 @@ export class DocData {
       return this._generatedFilePath;
     }
 
-    this._generatedFilePath = `src/pages/docs/generated/${this.generatedComponentName}.generated.tsx`;
+    this._generatedFilePath = `src/static/pages/docs/generated/${this.generatedComponentName}.generated.tsx`;
     return this._generatedFilePath;
   }
 }
@@ -168,17 +167,8 @@ export class Docs {
   }
 
   public printTree(tree = this.tree, indentation = 0) {
-    console.log(indent(indentation) + tree.key);
     tree.children.forEach((subtree) =>
       this.printTree(subtree, indentation + 1)
     );
   }
-}
-
-function indent(n: number) {
-  let s = "";
-  for (let i = 0; i < n; i++) {
-    s += "  ";
-  }
-  return s;
 }

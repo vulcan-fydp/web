@@ -1,6 +1,5 @@
 import glob from "glob";
 import fs from "fs";
-import kebabCase from "lodash.kebabcase";
 import rimraf from "rimraf";
 import { DocData, DocNode, Docs } from "./Docs";
 
@@ -19,14 +18,14 @@ async function generateDocData(fileName: string): Promise<DocData | undefined> {
     return;
   }
 
-  const [_, title, content] = match;
+  const [, title, content] = match;
 
   return new DocData(fileName, content, title);
 }
 
 async function generateRouterFile(datas: DocData[]) {
   const content = `
-import { Route, Switch } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import React from "react";
 ${datas
   .map(
@@ -38,7 +37,7 @@ ${datas
 function createLazyDoc(
   Component: React.LazyExoticComponent<() => JSX.Element>
 ) {
-  return () => (
+  return (
     <React.Suspense fallback={null}>
       <Component />
     </React.Suspense>
@@ -47,20 +46,23 @@ function createLazyDoc(
 
 export const DocsRouter = () => {
   return (
-    <Switch>
+    <Routes>
       ${datas
-        .map(
-          (r) =>
-            `<Route exact path="${r.route}" render={createLazyDoc(${r.generatedComponentName})} />`
-        )
+        .map((r) => {
+          const relativeRoute = r.route.replace(/^\/docs\/?/, "");
+          if (relativeRoute.length > 0) {
+            return `<Route path="${relativeRoute}" element={createLazyDoc(${r.generatedComponentName})} />`;
+          }
+          return `<Route index element={createLazyDoc(${r.generatedComponentName})} />`;
+        })
         .join("\n      ")}
-    </Switch>
+    </Routes>
   );
 };
 `.trimStart();
 
   await fs.promises.writeFile(
-    "src/pages/docs/generated/DocsRouter.tsx",
+    "src/static/pages/docs/generated/DocsRouter.generated.tsx",
     content
   );
 }
@@ -101,7 +103,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { DocSidebarNode } from "pages/docs/components/DocSidebarNode";
+import { DocSidebarNode } from "static/pages/docs/components/DocSidebarNode";
 
 export const DocsSidebar = () => {
   return (
@@ -115,7 +117,7 @@ ${Array.from(root.children.values())
 `.trimStart();
 
   await fs.promises.writeFile(
-    "src/pages/docs/generated/DocsSidebar.generated.tsx",
+    "src/static/pages/docs/generated/DocsSidebar.generated.tsx",
     content
   );
 }
@@ -141,8 +143,8 @@ async function generateDoc(node: DocNode) {
 
   const content = `
   /* eslint-disable */
-  import { DocParagraph } from "pages/docs/components";
-  import { DocPage } from "pages/docs/components/DocPage";
+  import { DocParagraph } from "static/pages/docs/components";
+  import { DocPage } from "static/pages/docs/components/DocPage";
   
   export default () => <DocPage title="${
     node.data.title
@@ -155,8 +157,8 @@ async function generateDoc(node: DocNode) {
 }
 
 async function main() {
-  rimraf.sync("src/pages/docs/generated/**/*.generated.tsx");
-  const docFiles = glob.sync("src/pages/docs/**/*.doc.tsx");
+  rimraf.sync("src/static/pages/docs/generated/*.generated.tsx");
+  const docFiles = glob.sync("src/static/pages/docs/content/**/*.doc.tsx");
   const docDataResults = await Promise.all(docFiles.map(generateDocData));
 
   if (docDataResults.some((r) => !r)) {

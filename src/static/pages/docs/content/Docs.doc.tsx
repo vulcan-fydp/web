@@ -1,4 +1,4 @@
-import { defineDoc } from "pages/docs/components/defineDoc";
+import { defineDoc } from "static/pages/docs/components/defineDoc";
 
 defineDoc({
   title: "Docs",

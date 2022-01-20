@@ -1,22 +1,19 @@
 import {
   Box,
-  Flex,
-  Center,
-  useToken,
-  useMediaQuery,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbSeparator,
+  Center,
+  Flex,
+  useMediaQuery,
+  useToken,
 } from "@chakra-ui/react";
-import { DocsRoutes } from "..";
-import { useEffect, useLayoutEffect, useMemo } from "react";
-import { useRouteMatch } from "react-router";
-import { Link, useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { DocsSidebar } from "../generated/DocsSidebar.generated";
 import { DocContentContextProvider } from "./doc-content";
 import { DocTableOfContents } from "./DocTableOfContents";
 import { DocTitle } from "./DocTitle";
-import { DocsSidebar } from "../generated/DocsSidebar.generated";
 
 interface DocPageProps {
   title: string;
