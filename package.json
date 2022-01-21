@@ -39,9 +39,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "npm run codegen:backend && npm run codegen:relay",
+    "codegen": "npx concurrently \"npm:codegen:*\"",
     "codegen:backend": "graphql-codegen --config codegen.backend.yml",
     "codegen:relay": "graphql-codegen --config codegen.relay.yml",
+    "codegen:docs": "npx ts-node --project=scripts/tsconfig.json ./scripts/gen-docs.ts",
     "postinstall": "npm run codegen",
     "lint": "eslint src --fix",
     "lint:ci": "eslint src"
@@ -65,9 +66,17 @@
     "@graphql-codegen/typescript": "^2.4.2",
     "@graphql-codegen/typescript-operations": "^2.2.2",
     "@graphql-codegen/typescript-react-apollo": "^3.2.2",
+    "@types/glob": "^7.2.0",
+    "@types/lodash.kebabcase": "^4.1.6",
+    "@types/rimraf": "^3.0.2",
+    "concurrently": "^7.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-graphql": "^4.0.0",
+    "glob": "^7.2.0",
     "http-proxy-middleware": "^2.0.1",
-    "prettier": "^2.5.1"
+    "lodash.kebabcase": "^4.1.1",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.4.0"
   }
 }
