@@ -1,4 +1,4 @@
-import { Heading, Text } from "@chakra-ui/layout";
+import { Heading } from "@chakra-ui/layout";
 import { useDocSubtitle } from "./doc-content";
 import { DocLink } from "./DocLink";
 import { idify } from "./idify";

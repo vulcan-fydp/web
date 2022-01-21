@@ -1,7 +1,4 @@
-import { Button } from "@chakra-ui/button";
 import { Link } from "@chakra-ui/layout";
-import { chakra } from "@chakra-ui/system";
-import { useLocation } from "react-router";
 import { Link as ReactRouterLink } from "react-router-dom";
 
 interface DocLinkProps {

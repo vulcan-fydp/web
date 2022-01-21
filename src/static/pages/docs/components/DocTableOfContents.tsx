@@ -1,6 +1,5 @@
-import { Box, Text, Button, VStack, Link, Flex } from "@chakra-ui/react";
+import { Link, Flex } from "@chakra-ui/react";
 import { useCallback } from "react";
-// import { Link } from "react-router-dom";
 import { useDocContent } from "./doc-content";
 
 const focusedStyles = {

@@ -9,7 +9,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { HeroPage } from "app/components/HeroPage";
-import React, { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useLogInMutation } from "./logIn.backend.generated";
@@ -29,8 +29,6 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const apolloClient = useApolloClient();
 
-  const [responseError, setResponseError] = useState<string>();
-
   const [logIn] = useLogInMutation();
 
   const onFormSubmit = useCallback<SubmitHandler<LoginForm>>(
@@ -43,7 +41,13 @@ export const LoginPage = () => {
       });
 
       if (!logInResult) {
-        setResponseError("An unknown error occured.");
+        setError(
+          "password",
+          {
+            message: "An unknown error occured.",
+          },
+          { shouldFocus: true }
+        );
         return;
       }
 
@@ -53,11 +57,15 @@ export const LoginPage = () => {
           navigate("/room");
           break;
         case "AuthenticationError":
-          setResponseError(logInResult.logInAsUser.message);
+          setError(
+            "password",
+            { message: logInResult.logInAsUser.message },
+            { shouldFocus: true }
+          );
           break;
       }
     },
-    [logIn, navigate, setResponseError, apolloClient]
+    [logIn, navigate, setError, apolloClient]
   );
 
   return (
@@ -110,7 +118,6 @@ export const LoginPage = () => {
         >
           Log In
         </Button>
-        {responseError !== undefined ? <Text>{responseError}</Text> : null}
       </Flex>
       <Text size="sm" mb="10px">
         <Link as={RouterLink} to="/reset-password">
