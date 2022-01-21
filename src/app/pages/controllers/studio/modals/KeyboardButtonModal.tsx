@@ -8,7 +8,6 @@ import {
   ModalCloseButton,
   Center,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { ButtonModalComponent, UnsetButton } from "./ButtonModal";

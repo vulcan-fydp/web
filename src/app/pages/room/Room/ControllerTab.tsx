@@ -1,6 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import { EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, HStack, Stack, Tag, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { Controller } from "app/backend-types";
 import { ControllerTags } from "app/components/ControllerTags";
 import { useCallback } from "react";

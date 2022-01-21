@@ -94,14 +94,6 @@ function setTransportOnConnect(
   });
 }
 
-interface StreamVideoProps {
-  streamRef: React.RefObject<HTMLVideoElement>;
-}
-
-interface ExampleControllerInputProps {
-  dataProducerRef: React.MutableRefObject<DataProducer | undefined>;
-}
-
 export const StreamTab: React.FC = () => {
   const streamRef = useRef<HTMLVideoElement>(null);
 

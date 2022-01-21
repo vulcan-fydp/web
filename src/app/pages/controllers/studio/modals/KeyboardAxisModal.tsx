@@ -11,7 +11,6 @@ import {
   Text,
   Button,
   HStack,
-  chakra,
   Box,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";

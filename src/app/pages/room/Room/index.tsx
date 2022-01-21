@@ -24,14 +24,7 @@ import { environment } from "environment";
 import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
 import { useEndRoomMutation } from "./endRoom.backend.generated";
-import {
-  NavLink,
-  Outlet,
-  Route,
-  Routes,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 
 type DashboardTab = "player" | "controller" | "stream";
 
