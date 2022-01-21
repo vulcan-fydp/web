@@ -37,10 +37,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "dev": "npx concurrently \"npm:codegen:*:watch\"",
+    "dev": "npx concurrently \"npm:codegen:backend:watch\" \"npm:codegen:relay:watch\" \"npm:codegen:docs:watch\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "codegen": "npx concurrently \"npm:codegen:*\"",
+    "codegen": "npx concurrently \"npm:codegen:backend\" \"npm:codegen:relay\" \"npm:codegen:docs\"",
     "codegen:backend": "graphql-codegen --config codegen.backend.yml",
     "codegen:backend:watch": "npx chokidar \"src/app/**/*.backend.gql\" -c \"npm run codegen:backend\"",
     "codegen:relay": "graphql-codegen --config codegen.relay.yml",
