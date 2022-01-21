@@ -6,13 +6,10 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Center,
-  Text,
   Button,
-  HStack,
   Flex,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonModalComponent, UnsetButton } from "./ButtonModal";
 import { KeyboardButtonModal } from "./KeyboardButtonModal";
 import { MouseButtonModal } from "./MouseButtonModal";
