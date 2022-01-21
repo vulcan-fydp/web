@@ -23,7 +23,7 @@ interface JoinRoomFormData {
 }
 
 export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
-  const [promptRoomId, setPromptRoomId] = useState(typeof roomId !== "string");
+  const [promptRoomId] = useState(typeof roomId !== "string");
 
   const [submissionErrorMessage, setSubmissionErrorMessage] =
     useState<string>();

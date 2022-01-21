@@ -1,4 +1,3 @@
-import { TriangleUpIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -7,20 +6,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Center,
-  Text,
   Button,
-  HStack,
-  chakra,
   Box,
 } from "@chakra-ui/react";
-import { Axis, ControllerMouseAxis } from "app/backend-types";
+import { Axis } from "app/backend-types";
 import { useCallback, useEffect, useState } from "react";
 import { thickDashedBorder } from "styles/thickDashedBorder";
-import {
-  getRotationForNegativeAxis,
-  getRotationForPositiveAxis,
-} from "../utils/getRotationForAxis";
 import { AxisModalComponent } from "./AxisModal";
 
 const CIRCLE_RADIUS = 10;

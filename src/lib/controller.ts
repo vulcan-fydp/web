@@ -1,4 +1,3 @@
-import { Controller } from "controller-input";
 import { ControllerState } from "controller-input/build/state";
 
 function booleansToNumber(...bools: (boolean | null | undefined)[]) {

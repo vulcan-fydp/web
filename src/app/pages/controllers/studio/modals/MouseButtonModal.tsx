@@ -8,7 +8,6 @@ import {
   ModalCloseButton,
   Center,
   Text,
-  Button,
 } from "@chakra-ui/react";
 import { disableContextMenu } from "lib/disableContextMenu";
 import { useCallback, useEffect, useState } from "react";

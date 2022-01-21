@@ -28,7 +28,6 @@ import { GamepadAxisModal } from "./modals/GamepadAxisModal";
 import { GamepadButtonModal } from "./modals/GamepadButtonModal";
 import { KeyboardAndMouseAxisModal } from "./modals/KeyboardAndMouseAxisModal";
 import { KeyboardAndMouseButtonModal } from "./modals/KeyboardAndMouseButtonModal";
-import { KeyboardButtonModal } from "./modals/KeyboardButtonModal";
 
 function getModals(controllerType: ControllerType): {
   ButtonModal: ButtonModalComponent;

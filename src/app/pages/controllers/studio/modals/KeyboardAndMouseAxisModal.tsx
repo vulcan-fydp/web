@@ -6,13 +6,10 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Center,
-  Text,
   Button,
-  HStack,
   Flex,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AxisModalComponent } from "./AxisModal";
 import { KeyboardAxisModal } from "./KeyboardAxisModal";
 import { MouseAxisModal } from "./MouseAxisModal";
