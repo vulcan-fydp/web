@@ -26,6 +26,7 @@ import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
 import { useEndRoomMutation } from "./endRoom.backend.generated";
 import {
   NavLink,
+  Outlet,
   Route,
   Routes,
   useNavigate,
@@ -87,14 +88,7 @@ export const Dashboard = () => {
           <RoomDetails />
           <EndRoom isHost={data.roomSession.isHost} roomId={roomId} />
         </HStack>
-        <Routes>
-          <Route path="players" element={<TabContainer tab="player" />} />
-          <Route
-            path="controller"
-            element={<TabContainer tab="controller" />}
-          />
-          <Route path="stream" element={<TabContainer tab="stream" />} />
-        </Routes>
+        <Outlet />
       </VStack>
     </HeroPage>
   );
@@ -228,7 +222,7 @@ interface TabContainerProps {
   tab: DashboardTab;
 }
 
-const TabContainer: React.FC<TabContainerProps> = ({ tab }) => {
+export const DashboardTabContainer: React.FC<TabContainerProps> = ({ tab }) => {
   const { roomId } = useParams<{ roomId?: string }>();
   const dashboardTabs: DashboardTab[] = ["stream", "player", "controller"];
   return (

@@ -5,12 +5,11 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client/core";
 import { WebSocketLink } from "@apollo/client/link/ws";
-import { Box, Button, chakra, HStack, Input } from "@chakra-ui/react";
 import { environment } from "environment";
 import { Device } from "mediasoup-client";
 import { DataProducer } from "mediasoup-client/lib/DataProducer";
 import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { useRoomSessionQuery } from "./roomSession.backend.generated";

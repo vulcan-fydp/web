@@ -1,17 +1,12 @@
 import { Button } from "@chakra-ui/button";
 import { Input } from "@chakra-ui/input";
-import { Text, Box, HStack, Flex, Wrap, WrapItem } from "@chakra-ui/layout";
-import { Skeleton, SkeletonText } from "@chakra-ui/skeleton";
-import { useToken } from "@chakra-ui/system";
+import { Text, Box, HStack, Wrap, WrapItem } from "@chakra-ui/layout";
+import { Skeleton } from "@chakra-ui/skeleton";
 import { ErrorPage } from "app/components/ErrorPage";
 import { HeroPage } from "app/components/HeroPage";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAccountQuery } from "./account.backend.generated";
-
-const AccountField = () => {
-  return <Box></Box>;
-};
 
 interface AccountForm {
   firstName: string;
