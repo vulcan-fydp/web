@@ -4,7 +4,7 @@ import rimraf from "rimraf";
 import { DocData, DocNode, Docs } from "./Docs";
 
 const DEFINE_DOC =
-  /defineDoc\(\{\s*title:\s*"([\w ]+)",\s*content:\s*<>(.*)<\/>,\s*}\)/ms;
+  /defineDoc\(\{\s*title:\s*"([\w ]+)",\s*content:\s*(?:\(\s*)?<>(.*)<\/>(?:\s*\s*\))?,\s*}\)/ms;
 
 async function generateDocData(fileName: string): Promise<DocData | undefined> {
   const fileContent = await fs.promises.readFile(fileName, {
