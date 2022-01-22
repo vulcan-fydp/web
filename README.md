@@ -1,62 +1,37 @@
-This project was bootstrapped with
-[Create React App](https://github.com/facebook/create-react-app).
+# Vulcan Gaming Platform - Web
 
-## Available Scripts
+This is a monorepo for all of the websites on the platform.
 
-In the project directory, you can run:
+## Tech Stack
 
-### `npm start`
+- React
+- TypeScript
+- Create-React-App (webpack, eslint)
+- GraphQL
+- Chakra UI
+- Apollo
+- GraphQL Codegen
 
-Runs the app in the development mode.<br /> Open
-[http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting Started
 
-The page will reload if you make edits.<br /> You will also see any lint errors
-in the console.
+1. `npm i`: This will install all necessary dependencies and will codegen additional source code
+2. `cp .env.template .env.local`: This will create your local environment configuration
+3. Fill in `.env.local` with how you want to run the web platform
+4. `npm start`
 
-### `npm test`
+## Site: `app`
 
-Launches the test runner in the interactive watch mode.<br /> See the section
-about
-[running tests](https://facebook.github.io/create-react-app/docs/running-tests)
-for more information.
+The `app` site is located in `src/app`. Additional information can be found there.
 
-### `npm run build`
+When a user deploys their own instance of the Vulcan Gaming Platform one of the components they are deploying is `app`. It is the interface for users to interact with Vulcasts and play games.
 
-Builds the app for production to the `build` folder.<br /> It correctly bundles
-React in production mode and optimizes the build for the best performance.
+## Site: `static`
 
-The build is minified and the filenames include the hashes.<br /> Your app is
-ready to be deployed!
+The `static` site is located in `src/static`. Additional information can be found there.
 
-See the section about
-[deployment](https://facebook.github.io/create-react-app/docs/deployment) for
-more information.
+This site is the only site that the Vulcan Gaming Platform team hosts. It is generally users' first point of entry to the platform. From there they can learn what Vulcan is, how to set up their own instance and how to play with their friends.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can
-`eject` at any time. This command will remove the single build dependency from
-your project.
-
-Instead, it will copy all the configuration files and the transitive
-dependencies (webpack, Babel, ESLint, etc) right into your project so you have
-full control over them. All of the commands except `eject` will still work, but
-they will point to the copied scripts so you can tweak them. At this point
-you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for
-small and middle deployments, and you shouldn’t feel obligated to use this
-feature. However we understand that this tool wouldn’t be useful if you couldn’t
-customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the
-[Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Deprecated Section - Re-Write Incoming
 
 ### To connect to local development backend or relay:
 
