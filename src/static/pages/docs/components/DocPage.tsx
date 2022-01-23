@@ -57,10 +57,11 @@ export const DocPage: React.FC<DocPageProps> = ({
       {isDesktop ? (
         <Center>
           <Flex
-            alignItems="flex-start"
+            alignItems="stretch"
             width="100%"
             justifyContent="stretch"
             maxWidth="1280px"
+            mb="100px"
           >
             <Box
               flex="0 0 250px"
@@ -74,21 +75,27 @@ export const DocPage: React.FC<DocPageProps> = ({
             </Box>
             <Box textAlign="left" flex="1 1 800px" pr="50px">
               <DocTitle>{title}</DocTitle>
-              <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
+              <Breadcrumb mt="10px" mb="10px" color="yellow.300">
                 {breadcrumbs}
               </Breadcrumb>
               {children}
             </Box>
-            <Box flex="0 0 200px" mt="30px" position="sticky" top="30px">
+            <Box
+              flex="0 0 200px"
+              mt="30px"
+              position="sticky"
+              top="30px"
+              mr="20px"
+            >
               <DocTableOfContents />
             </Box>
           </Flex>
         </Center>
       ) : null}
       {!isDesktop ? (
-        <Flex flexDir="column" margin="0 20px">
+        <Flex flexDir="column" margin="0 20px 100px">
           <DocTitle>{title}</DocTitle>
-          <Breadcrumb ml="10px" mt="10px" mb="10px" color="yellow.300">
+          <Breadcrumb mt="10px" mb="10px" color="yellow.300">
             {breadcrumbs}
           </Breadcrumb>
           <Box>

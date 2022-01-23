@@ -50,7 +50,7 @@ export const DocTableOfContents = () => {
           <Link
             key={subtitle.text}
             ml="10px"
-            mt="2px"
+            mt="4px"
             {...getStyles(subtitle.id)}
             onClick={(e) => {
               e.preventDefault();
@@ -59,6 +59,7 @@ export const DocTableOfContents = () => {
             variant="link"
             display="block"
             href=""
+            fontSize="sm"
           >
             {subtitle.text}
           </Link>

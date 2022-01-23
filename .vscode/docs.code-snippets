@@ -20,7 +20,7 @@
 		"prefix": "doc",
 		"body": [
 			"import { defineDoc } from \"static/pages/docs/components/defineDoc\";",
-			"import { DocParagraph, DocSubtitle, DocLink } from \"static/pages/docs/components\";",
+			"import { DocParagraph, DocSubtitle, DocLink, DocUnorderedList, DocOrderedList, DocListItem } from \"static/pages/docs/components\";",
 			"",
 			"defineDoc({",
 			"  title: \"$1\",",

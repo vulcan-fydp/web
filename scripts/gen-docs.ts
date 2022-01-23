@@ -143,7 +143,7 @@ async function generateDoc(node: DocNode) {
 
   const content = `
   /* eslint-disable */
-  import { DocParagraph } from "static/pages/docs/components";
+  import { DocParagraph, DocSubtitle, DocUnorderedList, DocListItem, DocOrderedList } from "static/pages/docs/components";
   import { DocPage } from "static/pages/docs/components/DocPage";
   
   export default () => <DocPage title="${
