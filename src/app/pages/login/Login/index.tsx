@@ -108,13 +108,7 @@ export const LoginPage = () => {
             <FormErrorMessage>{errors.password.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <Button
-          isDisabled={isSubmitting}
-          type="submit"
-          colorScheme="purple"
-          size="lg"
-          mb="20px"
-        >
+        <Button isLoading={isSubmitting} type="submit" size="lg" mb="20px">
           Log In
         </Button>
       </Flex>
