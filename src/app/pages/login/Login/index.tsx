@@ -28,7 +28,6 @@ export const LoginPage = () => {
   } = useForm<LoginForm>();
   const navigate = useNavigate();
   const apolloClient = useApolloClient();
-
   const [logIn] = useLogInMutation();
 
   const onFormSubmit = useCallback<SubmitHandler<LoginForm>>(
@@ -109,13 +108,7 @@ export const LoginPage = () => {
             <FormErrorMessage>{errors.password.message}</FormErrorMessage>
           ) : null}
         </FormControl>
-        <Button
-          isDisabled={isSubmitting}
-          type="submit"
-          colorScheme="purple"
-          size="lg"
-          mb="20px"
-        >
+        <Button isLoading={isSubmitting} type="submit" size="lg" mb="20px">
           Log In
         </Button>
       </Flex>
@@ -125,7 +118,7 @@ export const LoginPage = () => {
         </Link>
       </Text>
       <Text size="sm">
-        <Link as={RouterLink} to="/sign-up">
+        <Link as={RouterLink} to="/signup">
           Create an account
         </Link>
       </Text>

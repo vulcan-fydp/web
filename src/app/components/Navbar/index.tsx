@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   Link,
   Menu,
   MenuButton,
@@ -49,13 +50,23 @@ export const DefaultNavbar: React.FC = ({ children }) => {
       rightContent={
         <>
           {!data.user ? (
-            <Button
-              onClick={() => {
-                navigate("/login");
-              }}
-            >
-              Login
-            </Button>
+            <Flex gap="32px">
+              <Button
+                variant="link"
+                onClick={() => {
+                  navigate("/login");
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate("/signup");
+                }}
+              >
+                Sign Up
+              </Button>
+            </Flex>
           ) : null}
           {data.user ? (
             <Menu placement="bottom-end">
