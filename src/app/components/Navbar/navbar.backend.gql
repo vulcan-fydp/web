@@ -7,4 +7,10 @@ query navbar {
       id
     }
   }
+  roomSession {
+    id
+    room {
+      id
+    }
+  }
 }
