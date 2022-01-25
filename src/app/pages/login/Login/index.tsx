@@ -28,7 +28,6 @@ export const LoginPage = () => {
   } = useForm<LoginForm>();
   const navigate = useNavigate();
   const apolloClient = useApolloClient();
-
   const [logIn] = useLogInMutation();
 
   const onFormSubmit = useCallback<SubmitHandler<LoginForm>>(
@@ -125,7 +124,7 @@ export const LoginPage = () => {
         </Link>
       </Text>
       <Text size="sm">
-        <Link as={RouterLink} to="/sign-up">
+        <Link as={RouterLink} to="/signup">
           Create an account
         </Link>
       </Text>
