@@ -75,7 +75,7 @@ export const vulcanTheme = extendTheme(
           solid: {},
           link: {
             _hover: {
-              color: "purple",
+              color: "purple.400",
               textDecoration: "none",
             },
           },
