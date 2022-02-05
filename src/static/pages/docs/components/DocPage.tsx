@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
+import { Footer } from "static/components/Footer";
 import { DocsSidebar } from "../generated/DocsSidebar.generated";
 import { DocContentContextProvider } from "./doc-content";
 import { DocTableOfContents } from "./DocTableOfContents";
@@ -126,6 +127,7 @@ export const DocPage: React.FC<DocPageProps> = ({
           </Drawer>
         </Flex>
       ) : null}
+      <Footer />
     </DocContentContextProvider>
   );
 };
