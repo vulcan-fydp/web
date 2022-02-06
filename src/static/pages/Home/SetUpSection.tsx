@@ -103,7 +103,7 @@ export const SetUpSection = () => {
         <SetUpStep
           stepNumber={step()}
           title="Set Up A Vulcast"
-          description="A Vulcast is a hardware device that connects to your game console. It handles streaming the video output to over the internet to the web platform and passes controller inputs from other players through to the console"
+          description="A Vulcast is a hardware device that connects to your game console. It streams video output over the internet to the web platform and passes controller inputs from other players back to your console."
           actionText="Build It"
           actionTo="/docs"
           imageSrc={VulcastImg}
