@@ -6,3 +6,38 @@ query account {
     lastName
   }
 }
+
+mutation updateUser(
+  $firstName: String
+  $lastName: String
+  $oldPassword: String
+  $newPassword: String
+) {
+  updateUser(
+    firstName: $firstName
+    lastName: $lastName
+    oldPassword: $oldPassword
+    newPassword: $newPassword
+  ) {
+    __typename
+    ... on User {
+      firstName
+      lastName
+    }
+    ... on AuthenticationError {
+      message
+    }
+    ... on InvalidFirstNameError {
+      message
+    }
+    ... on InvalidLastNameError {
+      message
+    }
+    ... on InvalidOldPasswordError {
+      message
+    }
+    ... on InvalidNewPasswordError {
+      message
+    }
+  }
+}

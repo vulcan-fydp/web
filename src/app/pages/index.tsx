@@ -4,7 +4,7 @@ import { LoginRouter } from "app/pages/login";
 import { RoomRouter } from "app/pages/room";
 import { ControllersRouter } from "app/pages/controllers";
 import { AccountPage } from "app/pages/account";
-import { SignUpPage } from "app/pages/signup";
+import { SignUpPage } from "app/pages/Signup";
 
 export const Pages = () => (
   <Routes>
