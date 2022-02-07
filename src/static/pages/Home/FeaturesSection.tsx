@@ -13,7 +13,7 @@ import {
 import { HomeMaxWidthSection } from "./components/HomeMaxWidthSection";
 import { HomeSectionTitle } from "./components/HomeSectionTitle";
 import PlaceholderImgSrc from "static/resources/placeholder-feature.png";
-import {
+import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -165,31 +165,30 @@ const Features: React.FC<FeaturesProps> = ({ features }) => {
 
   return (
     <Box backgroundColor="purple.400" padding="40px" borderRadius="3xl">
-      <HStack
-        mb="20px"
-        overflowX="scroll"
-        divider={
-          <Box m="0 10px" border="0">
-            •
-          </Box>
-        }
-      >
+      <Box mb="20px" overflowX="scroll" whiteSpace="nowrap">
         {features.map(([featureName], i) => (
-          <Button
-            key={featureName}
-            variant="link"
-            borderRadius="0"
-            borderLeftColor="yellow.300"
-            borderLeftWidth={i === visibleIndex ? "2px" : "0"}
-            paddingLeft={i === visibleIndex ? "5px" : "0"}
-            onClick={() => goToFeature(i)}
-          >
-            <Text color="white" fontWeight="400">
-              {featureName}
-            </Text>
-          </Button>
+          <React.Fragment key={featureName}>
+            <Button
+              display="inline"
+              variant="link"
+              borderRadius="0"
+              borderLeftColor="yellow.300"
+              borderLeftWidth={i === visibleIndex ? "2px" : "0"}
+              paddingLeft={i === visibleIndex ? "5px" : "0"}
+              onClick={() => goToFeature(i)}
+            >
+              <Text color="white" fontWeight="400">
+                {featureName}
+              </Text>
+            </Button>
+            {i !== features.length - 1 ? (
+              <Box m="0 10px" border="0" display="inline-block">
+                •
+              </Box>
+            ) : null}
+          </React.Fragment>
         ))}
-      </HStack>
+      </Box>
       {features.map(([featureName, featureContent], i) => (
         <Feature
           key={featureName}
