@@ -12,7 +12,7 @@ import {
   AccountQuery,
   useAccountQuery,
   useUpdateUserMutation,
-} from "app/pages/Account/account.backend.generated";
+} from "app/pages/account/account.backend.generated";
 
 interface UpdateFormProps {
   isLoaded: boolean;

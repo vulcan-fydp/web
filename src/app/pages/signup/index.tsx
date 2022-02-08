@@ -12,7 +12,7 @@ import { HeroPage } from "app/components/HeroPage";
 import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useCreateUserMutation } from "app/pages/Signup/createUser.backend.generated";
+import { useCreateUserMutation } from "app/pages/signup/createUser.backend.generated";
 
 interface LoginForm {
   firstName: string;
