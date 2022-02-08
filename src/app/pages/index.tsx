@@ -3,7 +3,7 @@ import { Home } from "app/pages/Home";
 import { LoginRouter } from "app/pages/login";
 import { RoomRouter } from "app/pages/room";
 import { ControllersRouter } from "app/pages/controllers";
-import { AccountPage } from "app/pages/account";
+import { AccountPage } from "app/pages/Account";
 import { SignUpPage } from "app/pages/Signup";
 
 export const Pages = () => (

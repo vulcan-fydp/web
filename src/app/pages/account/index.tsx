@@ -6,13 +6,13 @@ import { Skeleton } from "@chakra-ui/skeleton";
 import { apolloClient } from "app/apollo";
 import { ErrorPage } from "app/components/ErrorPage";
 import { HeroPage } from "app/components/HeroPage";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   AccountQuery,
   useAccountQuery,
   useUpdateUserMutation,
-} from "./account.backend.generated";
+} from "app/pages/Account/account.backend.generated";
 
 interface UpdateFormProps {
   isLoaded: boolean;
@@ -24,18 +24,28 @@ interface UpdateNameFields {
 }
 
 const UpdateNameForm: React.FC<UpdateFormProps> = ({ isLoaded, data }) => {
-  console.log(1, data);
   const {
     handleSubmit,
     register,
     setError,
-    formState: { errors, isSubmitting },
+    reset,
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<UpdateNameFields>({
     defaultValues: {
       firstName: data?.user?.firstName,
       lastName: data?.user?.lastName,
     },
   });
+
+  useEffect(() => {
+    if (data?.user) {
+      reset({
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+      });
+    }
+  }, [data, reset]);
+
   const showToast = useToast();
 
   const [updateUser] = useUpdateUserMutation();
@@ -47,7 +57,6 @@ const UpdateNameForm: React.FC<UpdateFormProps> = ({ isLoaded, data }) => {
           lastName: data.lastName,
         },
       });
-      console.log(updateUserResult);
       if (!updateUserResult || !updateUserResult.updateUser) {
         setError("lastName", {
           message: "An unknown error occured.",
@@ -129,7 +138,12 @@ const UpdateNameForm: React.FC<UpdateFormProps> = ({ isLoaded, data }) => {
           </FormControl>
         </WrapItem>
       </Wrap>
-      <Button isLoading={isSubmitting} type="submit" mt="10px">
+      <Button
+        isLoading={isSubmitting}
+        isDisabled={!isDirty}
+        type="submit"
+        mt="10px"
+      >
         Update name
       </Button>
     </Box>
@@ -146,7 +160,7 @@ const UpdatePasswordForm: React.FC<UpdateFormProps> = ({ isLoaded }) => {
     register,
     setError,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<UpdatePasswordFields>({
     defaultValues: {
       oldPassword: "",
@@ -242,7 +256,7 @@ const UpdatePasswordForm: React.FC<UpdateFormProps> = ({ isLoaded }) => {
           <FormErrorMessage>{errors.newPassword.message}</FormErrorMessage>
         ) : null}
       </FormControl>
-      <Button isLoading={isSubmitting} type="submit">
+      <Button isLoading={isSubmitting} isDisabled={!isDirty} type="submit">
         Update password
       </Button>
     </Box>
