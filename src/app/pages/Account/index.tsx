@@ -18,6 +18,7 @@ interface UpdateFormProps {
   isLoaded: boolean;
   data?: AccountQuery;
 }
+
 interface UpdateNameFields {
   firstName?: string;
   lastName?: string;
