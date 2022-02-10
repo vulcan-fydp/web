@@ -3,7 +3,6 @@ import { Input } from "@chakra-ui/input";
 import { Text, Box, Wrap, WrapItem } from "@chakra-ui/layout";
 import { FormControl, FormErrorMessage, useToast } from "@chakra-ui/react";
 import { Skeleton } from "@chakra-ui/skeleton";
-import { apolloClient } from "app/apollo";
 import { ErrorPage } from "app/components/ErrorPage";
 import { HeroPage } from "app/components/HeroPage";
 import { useCallback, useEffect } from "react";
@@ -66,7 +65,6 @@ const UpdateNameForm: React.FC<UpdateFormProps> = ({ isLoaded, data }) => {
       }
       switch (updateUserResult.updateUser.__typename) {
         case "User":
-          await apolloClient.resetStore();
           showToast({
             title: "Name successfully updated",
             status: "success",
