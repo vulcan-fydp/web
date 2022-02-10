@@ -5,6 +5,39 @@ import DeskImgSrc from "static/resources/hero-desk.jpg";
 import BedroomImgSrc from "static/resources/hero-bedroom.jpg";
 import CouchImgSrc from "static/resources/hero-couch.jpg";
 import TestScreenImgSrc from "static/resources/test-screen.png";
+import { useEffect, useRef, useState } from "react";
+
+const SKYLINE_IMG_WIDTH = 900;
+const SKYLINE_IMG_HEIGHT = 263;
+
+const SKYLINE_HEIGHT = 300;
+const SKYLINE_WIDTH = (SKYLINE_IMG_WIDTH * SKYLINE_HEIGHT) / SKYLINE_IMG_HEIGHT;
+
+const SKYLINE_LIGHT_SIZE = 8;
+
+function getSkylineLight(
+  x: number,
+  y: number,
+  scale: number
+): { left: string; right: string; bottom: string; top: string } {
+  return {
+    left: `${x * scale}px`,
+    right: `calc(100% - ${x * scale}px - ${SKYLINE_LIGHT_SIZE * scale}px)`,
+    bottom: `${y * scale}px`,
+    top: `calc(100vh - ${y * scale}px - ${SKYLINE_LIGHT_SIZE * scale}px)`,
+  };
+}
+
+function getSkylineLightPositions(screenWidth: number) {
+  const scale = Math.min(1, screenWidth / SKYLINE_WIDTH);
+
+  return [
+    getSkylineLight(310, 170, scale),
+    getSkylineLight(500, 140, scale),
+    getSkylineLight(630, 250, scale),
+    getSkylineLight(900, 140, scale),
+  ];
+}
 
 const TelevisionImage = () => (
   <Box
@@ -87,8 +120,23 @@ const CouchImage = () => (
 );
 
 export const HeroSection: React.FC = () => {
+  const [skylineLightPositions, setSkylineLightPositions] = useState(
+    getSkylineLightPositions(document.body.clientWidth)
+  );
+
+  useEffect(() => {
+    const onResize = () => {
+      setSkylineLightPositions(
+        getSkylineLightPositions(document.body.clientWidth)
+      );
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [setSkylineLightPositions]);
+
   return (
-    <Box width="100vw" height="100vh" overflow="hidden" position="relative">
+    <Box height="100vh" overflow="hidden" position="relative">
       <Box position="absolute" top="20px" left="20px">
         <Text
           fontSize={{ base: "4xl", md: "6xl" }}
@@ -122,8 +170,16 @@ export const HeroSection: React.FC = () => {
         backgroundImage={`url(${SkylineImg})`}
         backgroundSize="contain"
         backgroundRepeat="repeat-x"
-        backgroundPosition="bottom"
+        backgroundPosition="left bottom"
       ></Box>
+      {skylineLightPositions.map((pos) => (
+        <Box
+          key={pos.left}
+          position="absolute"
+          backgroundColor="yellow.300"
+          {...pos}
+        />
+      ))}
     </Box>
   );
 };
