@@ -68,23 +68,20 @@ export const vulcanTheme = extendTheme(
         },
       },
       Button: {
-        baseStyle: {
-          boxShadow: "md",
-        },
+        baseStyle: {},
         variants: {
-          solid: {},
+          solid: {
+            boxShadow: "md",
+          },
           link: {
-            _hover: {
-              color: "purple.400",
-              textDecoration: "none",
-            },
+            _hover: {},
           },
         },
         kickLink: {
-          ...theme.components.Button.variants.link,
+          color: "purple.400",
+          textDecoration: "none",
           height: "28px",
           padding: "0 12px",
-          color: "purple",
           _hover: {
             color: "purple.700",
             textDecoration: "none",
