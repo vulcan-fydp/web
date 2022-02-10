@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "optionalDependencies": {
-    "@vulcan-fydp/schema": "github:vulcan-fydp/schema#semver:^0.0.38"
+    "@vulcan-fydp/schema": "github:vulcan-fydp/schema#semver:^0.0.40"
   },
   "dependencies": {
     "@apollo/client": "^3.5.7",
