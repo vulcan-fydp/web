@@ -9,7 +9,7 @@ export const AboutSection = () => {
       <HomeSectionTitle>Level Up Your Online Game Night</HomeSectionTitle>
       <Flex align="center" gap="40px" flexDir={{ base: "column", lg: "row" }}>
         <Text flex="1 1 auto">
-          In a world filled with social distancing getting together with friends
+          In a world filled with social distancing, getting together with friends
           on a couch to play video games has never been harder. With the Vulcan
           Gaming Platform we bring the couch online.
           <br />
