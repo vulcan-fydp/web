@@ -1,4 +1,4 @@
-import { Box, Button, Image, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
 import SkylineImg from "static/resources/skyline-2.png";
 import TelevisionImgSrc from "static/resources/hero-tv.jpg";
 import DeskImgSrc from "static/resources/hero-desk.jpg";
@@ -109,9 +109,9 @@ const CouchImage = () => (
     <Image src={CouchImgSrc} borderRadius="4px" />
     <Box
       position="absolute"
-      top="165px"
-      left="154px"
-      right="191px"
+      top="56.5%"
+      left="39.5%"
+      right="49%"
       objectFit="contain"
     >
       <Image src={TestScreenImgSrc} objectFit="contain" />
@@ -137,30 +137,43 @@ export const HeroSection: React.FC = () => {
 
   return (
     <Box height="100vh" overflow="hidden" position="relative">
-      <Box position="absolute" top="20px" left="20px">
-        <Text
-          fontSize={{ base: "4xl", md: "6xl" }}
-          color="purple.400"
-          fontWeight="bold"
-        >
-          Vulcan Gaming
-        </Text>
-        <Text>
-          Bring your console to your friends! &nbsp;
-          <Button mt="10px" variant="link">
-            Get Started!
-          </Button>
-        </Text>
-      </Box>
-      <Box
-        position="absolute"
-        top="50px"
-        right="200px"
-        left="calc(100vw - 400px - 200px)"
-        bottom="calc(100vh - 300px - 50px)"
+      <Flex
+        margin="0 auto"
+        maxWidth="1200px"
+        pt={{ base: "60px", md: "100px" }}
+        pl="20px"
+        pr="20px"
+        pb={{ base: "100px", sm: "150px", md: "200px" }}
+        gap="20px"
+        height="100vh"
+        justifyContent="space-between"
+        flexDir={{ base: "column", lg: "row" }}
+        zIndex="999"
       >
-        <CouchImage />
-      </Box>
+        <Box>
+          <Text
+            fontSize={{ base: "4xl", md: "6xl" }}
+            color="purple.400"
+            fontWeight="bold"
+          >
+            Vulcan Gaming
+          </Text>
+          <Text>
+            Bring your console to your friends! &nbsp;
+            <Button mt="10px" variant="link">
+              Get Started!
+            </Button>
+          </Text>
+        </Box>
+        <Box
+          flex="0 0 400px"
+          mt={{ base: "20px", lg: "60px" }}
+          maxW="400px"
+          ml="auto"
+        >
+          <CouchImage />
+        </Box>
+      </Flex>
       <Box
         position="absolute"
         bottom="0"
@@ -171,6 +184,7 @@ export const HeroSection: React.FC = () => {
         backgroundSize="contain"
         backgroundRepeat="repeat-x"
         backgroundPosition="left bottom"
+        zIndex="0"
       ></Box>
       {skylineLightPositions.map((pos) => (
         <Box
