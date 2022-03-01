@@ -282,7 +282,7 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
             as={Button}
             variant="outline"
             size="sm"
-            disabled={!isHost}
+            disabled={!userIsHost}
           >
             {getControllerNumberDisplayText(controllerNumber)}
           </MenuButton>
