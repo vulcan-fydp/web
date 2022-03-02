@@ -18,12 +18,12 @@ import {
 } from "./joinRoom.backend.generated";
 
 interface JoinRoomFormData {
-  roomId: string;
+  roomCode: string;
   nickname: string;
 }
 
-export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
-  const [promptRoomId] = useState(typeof roomId !== "string");
+export const JoinRoomForm: React.FC<{ roomCode?: string }> = ({ roomCode }) => {
+  const [promptRoomCode] = useState(typeof roomCode !== "string");
 
   const [submissionErrorMessage, setSubmissionErrorMessage] =
     useState<string>();
@@ -35,7 +35,7 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
     setFocus,
   } = useForm<JoinRoomFormData>({
     defaultValues: {
-      roomId: roomId ?? "",
+      roomCode: roomCode ?? "",
       nickname: "",
     },
   });
@@ -47,7 +47,7 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
   const navigate = useNavigate();
 
   const onFormSubmit = useCallback<SubmitHandler<JoinRoomFormData>>(
-    async ({ roomId, nickname }) => {
+    async ({ roomCode, nickname }) => {
       let result;
       try {
         result = await apolloClient.mutate<
@@ -56,7 +56,7 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
         >({
           mutation: JoinRoomDocument,
           variables: {
-            roomId,
+            roomCode,
             nickname,
           },
           context: {
@@ -107,17 +107,17 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
           <FormErrorMessage>{errors.nickname.message}</FormErrorMessage>
         ) : null}
       </FormControl>
-      {promptRoomId ? (
-        <FormControl isInvalid={!!errors.roomId} mt="10px" align="center">
+      {promptRoomCode ? (
+        <FormControl isInvalid={!!errors.roomCode} mt="10px" align="center">
           <Input
             placeholder="Room Code"
-            {...register("roomId", {
+            {...register("roomCode", {
               required: "Room code cannot be empty",
             })}
             width="266px"
           />
-          {errors.roomId ? (
-            <FormErrorMessage>{errors.roomId.message}</FormErrorMessage>
+          {errors.roomCode ? (
+            <FormErrorMessage>{errors.roomCode.message}</FormErrorMessage>
           ) : null}
         </FormControl>
       ) : null}
