@@ -40,7 +40,8 @@ const Canvas = chakra("canvas");
 
 const MotionBox = motion(Box);
 
-const focusSelf = (e) => (e.target as any).focus();
+const focusSelf: MouseEventHandler<HTMLCanvasElement> = (e) =>
+  (e.target as any).focus();
 
 interface VideoStreamProps {
   videoRef: React.RefObject<HTMLVideoElement>;
