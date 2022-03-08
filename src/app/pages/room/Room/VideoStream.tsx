@@ -15,7 +15,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from "@chakra-ui/react";
-import { Controller, ControllerInput } from "controller-input";
+import { ControllerInput } from "controller-input";
 import {
   ControllersDocument,
   ControllersQuery,
@@ -34,10 +34,14 @@ import { motion } from "framer-motion";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { BiVolumeMute, BiVolumeFull } from "react-icons/bi";
 import { useFullscreen } from "lib/useFullscreen";
+import { configureController } from "./utils/configureController";
 
 const Canvas = chakra("canvas");
 
 const MotionBox = motion(Box);
+
+const focusSelf: MouseEventHandler<HTMLCanvasElement> = (e) =>
+  (e.target as any).focus();
 
 interface VideoStreamProps {
   videoRef: React.RefObject<HTMLVideoElement>;
@@ -93,9 +97,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
     if (controller) {
       controllerInputIdRef.current = controllerInputRef.current.addController(
-        controller as unknown as Controller
+        configureController(controller)
       );
-      console.log(controllerInputIdRef.current);
     } else {
       controllerIdVar(controllers[0].id);
     }
@@ -204,6 +207,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
     >
       <video ref={videoRef} width="100%" autoPlay />
       <Canvas
+        tabIndex={0}
         ref={onCanvasRefSet}
         position="absolute"
         top="0"
@@ -212,6 +216,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
         bottom="0"
         width="100%"
         height="100%"
+        onClick={focusSelf}
       />
       <MotionBox
         ref={controlsRef}
