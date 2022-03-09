@@ -6,13 +6,18 @@ import { Pages } from "app/pages";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { vulcanTheme } from "theme";
+import { GamepadToasts } from "./components/GamepadToasts";
+import { GamepadProvider } from "./contexts/gamepad";
 
 const VulcanGamingPlatformApp = () => (
   <ChakraProvider theme={vulcanTheme}>
     <ApolloProvider client={apolloClient}>
-      <BrowserRouter>
-        <Pages />
-      </BrowserRouter>
+      <GamepadProvider>
+        <GamepadToasts />
+        <BrowserRouter>
+          <Pages />
+        </BrowserRouter>
+      </GamepadProvider>
     </ApolloProvider>
   </ChakraProvider>
 );
