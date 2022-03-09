@@ -194,10 +194,14 @@ export const ControllerStudio: React.FC<ControllerStudioProps> = ({
         axisNumber={editingAxisNumber ?? -1} // Will always be defined when modal is visible
       />
       <Box width="800px" maxWidth="calc(100% - 40px)">
+        <Text fontSize="sm" mb="2px">
+          Controller name
+        </Text>
         {isReadOnly ? <Text fontSize="3xl">{name}</Text> : null}
         {!isReadOnly ? (
           <Input
             value={name}
+            placeholder="My awesome controller"
             onChange={onNameInputChange}
             variant="flushed"
             size="lg"
