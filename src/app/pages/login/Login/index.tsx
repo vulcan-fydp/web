@@ -85,6 +85,7 @@ export const LoginPage = () => {
         <FormControl isInvalid={!!errors.email} mb="10px" align="center">
           <Input
             type="email"
+            autoComplete="username"
             placeholder="Email"
             {...register("email", {
               required: "Please provide an email",
@@ -98,6 +99,7 @@ export const LoginPage = () => {
         <FormControl isInvalid={!!errors.password} mb="20px" align="center">
           <Input
             type="password"
+            autoComplete="current-password"
             placeholder="Password"
             {...register("password", {
               required: "Please provide a password",
