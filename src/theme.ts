@@ -14,6 +14,17 @@ export const vulcanTheme = extendTheme(
     colors: {
       black: "#282828",
       grey: "#434343",
+      medPurple: {
+        100: "#bfa3d9",
+        200: "#a075c5",
+        300: "#8047b2",
+        400: "#60199f",
+        500: "#4d147f",
+        600: "#3a0f5f",
+        700: "#260a40",
+        800: "#130520",
+        900: "#000000",
+      },
     },
     components: {
       Text: {
@@ -42,7 +53,7 @@ export const vulcanTheme = extendTheme(
           line: {
             tab: {
               color: "white",
-              fontWeight: "semibold",
+              fontWeight: "regular",
               _selected: {
                 color: "purple.400",
                 borderColor: "purple.400",
@@ -68,13 +79,35 @@ export const vulcanTheme = extendTheme(
         },
       },
       Button: {
-        baseStyle: {},
+        baseStyle: {
+          boxShadow: "md",
+          color: "white",
+          fontWeight: "regular",
+        },
         variants: {
-          solid: {
-            boxShadow: "md",
+          solid: ({ colorScheme }: any) => {
+            return {
+              color: "white",
+              background: `${colorScheme}.500`,
+            };
+          },
+          primary: {
+            color: "white",
+            background: "medPurple.500",
+            _hover: `bg: medPurple.600`,
           },
           link: {
             _hover: {},
+          },
+          outline: {
+            borderWidth: "1px",
+            borderColor: "brightPurple.400",
+          },
+          transparent: {
+            boxShadow: "none",
+            background: "rgba(255,0,0,0)",
+            _hover: "bg: rgba(255, 0, 0, 1.0)",
+            _focus: "boxShadow: none; bg: rgba(255, 0, 0, 0.0)",
           },
         },
         kickLink: {

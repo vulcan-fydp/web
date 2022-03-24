@@ -1,6 +1,6 @@
 import { useReactiveVar } from "@apollo/client";
 import { EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Stack, Text, VStack } from "@chakra-ui/react";
 import { Controller } from "app/backend-types";
 import { ControllerTags } from "app/components/ControllerTags";
 import { useCallback } from "react";
@@ -24,26 +24,24 @@ export const ControllerTab = () => {
   }
 
   return (
-    <Box>
-      <Stack spacing="20px" mt="20px">
-        {(query.data.user?.controllers ?? []).map((controller) => (
-          <ControllerRow
-            controller={controller}
-            key={controller.id}
-            isDefaultController={false}
-            isSelected={controllerId === controller.id}
-          />
-        ))}
-        {query.data.defaultControllers.map((controller) => (
-          <ControllerRow
-            controller={controller}
-            isDefaultController
-            key={controller.id}
-            isSelected={controllerId === controller.id}
-          />
-        ))}
-      </Stack>
-    </Box>
+    <VStack alignItems="left" spacing="20px">
+      {(query.data.user?.controllers ?? []).map((controller) => (
+        <ControllerRow
+          controller={controller}
+          key={controller.id}
+          isDefaultController={false}
+          isSelected={controllerId === controller.id}
+        />
+      ))}
+      {query.data.defaultControllers.map((controller) => (
+        <ControllerRow
+          controller={controller}
+          isDefaultController
+          key={controller.id}
+          isSelected={controllerId === controller.id}
+        />
+      ))}
+    </VStack>
   );
 };
 
@@ -69,7 +67,7 @@ const ControllerRow: React.FC<ControllerRowProps> = ({
       backgroundColor={isSelected ? "purple.800" : "whiteAlpha.50"}
       borderRadius="5px"
     >
-      <Text fontSize="lg" marginRight="20px">
+      <Text fontSize="lg" mr="20px">
         {controller.name}
       </Text>
       <ControllerTags
@@ -77,10 +75,10 @@ const ControllerRow: React.FC<ControllerRowProps> = ({
         isDefaultController={isDefaultController}
       />
       <Box flex="1 1 auto" />
-      <Button variant="ghost" size="sm">
+      <Button variant="transparent" size="sm">
         <ViewIcon />
       </Button>
-      <Button variant="ghost" size="sm">
+      <Button variant="transparent" size="sm">
         <EditIcon />
       </Button>
       <Button

@@ -254,7 +254,6 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
       borderRadius="5px"
     >
       <HStack direction="row" alignItems="center" spacing={4} mr="20px">
-        <Image src={profile} width="32px" />
         <Text fontSize="lg">{nickname}</Text>
       </HStack>
       <HStack spacing="10px">
@@ -276,7 +275,6 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
         ) : (
           <ControllerIcon color={getControllerNumberColor(controllerNumber)} />
         )}
-        {/* <div style={{ width: "120px" }}> */}
         <Menu matchWidth>
           <MenuButton
             as={Button}

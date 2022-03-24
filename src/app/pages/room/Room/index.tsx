@@ -24,7 +24,13 @@ import { environment } from "environment";
 import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
 import { useEndRoomMutation } from "./endRoom.backend.generated";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -54,20 +60,12 @@ export const Dashboard = () => {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return (
-      <Heading>
-        {" "}
-        Room{" "}
-        <Text as="span" color="#9F7AEA">
-          {roomId}
-        </Text>{" "}
-        has ended or does not exist.{" "}
-      </Heading>
-    );
+    return <Navigate to="../" replace={true} />;
   }
 
   return (
     <HeroPage isDashboard={true}>
+      {/* This should call leave room on the user and also navigate them to /room or /room/another-room */}
       <JoinAnotherRoomModal onLeave={() => null} />
       <VStack
         spacing="20px"

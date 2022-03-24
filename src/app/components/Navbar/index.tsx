@@ -75,8 +75,8 @@ export const DefaultNavbar: React.FC = ({ children }) => {
                 <MenuItem as={NavLink} to="/account">
                   Account
                 </MenuItem>
-                <MenuItem>
-                  {data.user.vulcasts.length > 0 ? "Vulcasts" : "Link Vulcast"}
+                <MenuItem as={NavLink} to="/room">
+                  Room
                 </MenuItem>
                 <MenuItem as={NavLink} to="/controllers">
                   Controllers
