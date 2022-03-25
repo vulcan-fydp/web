@@ -1,13 +1,15 @@
-import { Button, Flex } from "@chakra-ui/react";
-import React, { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button, Flex, useToast } from "@chakra-ui/react";
+import React, { useCallback, useState } from "react";
 import { useCreateRoomMutation } from "./createRoom.backend.generated";
+import { PostCreateRoomModal } from "./PostCreateRoomModal";
 
 export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
   vulcastId,
 }) => {
   const [createRoomMutation, { loading }] = useCreateRoomMutation();
-  const navigate = useNavigate();
+  const showToast = useToast();
+
+  const [roomId, setRoomId] = useState<string>();
 
   const onCreateRoomClick = useCallback(async () => {
     const result = await createRoomMutation({
@@ -22,22 +24,25 @@ export const CreateRoomForm: React.FC<{ vulcastId: string }> = ({
 
     switch (result.data.createRoom.__typename) {
       case "AuthenticationError":
-        return;
       case "VulcastInRoomError":
-        return;
       case "VulcastNotAssignedToRelayError":
-        return;
       case "VulcastNotFoundError":
-        return;
+        showToast({
+          description: "Failed to create room",
+          status: "error",
+          position: "top",
+        });
+        break;
       case "Room":
-        navigate(`/room/${result.data.createRoom.id}/players`);
+        setRoomId(result.data.createRoom.id);
         return;
     }
-  }, [createRoomMutation, vulcastId, navigate]);
+  }, [createRoomMutation, vulcastId, showToast, setRoomId]);
 
   return (
     <Flex>
-      <Button isDisabled={loading} onClick={onCreateRoomClick}>
+      <PostCreateRoomModal roomId={roomId} />
+      <Button isLoading={loading} onClick={onCreateRoomClick}>
         Start a Room
       </Button>
     </Flex>
