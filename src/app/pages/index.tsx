@@ -10,8 +10,8 @@ export const Pages = () => (
   <Routes>
     <Route path="/" element={<Home />} />
     <Route path="room/*" element={<RoomRouter />} />
-    <Route path="login" element={<LoginRouter />} />
-    <Route path="signup" element={<SignUpPage />} />
+    <Route path="login/*" element={<LoginRouter />} />
+    <Route path="signup/*" element={<SignUpPage />} />
     <Route path="controllers/*" element={<ControllersRouter />} />
     <Route path="account" element={<AccountPage />} />
   </Routes>
