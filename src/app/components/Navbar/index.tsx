@@ -114,7 +114,7 @@ export const DefaultNavbar: React.FC = ({ children }) => {
                 <MenuItem
                   as={Button}
                   variant="transparent"
-                  borderRaidus="0px"
+                  borderRadius="0px"
                   justifyContent="left"
                   onClick={onLogOutClick}
                 >

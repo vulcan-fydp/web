@@ -1,29 +1,16 @@
 import {
-  Heading,
+  Box,
   Button,
-  VStack,
+  Heading,
   HStack,
-  Tooltip,
-  Tabs,
-  TabList,
   Tab,
+  TabList,
   TabPanel,
   TabPanels,
-  Text,
+  Tabs,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { HeroPage } from "app/components/HeroPage";
-import { PlayerTab } from "app/pages/room/Room/PlayerTab";
-import { StreamTab } from "app/pages/room/Room/StreamTab";
-import { CopyIcon } from "@chakra-ui/icons";
-import { ControllerTab } from "./ControllerTab";
-import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
-import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
-import { environment } from "environment";
-import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
-import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
-import { useEndRoomMutation } from "./endRoom.backend.generated";
 import {
   Navigate,
   NavLink,
@@ -31,6 +18,17 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { HeroPage } from "app/components/HeroPage";
+import { ShareRoomLink } from "app/components/ShareRoomLink";
+import { PlayerTab } from "app/pages/room/Room/PlayerTab";
+import { StreamTab } from "app/pages/room/Room/StreamTab";
+import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
+import { useCallback } from "react";
+import { ControllerTab } from "./ControllerTab";
+import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
+import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
+import { useEndRoomMutation } from "./endRoom.backend.generated";
+import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 
 type DashboardTab = "player" | "controller" | "stream";
 
@@ -88,49 +86,17 @@ export const Dashboard = () => {
 const RoomDetails = () => {
   const { roomId } = useParams<{ roomId?: string }>();
 
-  const roomUrl = `${window.location.host}/room/${roomId}`;
-
-  const [tooltipShowing, setTooltipShowing] = useState(false);
-  useEffect(() => {
-    if (tooltipShowing) {
-      const timerID = setTimeout(() => {
-        setTooltipShowing(false);
-      }, 1000);
-      return () => {
-        clearTimeout(timerID);
-      };
-    }
-  }, [tooltipShowing]);
+  if (roomId === undefined) {
+    return null;
+  }
 
   return (
-    <HStack>
-      <VStack align="left" justifyContent="space-between" h="100px">
-        <Heading size="sm" w="320px">
-          Send this link to people who you want to play with.
-        </Heading>
-        <Tooltip
-          label="Copied!"
-          placement="right"
-          isOpen={tooltipShowing}
-          bg="purple"
-          color="white"
-        >
-          <Button
-            variant="solid"
-            rightIcon={<CopyIcon />}
-            justifyContent="space-between"
-            onClick={() => {
-              navigator.clipboard.writeText(
-                `http${environment.useSecureProtocol ? "s" : ""}://${roomUrl}`
-              );
-              setTooltipShowing(true);
-            }}
-          >
-            {roomUrl}
-          </Button>
-        </Tooltip>
-      </VStack>
-    </HStack>
+    <Box maxW="400px" flex="1 1 auto">
+      <Heading size="sm" mb="10px">
+        Share the room code!
+      </Heading>
+      <ShareRoomLink roomId={roomId} />
+    </Box>
   );
 };
 

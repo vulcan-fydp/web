@@ -151,6 +151,7 @@ export const SignUpPage = () => {
           <Input
             type="email"
             placeholder="Email"
+            autoComplete="username"
             {...register("email", {
               required: "Please provide an email",
             })}
@@ -163,6 +164,7 @@ export const SignUpPage = () => {
         <FormControl isInvalid={!!errors.password} mb="10px" align="center">
           <Input
             type="password"
+            autoComplete="new-password"
             placeholder="Password"
             {...register("password", {
               required: "Please provide a password",

@@ -1,17 +1,13 @@
-import { Box, Button, Flex, Image, position, Text } from "@chakra-ui/react";
-import SkylineImg from "static/resources/skyline-2.png";
-import TelevisionImgSrc from "static/resources/hero-tv.jpg";
-import DeskImgSrc from "static/resources/hero-desk.jpg";
+import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BedroomImgSrc from "static/resources/hero-bedroom.jpg";
 import CouchImgSrc from "static/resources/hero-couch.jpg";
+import DeskImgSrc from "static/resources/hero-desk.jpg";
+import TelevisionImgSrc from "static/resources/hero-tv.jpg";
+import SkylineImg from "static/resources/skyline-2.png";
 import TestScreenImgSrc from "static/resources/test-screen.png";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import SmashVideo1 from "static/resources/smash1.webp";
+import MarioKartVideo1 from "static/resources/mariokart1.webp";
 
 const SKYLINE_IMG_WIDTH = 900;
 const SKYLINE_IMG_HEIGHT = 263;
@@ -49,67 +45,72 @@ function getSkylineLightPositions(screenWidth: number) {
   ];
 }
 
-const TelevisionImage = () => (
+interface InsideViewImageProps {
+  videoSrc: string;
+}
+
+const TelevisionImage: React.FC<InsideViewImageProps> = ({ videoSrc }) => (
   <Box borderColor="yellow.300" borderWidth="4px" position="relative">
     <Image src={TelevisionImgSrc} />
     <Box
       position="absolute"
-      top="81px"
-      left="114px"
-      right="112px"
+      top="27%"
+      left="28.5%"
+      right="28%"
       objectFit="contain"
     >
-      <Image src={TestScreenImgSrc} objectFit="contain" />
+      <Image src={videoSrc} objectFit="contain" />
     </Box>
   </Box>
 );
 
-const DeskImage = () => (
+const DeskImage: React.FC<InsideViewImageProps> = ({ videoSrc }) => (
   <Box borderColor="yellow.300" borderWidth="4px" position="relative">
     <Image src={DeskImgSrc} />
     <Box
       position="absolute"
-      top="22px"
-      left="205px"
-      right="62px"
+      top="7.333%"
+      left="52%"
+      right="15.5%"
       objectFit="contain"
     >
-      <Image src={TestScreenImgSrc} objectFit="contain" />
+      <Image src={videoSrc} objectFit="contain" />
     </Box>
   </Box>
 );
 
-const BedroomImage = () => (
+const BedroomImage: React.FC<InsideViewImageProps> = ({ videoSrc }) => (
   <Box borderColor="yellow.300" borderWidth="4px" position="relative">
     <Image src={BedroomImgSrc} />
     <Box
       position="absolute"
-      top="159px"
-      left="139px"
-      right="203px"
+      top="54.5%"
+      left="35.5%"
+      right="51.75%"
       objectFit="contain"
     >
-      <Image src={TestScreenImgSrc} objectFit="contain" />
+      <Image src={videoSrc} objectFit="contain" />
     </Box>
   </Box>
 );
 
-const CouchImage = () => (
+const CouchImage: React.FC<InsideViewImageProps> = ({ videoSrc }) => (
   <Box borderColor="yellow.300" borderWidth="4px" position="relative">
     <Image src={CouchImgSrc} />
     <Box
       position="absolute"
-      top="56.5%"
-      left="39.5%"
+      top="56.25%"
+      left="39.25%"
       right="49%"
       objectFit="contain"
     >
-      <Image src={TestScreenImgSrc} objectFit="contain" />
+      <Image src={videoSrc} objectFit="contain" />
     </Box>
   </Box>
 );
 
 const InsideViewImages = [TelevisionImage, DeskImage, BedroomImage, CouchImage];
+const InsideViewVideoSrcs = [SmashVideo1, MarioKartVideo1];
 
 const NUM_ROOMS = 4;
 const projectionStyles = {
@@ -143,6 +144,7 @@ export const HeroSection: React.FC = () => {
   const leftProjectionRef = useRef<HTMLDivElement>(null);
 
   const [insideViewImageIndex, setInsideViewImageIndex] = useState(0);
+  const [insideViewVideoSrcIndex, setInsideViewVideoSrcIndex] = useState(0);
 
   const positionProjections = useCallback(() => {
     const skylineLightDiv = skylineLightRefs[insideViewImageIndex].current;
@@ -226,6 +228,16 @@ export const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, [setInsideViewImageIndex]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setInsideViewVideoSrcIndex(
+        (idx) => (idx + 1) % InsideViewVideoSrcs.length
+      );
+    }, 20000);
+
+    return () => clearInterval(interval);
+  }, [setInsideViewVideoSrcIndex]);
+
   return (
     <Box height="100vh" overflow="hidden" position="relative">
       <Flex
@@ -304,7 +316,9 @@ export const HeroSection: React.FC = () => {
           opacity={i === insideViewImageIndex ? 1 : 0}
           ref={roomRefs[i]}
         >
-          <InsideViewImage />
+          <InsideViewImage
+            videoSrc={InsideViewVideoSrcs[insideViewVideoSrcIndex]}
+          />
         </Box>
       ))}
       {skylineLightPositions.map((pos, i) => (

@@ -1,11 +1,11 @@
 import { Center, Flex, HStack, Text } from "@chakra-ui/react";
 import { HeroPage } from "app/components/HeroPage";
+import { JoinRoomForm } from "app/pages/room/JoinOrHostRoom/JoinRoomForm";
 import React from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { CreateRoomForm } from "./CreateRoomForm";
-import { JoinRoomForm } from "app/components/JoinRoomForm";
-import { RegisterVulcastForm } from "./RegisterVulcastForm";
 import { useJoinOrHostRoomQuery } from "./joinOrHostRoom.backend.generated";
+import { RegisterVulcastForm } from "./RegisterVulcastForm";
 
 export const JoinOrHostRoom: React.FC = () => {
   const { roomId } = useParams<{ roomId?: string }>();

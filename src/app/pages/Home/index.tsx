@@ -1,6 +1,6 @@
 import { DefaultNavbar } from "app/components/Navbar";
 import { Box, Stack, Heading, Text } from "@chakra-ui/react";
-import { JoinRoomForm } from "app/components/JoinRoomForm";
+import { JoinRoomForm } from "app/pages/room/JoinOrHostRoom/JoinRoomForm";
 
 export const Home = () => {
   return (
