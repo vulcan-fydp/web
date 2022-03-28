@@ -4,9 +4,9 @@ import {
   Box,
   Button,
   Flex,
-  Stack,
   Text,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { Controller } from "app/backend-types";
 import { ControllerTags } from "app/components/ControllerTags";
@@ -31,26 +31,24 @@ export const ControllerTab = () => {
   }
 
   return (
-    <Box>
-      <Stack spacing="20px" mt="20px">
-        {(query.data.user?.controllers ?? []).map((controller) => (
-          <ControllerRow
-            controller={controller}
-            key={controller.id}
-            isDefaultController={false}
-            isSelected={controllerId === controller.id}
-          />
-        ))}
-        {query.data.defaultControllers.map((controller) => (
-          <ControllerRow
-            controller={controller}
-            isDefaultController
-            key={controller.id}
-            isSelected={controllerId === controller.id}
-          />
-        ))}
-      </Stack>
-    </Box>
+    <VStack alignItems="left" spacing="20px">
+      {(query.data.user?.controllers ?? []).map((controller) => (
+        <ControllerRow
+          controller={controller}
+          key={controller.id}
+          isDefaultController={false}
+          isSelected={controllerId === controller.id}
+        />
+      ))}
+      {query.data.defaultControllers.map((controller) => (
+        <ControllerRow
+          controller={controller}
+          isDefaultController
+          key={controller.id}
+          isSelected={controllerId === controller.id}
+        />
+      ))}
+    </VStack>
   );
 };
 
@@ -77,7 +75,7 @@ const ControllerRow: React.FC<ControllerRowProps> = ({
       backgroundColor={isSelected ? "purple.800" : "whiteAlpha.50"}
       borderRadius="5px"
     >
-      <Text fontSize="lg" marginRight="20px">
+      <Text fontSize="lg" mr="20px">
         {controller.name}
       </Text>
       {isMobile ? null : (

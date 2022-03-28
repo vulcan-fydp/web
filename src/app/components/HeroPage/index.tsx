@@ -24,13 +24,7 @@ const HeroPageContent: React.FC = ({ children }) => {
 
 export const HeroPage: React.FC<HeroProps> = ({ children, isDashboard }) => {
   return (
-    <Box
-      background={
-        isDashboard
-          ? "black"
-          : "linear-gradient(132.85deg, #30292F 0%, #413F54 100%);"
-      }
-    >
+    <Box background={"black"}>
       <DefaultNavbar>
         <HeroPageContent>{children}</HeroPageContent>
       </DefaultNavbar>

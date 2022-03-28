@@ -18,7 +18,6 @@ export const JoinAnotherRoomModal: React.FC<JoinAnotherRoomModalProps> = ({
   onLeave,
 }) => {
   const stayButtonRef = useRef<HTMLButtonElement>(null);
-  const leaveButtonRef = useRef<HTMLButtonElement>(null);
 
   const [otherRoom, setOtherRoom] = useStringSearchParam(
     "join-another-room",
@@ -44,13 +43,7 @@ export const JoinAnotherRoomModal: React.FC<JoinAnotherRoomModalProps> = ({
             mr="20px"
             variant="outline"
           >
-            Stay
-          </Button>
-          <Button
-            ref={leaveButtonRef}
-            onClick={() => onLeave(otherRoom ?? undefined)}
-          >
-            Leave
+            Ok
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

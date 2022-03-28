@@ -8,21 +8,26 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import { HeroPage } from "app/components/HeroPage";
 import { ShareRoomLink } from "app/components/ShareRoomLink";
 import { PlayerTab } from "app/pages/room/Room/PlayerTab";
 import { StreamTab } from "app/pages/room/Room/StreamTab";
 import { makeLocalStorageBackedVar } from "lib/makeLocalStorageBackedVar";
 import { useCallback } from "react";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 import { ControllerTab } from "./ControllerTab";
-import { useEndRoomMutation } from "./endRoom.backend.generated";
 import { JoinAnotherRoomModal } from "./JoinAnotherRoomModal";
 import { useLeaveRoomMutation } from "./leaveRoom.backend.generated";
+import { useEndRoomMutation } from "./endRoom.backend.generated";
 import { usePlayerIsHostQuery } from "./roomSession.backend.generated";
 
 type DashboardTab = "player" | "controller" | "stream";
@@ -53,20 +58,12 @@ export const Dashboard = () => {
     return <Heading> No data found </Heading>;
   }
   if (!data.roomSession) {
-    return (
-      <Heading>
-        {" "}
-        Room{" "}
-        <Text as="span" color="#9F7AEA">
-          {roomId}
-        </Text>{" "}
-        has ended or does not exist.{" "}
-      </Heading>
-    );
+    return <Navigate to="../" replace={true} />;
   }
 
   return (
     <HeroPage isDashboard={true}>
+      {/* This should call leave room on the user and also navigate them to /room or /room/another-room */}
       <JoinAnotherRoomModal onLeave={() => null} />
       <VStack
         spacing="20px"
