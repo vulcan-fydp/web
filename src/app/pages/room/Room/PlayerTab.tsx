@@ -47,7 +47,7 @@ const playerLoadingError =
 
 export const PlayerTab: React.FC = () => {
   const { data, loading, error } = useClientPlayersInRoomQuery({
-    pollInterval: 10000,
+    pollInterval: 2000,
   });
   const {
     data: isHostData,
