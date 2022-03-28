@@ -93,15 +93,16 @@ function configureControllerAxes(
   controllerAxes: Maybe<BackendControllerAxis>[]
 ): Controller["axes"] {
   return [
-    configureControllerAxis(controllerAxes[0]),
-    configureControllerAxis(controllerAxes[1]),
-    configureControllerAxis(controllerAxes[2]),
-    configureControllerAxis(controllerAxes[3]),
+    configureControllerAxis(controllerAxes[0], 0),
+    configureControllerAxis(controllerAxes[1], 1),
+    configureControllerAxis(controllerAxes[2], 2),
+    configureControllerAxis(controllerAxes[3], 3),
   ];
 }
 
 function configureControllerAxis(
-  controllerAxis: Maybe<BackendControllerAxis>
+  controllerAxis: Maybe<BackendControllerAxis>,
+  index: number
 ): ControllerAxis {
   switch (controllerAxis?.__typename) {
     case "ControllerDragAxis":
@@ -130,7 +131,9 @@ function configureControllerAxis(
       return {
         __typename: "ControllerTouchJoystickAxis",
         anchor: ControllerTouchAnchor.BOTTOM_LEFT,
-        axis: axisLookup[BackendAxis.Horizontal], // todo: Not hardcode
+        axis: axisLookup[
+          index % 2 === 0 ? BackendAxis.Horizontal : BackendAxis.Vertical
+        ], // todo: Not hardcode
         radius: controllerAxis.radius,
         xOffset: controllerAxis.xOffset,
         yOffset: controllerAxis.yOffset,

@@ -38,10 +38,11 @@ export function controllerStateToArrayBuffer(
 
   dataView.setUint8(4, booleansToNumber(controller.buttons[16].pressed));
 
+  // @todo: Find root cause of why this is necessary
   dataView.setUint16(5, unitDoubleToUint16(controller.axes[0].value));
-  dataView.setUint16(7, unitDoubleToUint16(controller.axes[1].value));
+  dataView.setUint16(7, unitDoubleToUint16(-controller.axes[1].value));
   dataView.setUint16(9, unitDoubleToUint16(controller.axes[2].value));
-  dataView.setUint16(11, unitDoubleToUint16(controller.axes[3].value));
+  dataView.setUint16(11, unitDoubleToUint16(-controller.axes[3].value));
 
   return buffer;
 }
