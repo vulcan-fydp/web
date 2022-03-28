@@ -31,7 +31,12 @@ export const DefaultNavbar: React.FC = ({ children }) => {
   const onLogOutClick = useCallback(async () => {
     const result = await logoutMutation();
     if (!result.data) {
-      console.log(result);
+      toast({
+        title: "Could not log out of room.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
       return;
     }
 
