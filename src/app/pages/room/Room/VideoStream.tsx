@@ -35,6 +35,7 @@ import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { BiVolumeMute, BiVolumeFull } from "react-icons/bi";
 import { useFullscreen } from "lib/useFullscreen";
 import { configureController } from "./utils/configureController";
+import { drawTouchControls } from "./utils/drawTouchControls";
 
 const Canvas = chakra("canvas");
 
@@ -61,6 +62,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
   const controllerId = useReactiveVar(controllerIdVar);
   const controllerInputIdRef = useRef<number>();
   const sequenceNumberRef = useRef<number>(0);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     controllerPromiseRef.current = client.query<
@@ -99,6 +101,9 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
       controllerInputIdRef.current = controllerInputRef.current.addController(
         configureController(controller)
       );
+      if (canvasRef.current) {
+        drawTouchControls(canvasRef.current, controller);
+      }
     } else {
       controllerIdVar(controllers[0].id);
     }
@@ -106,6 +111,8 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
   const onCanvasRefSet = useCallback(
     (canvas: HTMLCanvasElement | null) => {
+      canvasRef.current = canvas;
+
       if (!canvas) {
         if (controllerInputIdRef.current !== undefined) {
           controllerInputRef.current?.removeController(
@@ -121,7 +128,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
 
       setController();
     },
-    [setController, controllerInputRef]
+    [setController, controllerInputRef, canvasRef]
   );
 
   useEffect(() => {
