@@ -1048,7 +1048,7 @@ const NintendoSwitchAsset = () => (
           <path
             d="m0 0c0-.743-.602-1.347-1.345-1.347-.744 0-1.347.604-1.347 1.347s.603 1.347 1.347 1.347c.743 0 1.345-.604 1.345-1.347z"
             fill="none"
-            stroke-miterlimit="10"
+            strokeMiterlimit="10"
             transform="matrix(.35277777 0 0 -.35277777 43.541195 33.960967)"
           />
           <path
