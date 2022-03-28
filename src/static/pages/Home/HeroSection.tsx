@@ -1,11 +1,11 @@
-import { Box, Button, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Link, Flex, Image, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BedroomImgSrc from "static/resources/hero-bedroom.jpg";
 import CouchImgSrc from "static/resources/hero-couch.jpg";
 import DeskImgSrc from "static/resources/hero-desk.jpg";
 import TelevisionImgSrc from "static/resources/hero-tv.jpg";
 import SkylineImg from "static/resources/skyline-2.png";
-import TestScreenImgSrc from "static/resources/test-screen.png";
+import SkylineReflectionImg from "static/resources/skyline-reflection.png";
 import SmashVideo1 from "static/resources/smash1.webp";
 import MarioKartVideo1 from "static/resources/mariokart1.webp";
 
@@ -239,97 +239,106 @@ export const HeroSection: React.FC = () => {
   }, [setInsideViewVideoSrcIndex]);
 
   return (
-    <Box height="100vh" overflow="hidden" position="relative">
-      <Flex
-        margin="0 auto"
-        maxWidth="1200px"
-        pt={{ base: "60px", md: "100px" }}
-        pl="20px"
-        pr="20px"
-        pb={{ base: "100px", sm: "150px", md: "200px" }}
-        gap="20px"
-        height="100vh"
-        justifyContent="space-between"
-        flexDir={{ base: "column", lg: "row" }}
-        zIndex="999"
-      >
-        <Box>
-          <Text
-            fontSize={{ base: "4xl", md: "6xl" }}
-            color="purple.400"
-            fontWeight="bold"
-          >
-            Vulcan Gaming
-          </Text>
-          <Text>
-            Bring your console to your friends! &nbsp;
-            <Button mt="10px" variant="link">
-              Get Started!
-            </Button>
-          </Text>
-        </Box>
-      </Flex>
+    <>
+      <Box height="100vh" overflow="hidden" position="relative">
+        <Flex
+          margin="0 auto"
+          maxWidth="1200px"
+          pt={{ base: "60px", md: "100px" }}
+          pl="20px"
+          pr="20px"
+          pb={{ base: "100px", sm: "150px", md: "200px" }}
+          gap="20px"
+          height="100vh"
+          justifyContent="space-between"
+          flexDir={{ base: "column", lg: "row" }}
+          zIndex="999"
+        >
+          <Box>
+            <Text
+              fontSize={{ base: "4xl", md: "6xl" }}
+              color="purple.400"
+              fontWeight="bold"
+            >
+              Vulcan Gaming
+            </Text>
+            <Text>
+              Bring your console to your friends! &nbsp;
+              <Link mt="10px" href="https://app.vulcangames.fun">
+                Play Now!
+              </Link>
+            </Text>
+          </Box>
+        </Flex>
 
+        <Box
+          position="absolute"
+          bottom="0"
+          left="0"
+          right="0"
+          top="calc(100vh - 300px)"
+          backgroundImage={`url(${SkylineImg})`}
+          backgroundSize="contain"
+          backgroundRepeat="repeat-x"
+          backgroundPosition="center bottom"
+          zIndex="0"
+        ></Box>
+        <Box {...projectionStyles} ref={leftProjectionRef} />
+        <Box {...projectionStyles} ref={topProjectionRef} />
+        <Box {...projectionStyles} ref={rightProjectionRef} />
+        <Box {...projectionStyles} ref={bottomProjectionRef} />
+        {InsideViewImages.map((InsideViewImage, i) => (
+          <Box
+            position="absolute"
+            // base: 320x240
+            // md: 480x360
+            // lg: 400x300
+            top={{
+              base: "calc(50% - 160px)",
+              md: "calc(50% - 200px)",
+              lg: "100px",
+            }}
+            left={{
+              base: "calc(50% - 160px)",
+              md: "calc(50% - 240px)",
+              lg: "calc(50% + 50px)",
+            }}
+            bottom={{
+              base: "calc(50% - 80px)",
+              md: "calc(50% - 160px)",
+              lg: "calc(100% - 100px - 300px)",
+            }}
+            right={{
+              base: "calc(50% - 160px)",
+              md: "calc(50% - 240px)",
+              lg: "calc(50% - 50px - 400px)",
+            }}
+            key={i}
+            opacity={i === insideViewImageIndex ? 1 : 0}
+            ref={roomRefs[i]}
+          >
+            <InsideViewImage
+              videoSrc={InsideViewVideoSrcs[insideViewVideoSrcIndex]}
+            />
+          </Box>
+        ))}
+        {skylineLightPositions.map((pos, i) => (
+          <Box
+            key={pos.left}
+            position="absolute"
+            backgroundColor="yellow.300"
+            ref={skylineLightRefs[i]}
+            {...pos}
+          />
+        ))}
+      </Box>
       <Box
-        position="absolute"
-        bottom="0"
-        left="0"
-        right="0"
-        top="calc(100vh - 300px)"
-        backgroundImage={`url(${SkylineImg})`}
+        height="150px"
+        backgroundImage={`url(${SkylineReflectionImg})`}
         backgroundSize="contain"
         backgroundRepeat="repeat-x"
-        backgroundPosition="center bottom"
-        zIndex="0"
-      ></Box>
-      <Box {...projectionStyles} ref={leftProjectionRef} />
-      <Box {...projectionStyles} ref={topProjectionRef} />
-      <Box {...projectionStyles} ref={rightProjectionRef} />
-      <Box {...projectionStyles} ref={bottomProjectionRef} />
-      {InsideViewImages.map((InsideViewImage, i) => (
-        <Box
-          position="absolute"
-          // base: 320x240
-          // md: 480x360
-          // lg: 400x300
-          top={{
-            base: "calc(50% - 160px)",
-            md: "calc(50% - 200px)",
-            lg: "100px",
-          }}
-          left={{
-            base: "calc(50% - 160px)",
-            md: "calc(50% - 240px)",
-            lg: "calc(50% + 50px)",
-          }}
-          bottom={{
-            base: "calc(50% - 80px)",
-            md: "calc(50% - 160px)",
-            lg: "calc(100% - 100px - 300px)",
-          }}
-          right={{
-            base: "calc(50% - 160px)",
-            md: "calc(50% - 240px)",
-            lg: "calc(50% - 50px - 400px)",
-          }}
-          key={i}
-          opacity={i === insideViewImageIndex ? 1 : 0}
-          ref={roomRefs[i]}
-        >
-          <InsideViewImage
-            videoSrc={InsideViewVideoSrcs[insideViewVideoSrcIndex]}
-          />
-        </Box>
-      ))}
-      {skylineLightPositions.map((pos, i) => (
-        <Box
-          key={pos.left}
-          position="absolute"
-          backgroundColor="yellow.300"
-          ref={skylineLightRefs[i]}
-          {...pos}
-        />
-      ))}
-    </Box>
+        backgroundPosition="center top"
+      />
+    </>
   );
 };
