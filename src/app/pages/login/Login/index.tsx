@@ -114,11 +114,11 @@ export const LoginPage = () => {
           Log In
         </Button>
       </Flex>
-      <Text size="sm" mb="10px">
+      {/* <Text size="sm" mb="10px">
         <Link as={RouterLink} to="/reset-password">
           Forgot your password?
         </Link>
-      </Text>
+      </Text> */}
       <Text size="sm">
         <Link as={RouterLink} to="/signup">
           Create an account

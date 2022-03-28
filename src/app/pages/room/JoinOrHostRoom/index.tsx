@@ -43,10 +43,11 @@ const JoinRoom: React.FC<{ roomId?: string }> = ({ roomId }) => {
   return (
     <HeroPage>
       <Text variant="heading1" mb="20px" w="500px">
-        Join a room to start{" "}
+        Create a&nbsp;
         <Text as="span" color="purple.300">
-          playing.
+          nickname&nbsp;
         </Text>
+        to start playing.
       </Text>
       <Text textAlign="center" mb="40px" w="500px" maxW="calc(100% - 20px)">
         Vulcan makes it easy to play on your friend's{" "}

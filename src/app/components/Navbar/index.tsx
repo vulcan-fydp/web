@@ -105,7 +105,7 @@ export const DefaultNavbar: React.FC = ({ children }) => {
                   Account
                 </MenuItem>
                 <MenuItem as={NavLink} to="/room">
-                  Room
+                  Join Room
                 </MenuItem>
                 <MenuItem as={NavLink} to="/controllers">
                   Controllers

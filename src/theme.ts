@@ -14,17 +14,6 @@ export const vulcanTheme = extendTheme(
     colors: {
       black: "#282828",
       grey: "#434343",
-      medPurple: {
-        100: "#bfa3d9",
-        200: "#a075c5",
-        300: "#8047b2",
-        400: "#60199f",
-        500: "#4d147f",
-        600: "#3a0f5f",
-        700: "#260a40",
-        800: "#130520",
-        900: "#000000",
-      },
     },
     components: {
       Text: {
@@ -88,20 +77,31 @@ export const vulcanTheme = extendTheme(
           solid: ({ colorScheme }: any) => {
             return {
               color: "white",
-              background: `${colorScheme}.500`,
+              background: `${colorScheme}.400`,
+              _hover: {
+                bg: `${colorScheme}.500`,
+              },
+              _active: {
+                bg: `${colorScheme}.600`,
+              },
             };
           },
-          primary: {
-            color: "white",
-            background: "medPurple.500",
-            _hover: `bg: medPurple.600`,
+          link: ({ colorScheme }: any) => {
+            return {
+              _hover: {
+                color: `${colorScheme}.500`,
+              },
+              _active: {
+                color: `${colorScheme}.600`,
+              },
+              boxShadow: "none",
+            };
           },
-          link: {
-            _hover: {},
-          },
-          outline: {
-            borderWidth: "1px",
-            borderColor: "brightPurple.400",
+          outline: ({ colorScheme }: any) => {
+            return {
+              borderWidth: "1px",
+              borderColor: `${colorScheme}.400`,
+            };
           },
           transparent: {
             boxShadow: "none",
@@ -138,8 +138,17 @@ export const vulcanTheme = extendTheme(
         },
       },
       Link: {
-        baseStyle: {
-          color: "purple.300",
+        baseStyle: ({ colorScheme }: any) => {
+          return {
+            color: `${colorScheme}.400`,
+            _hover: {
+              color: `${colorScheme}.500`,
+            },
+            _active: {
+              color: `${colorScheme}.600`,
+            },
+            boxShadow: "none",
+          };
         },
       },
       Skeleton: {
