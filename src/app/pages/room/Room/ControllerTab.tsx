@@ -1,6 +1,13 @@
 import { useReactiveVar } from "@apollo/client";
 import { EditIcon, ViewIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { Controller } from "app/backend-types";
 import { ControllerTags } from "app/components/ControllerTags";
 import { useCallback } from "react";
@@ -58,6 +65,7 @@ const ControllerRow: React.FC<ControllerRowProps> = ({
   isDefaultController,
   isSelected,
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const selectController = useCallback(() => {
     controllerIdVar(controller.id);
   }, [controller]);
@@ -72,17 +80,23 @@ const ControllerRow: React.FC<ControllerRowProps> = ({
       <Text fontSize="lg" marginRight="20px">
         {controller.name}
       </Text>
-      <ControllerTags
-        controller={controller}
-        isDefaultController={isDefaultController}
-      />
+      {isMobile ? null : (
+        <ControllerTags
+          controller={controller}
+          isDefaultController={isDefaultController}
+        />
+      )}
       <Box flex="1 1 auto" />
-      <Button variant="ghost" size="sm">
-        <ViewIcon />
-      </Button>
-      <Button variant="ghost" size="sm">
-        <EditIcon />
-      </Button>
+      {isMobile ? null : (
+        <Button variant="ghost" size="sm">
+          <ViewIcon />
+        </Button>
+      )}
+      {isMobile ? null : (
+        <Button variant="ghost" size="sm">
+          <EditIcon />
+        </Button>
+      )}
       <Button
         variant="outline"
         ml="10px"

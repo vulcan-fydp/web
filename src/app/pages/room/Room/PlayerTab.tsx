@@ -16,6 +16,7 @@ import {
   MenuDivider,
   Tag,
   useToast,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import profile from "app/resources/profile.png";
 import { ControllerIcon } from "app/resources/controller";
@@ -246,6 +247,11 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
   onRemovePlayerClick,
   userIsHost,
 }) => {
+  const hideOnMobile = useBreakpointValue({
+    base: "none",
+    md: "auto",
+  });
+
   return (
     <Flex
       padding="15px 25px"
@@ -270,42 +276,42 @@ const PlayerRow: React.FC<PlayerRowProps> = ({
         ) : null}
       </HStack>
       <Box flex="1 1 auto" />
-      <HStack minW="154px" spacing={4}>
+      <HStack minW={{ md: "154px" }} spacing={4}>
         {controllerNumber === null ? (
           <Image src={spectatorIcon} />
         ) : (
           <ControllerIcon color={getControllerNumberColor(controllerNumber)} />
         )}
-        {/* <div style={{ width: "120px" }}> */}
-        <Menu matchWidth>
-          <MenuButton
-            as={Button}
-            variant="outline"
-            size="sm"
-            disabled={!userIsHost}
-          >
-            {getControllerNumberDisplayText(controllerNumber)}
-          </MenuButton>
-          <MenuList minWidth="150px" bgColor="black" borderColor="purple.300">
-            <MenuItem onClick={() => setControllerNumber(0)}>
-              {getControllerNumberDisplayText(0)}
-            </MenuItem>
-            <MenuItem onClick={() => setControllerNumber(1)}>
-              {getControllerNumberDisplayText(1)}
-            </MenuItem>
-            <MenuItem onClick={() => setControllerNumber(2)}>
-              {getControllerNumberDisplayText(2)}
-            </MenuItem>
-            <MenuItem onClick={() => setControllerNumber(3)}>
-              {getControllerNumberDisplayText(3)}
-            </MenuItem>
-            <MenuDivider />
-            <MenuItem onClick={() => setControllerNumber(null)}>
-              {getControllerNumberDisplayText(null)}
-            </MenuItem>
-          </MenuList>
-        </Menu>
-        {/* </div> */}
+        <Box display={hideOnMobile}>
+          <Menu matchWidth>
+            <MenuButton
+              as={Button}
+              variant="outline"
+              size="sm"
+              disabled={!userIsHost}
+            >
+              {getControllerNumberDisplayText(controllerNumber)}
+            </MenuButton>
+            <MenuList minWidth="150px" bgColor="black" borderColor="purple.300">
+              <MenuItem onClick={() => setControllerNumber(0)}>
+                {getControllerNumberDisplayText(0)}
+              </MenuItem>
+              <MenuItem onClick={() => setControllerNumber(1)}>
+                {getControllerNumberDisplayText(1)}
+              </MenuItem>
+              <MenuItem onClick={() => setControllerNumber(2)}>
+                {getControllerNumberDisplayText(2)}
+              </MenuItem>
+              <MenuItem onClick={() => setControllerNumber(3)}>
+                {getControllerNumberDisplayText(3)}
+              </MenuItem>
+              <MenuDivider />
+              <MenuItem onClick={() => setControllerNumber(null)}>
+                {getControllerNumberDisplayText(null)}
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Box>
       </HStack>
       {userIsHost && (
         <Button

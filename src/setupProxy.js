@@ -24,14 +24,14 @@ function createAzureProxy(app) {
   app.use(
     '/backend',
     createProxyMiddleware({
-      target: 'https://vulcangames.fun',
+      target: 'https://app.vulcangames.fun',
       changeOrigin: true,
       pathRewrite: path => path.replace('/backend', ''),
     })
   );
 
   const relayProxy = createProxyMiddleware('/relay', { 
-    target: 'wss://vulcangames.fun:8443', 
+    target: 'wss://app.vulcangames.fun:8443', 
     changeOrigin: true,
     pathRewrite: path => path.replace('/relay/graphql', ''),
     ws: true,
