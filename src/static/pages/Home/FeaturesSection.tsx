@@ -22,7 +22,7 @@ import React, {
 } from "react";
 import { motion, useAnimation } from "framer-motion";
 
-import CreatingControllersSrc from "static/resources/features/create-controllers.jpg";
+import CreatingControllersSrc from "static/resources/features/create-controllers.png";
 
 const FEATURE_VISIBLE_FOR_S = 15;
 
