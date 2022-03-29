@@ -14,7 +14,7 @@ export const PlayAnywhereSection = () => {
           required!
         </Text>
         <Box position="relative" width="100%" overflow="visible">
-          <WorldMap color={"#CFCFCF"} />
+          <WorldMap color={"#CACACA"} />
         </Box>
       </HomeMaxWidthSection>
     </>
