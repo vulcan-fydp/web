@@ -214,7 +214,7 @@ export const VideoStream: React.FC<VideoStreamProps> = ({
     >
       <video ref={videoRef} width="100%" autoPlay />
       <Canvas
-        sx={{ "touch-action": "none" }}
+        // sx={{ "touch-action": "none" }}
         tabIndex={0}
         ref={onCanvasRefSet}
         position="absolute"
