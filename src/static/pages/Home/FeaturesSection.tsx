@@ -22,6 +22,8 @@ import React, {
 } from "react";
 import { motion, useAnimation } from "framer-motion";
 
+import CreatingControllersSrc from "static/resources/features/create-controllers.jpg";
+
 const FEATURE_VISIBLE_FOR_S = 15;
 
 const MotionBox = motion(Box);
@@ -225,23 +227,13 @@ export const FeaturesSection = () => {
       <Features
         features={[
           [
-            "Room management",
+            "Everything is a controller",
             {
-              imageSrc: PlaceholderImgSrc,
-              imageAlt: "A placeholder image",
-              tags: [HostTag],
+              imageSrc: CreatingControllersSrc,
+              imageAlt: "View of creating a controller",
+              tags: [ClientTag],
               description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            },
-          ],
-          [
-            "Something else",
-            {
-              imageSrc: PlaceholderImgSrc,
-              imageAlt: "A placeholder image",
-              tags: [VulcastTag],
-              description:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                "No Switch controllers required! Play with your keyboard, mouse or even a controller from another console.",
             },
           ],
         ]}

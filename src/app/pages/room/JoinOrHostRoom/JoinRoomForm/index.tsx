@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   FormControl,
@@ -92,29 +93,32 @@ export const JoinRoomForm: React.FC<{ roomId?: string }> = ({ roomId }) => {
     <Flex
       as="form"
       flexDir="column"
-      align="center"
+      alignItems="center"
       onSubmit={handleSubmit(onFormSubmit)}
     >
-      <FormControl isInvalid={!!errors.nickname} align="center">
+      <FormControl isInvalid={!!errors.nickname} align="center" width="266px">
         <Input
           placeholder="Nickname"
           {...register("nickname", {
             required: "Nickname cannot be empty",
           })}
-          width="266px"
         />
         {errors.nickname ? (
           <FormErrorMessage>{errors.nickname.message}</FormErrorMessage>
         ) : null}
       </FormControl>
       {promptRoomId ? (
-        <FormControl isInvalid={!!errors.roomId} mt="10px" align="center">
+        <FormControl
+          isInvalid={!!errors.roomId}
+          mt="10px"
+          align="center"
+          width="266px"
+        >
           <Input
             placeholder="Room Code"
             {...register("roomId", {
               required: "Room code cannot be empty",
             })}
-            width="266px"
           />
           {errors.roomId ? (
             <FormErrorMessage>{errors.roomId.message}</FormErrorMessage>

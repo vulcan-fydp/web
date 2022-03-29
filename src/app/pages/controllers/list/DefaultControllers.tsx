@@ -78,7 +78,7 @@ export const DefaultControllerRow: React.FC<DefaultControllerRowProps> = ({
           variant="solid"
           size="sm"
           leftIcon={<CopyIcon />}
-          colorScheme="cyan"
+          colorScheme="blue"
         >
           Clone
         </Button>

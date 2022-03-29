@@ -7,20 +7,54 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  useToast,
 } from "@chakra-ui/react";
+import { apolloClient } from "app/apollo";
 import { Navbar } from "lib/Navbar";
+import { useCallback } from "react";
 import {
   Link as RouterLink,
   NavLink,
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { useLogOutFromUserMutation } from "./logout.backend.generated";
 import { useNavbarQuery } from "./navbar.backend.generated";
 
 export const DefaultNavbar: React.FC = ({ children }) => {
   const { data, loading } = useNavbarQuery();
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
+  const [logoutMutation] = useLogOutFromUserMutation();
+
+  const onLogOutClick = useCallback(async () => {
+    const result = await logoutMutation();
+    if (!result.data) {
+      toast({
+        title: "Could not log out of room.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    switch (result.data.logOutFromUser.__typename) {
+      case "AuthenticationError":
+        toast({
+          title: "Could not log out of room.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      case "Success":
+        await apolloClient.resetStore();
+        navigate("/");
+        return;
+    }
+  }, [logoutMutation, navigate, toast]);
 
   if (loading || !data) {
     return <Navbar>{children}</Navbar>;
@@ -75,14 +109,22 @@ export const DefaultNavbar: React.FC = ({ children }) => {
                 <MenuItem as={NavLink} to="/account">
                   Account
                 </MenuItem>
-                <MenuItem>
-                  {data.user.vulcasts.length > 0 ? "Vulcasts" : "Link Vulcast"}
+                <MenuItem as={NavLink} to="/room">
+                  Join Room
                 </MenuItem>
                 <MenuItem as={NavLink} to="/controllers">
                   Controllers
                 </MenuItem>
                 <MenuDivider />
-                <MenuItem>Log Out</MenuItem>
+                <MenuItem
+                  as={Button}
+                  variant="transparent"
+                  borderRadius="0px"
+                  justifyContent="left"
+                  onClick={onLogOutClick}
+                >
+                  Log Out
+                </MenuItem>
               </MenuList>
             </Menu>
           ) : null}

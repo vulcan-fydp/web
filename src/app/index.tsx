@@ -1,6 +1,6 @@
 import { ApolloProvider } from "@apollo/client";
 import { ChakraProvider } from "@chakra-ui/react";
-import "@fontsource/montserrat";
+import "@fontsource/montserrat/800.css";
 import { apolloClient } from "app/apollo";
 import { Pages } from "app/pages";
 import React from "react";

@@ -42,7 +42,7 @@ export const vulcanTheme = extendTheme(
           line: {
             tab: {
               color: "white",
-              fontWeight: "semibold",
+              fontWeight: "regular",
               _selected: {
                 color: "purple.400",
                 borderColor: "purple.400",
@@ -68,13 +68,46 @@ export const vulcanTheme = extendTheme(
         },
       },
       Button: {
-        baseStyle: {},
+        baseStyle: {
+          boxShadow: "md",
+          color: "white",
+          fontWeight: "regular",
+        },
         variants: {
-          solid: {
-            boxShadow: "md",
+          solid: ({ colorScheme }: any) => {
+            return {
+              color: "white",
+              background: `${colorScheme}.400`,
+              _hover: {
+                bg: `${colorScheme}.500`,
+              },
+              _active: {
+                bg: `${colorScheme}.600`,
+              },
+            };
           },
-          link: {
-            _hover: {},
+          link: ({ colorScheme }: any) => {
+            return {
+              _hover: {
+                color: `${colorScheme}.500`,
+              },
+              _active: {
+                color: `${colorScheme}.600`,
+              },
+              boxShadow: "none",
+            };
+          },
+          outline: ({ colorScheme }: any) => {
+            return {
+              borderWidth: "1px",
+              borderColor: `${colorScheme}.400`,
+            };
+          },
+          transparent: {
+            boxShadow: "none",
+            background: "rgba(255,0,0,0)",
+            _hover: "bg: rgba(255, 0, 0, 1.0)",
+            _focus: "boxShadow: none; bg: rgba(255, 0, 0, 0.0)",
           },
         },
         kickLink: {
@@ -105,8 +138,17 @@ export const vulcanTheme = extendTheme(
         },
       },
       Link: {
-        baseStyle: {
-          color: "purple.300",
+        baseStyle: ({ colorScheme }: any) => {
+          return {
+            color: `${colorScheme}.400`,
+            _hover: {
+              color: `${colorScheme}.500`,
+            },
+            _active: {
+              color: `${colorScheme}.600`,
+            },
+            boxShadow: "none",
+          };
         },
       },
       Skeleton: {

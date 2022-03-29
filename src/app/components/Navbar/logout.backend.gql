@@ -1,0 +1,8 @@
+mutation logOutFromUser {
+  logOutFromUser {
+    __typename
+    ... on AuthenticationError {
+      message
+    }
+  }
+}
