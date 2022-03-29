@@ -23,6 +23,8 @@ import React, {
 import { motion, useAnimation } from "framer-motion";
 
 import CreatingControllersSrc from "static/resources/features/create-controllers.png";
+import ManagePlayersSrc from "static/resources/features/manage-players.png";
+import AssignPlayersSrc from "static/resources/features/assign-players.png";
 
 const FEATURE_VISIBLE_FOR_S = 15;
 
@@ -227,6 +229,16 @@ export const FeaturesSection = () => {
       <Features
         features={[
           [
+            "Pass the controllers around",
+            {
+              imageSrc: AssignPlayersSrc,
+              imageAlt: "View of players in a room",
+              tags: [HostTag],
+              description:
+                "Have up to 4 players using controllers at the same time with as many spectators as desired! Controllers can be re-assigned at any time to faciliate tournaments or to give someone a break.",
+            },
+          ],
+          [
             "Everything is a controller",
             {
               imageSrc: CreatingControllersSrc,
@@ -234,6 +246,16 @@ export const FeaturesSection = () => {
               tags: [ClientTag],
               description:
                 "No Switch controllers required! Play with your keyboard, mouse or even a controller from another console.",
+            },
+          ],
+          [
+            "Trolls begone",
+            {
+              imageSrc: ManagePlayersSrc,
+              imageAlt: "View of kicking a player out of the room",
+              tags: [HostTag],
+              description:
+                "Is someone being annoying? Secure your room by kicking out unwanted players.",
             },
           ],
         ]}
