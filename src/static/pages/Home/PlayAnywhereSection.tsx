@@ -23,15 +23,6 @@ export const PlayAnywhereSection = () => {
             overflow="visible"
           >
             <WorldMap color={"#FFFFFF"} />
-            {/* <Box
-              display="block"
-              position="absolute"
-              left="20"
-              top="20%"
-              width="2.5%"
-            >
-              <SwitchWaypoint />
-            </Box> */}
           </Box>
         </Box>
       </HomeMaxWidthSection>
