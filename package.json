@@ -34,7 +34,7 @@
     "screenfull": "5.2.0",
     "subscriptions-transport-ws": "^0.9.19",
     "typescript": "^4.5.5",
-    "web-vitals": "^2.1.2"
+    "web-vitals": "^3.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
