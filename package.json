@@ -22,7 +22,7 @@
     "controller-input": "^0.3.4",
     "framer-motion": "^5.6.0",
     "graphql": "^15.5.1",
-    "mediasoup-client": "^3.6.36",
+    "mediasoup-client": "^3.6.69",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
